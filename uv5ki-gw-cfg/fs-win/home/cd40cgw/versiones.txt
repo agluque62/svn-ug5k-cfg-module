@@ -1,0 +1,21 @@
+Ultima Actualizacion
+
+Linux version 2.4.32 NUCLEODF  (gcc version 3.2.2 20030217 (Yellow Dog Linux 3.0 3.2.2-2a_1)) #203 jue feb 19 12:55:29 CET 2015
+
+cgw6747:
+17-03-2016, 14:10 <291328>>
+
+ Servdsp      V0.0.2  (NUCLEODF 2016-05-02 13:29:00)
+ Recurso RAD  V0.0.1  (NUCLEODF 2016-05-02 13:29:00)
+
+ Recurso LC   V0.0.1  (NUCLEODF 2016-05-02 13:29:00)
+
+ Recurso TLF  V0.0.1  (NUCLEODF 2016-05-02 13:29:00)
+
+ Recurso R2N5 V0.0.1  (NUCLEODF 2016-05-02 13:29:00)
+
+ ulisesg5000-cgw   V1.0.0 (NUCLEODF 2016-05-02 13:29:00)
+
+swiniciacgw:
+ÀNUCLEODF 2014-10-13 15:13:26
+

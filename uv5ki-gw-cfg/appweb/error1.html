@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta name="generator"
+        content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="windows-1252" />
+    <meta name="description" content="Plantilla Ulises 5000" />
+    <meta name="keywords" content="HTML5, CSS3, JavaScript" />
+    <title>ULISES G 5000. Acceso Denegado</title>
+    <!-- Estilos  -->
+    <link rel="stylesheet" href="./styles/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="./styles/uv5ki-styles.css" />
+</head>
+<body>
+    <div id="agrupar">
+        <header id="cabecera">
+            <div id="_contSupIzq">
+                <div id="_logo" style="width:90%;">
+                    <!-- <img src="images/nucleo-df-new.jpg" /> -->
+                    <img src="./images/corporativo-a.png"
+                         style="width:100%; height: 100%; margin: 0; " />
+                </div>
+            </div>
+            <div id="_tit_ppal"><h1>
+                <span lang="es" hidden>ULISES G 5000.</span>
+                <span lang="en" hidden>ULISES G 5000.</span>
+                <span lang="fr" hidden>ULISES G 5000.</span>
+            </h1></div>
+            <div id="_contSupDrcha">
+                <div id="_hfecha"></div>
+				<div id="_hsolohora"></div>
+                <div id="_usuario"></div>
+            </div>
+        </header>
+
+        <nav id="_menu" class="container">
+		</nav>
+
+        <section id="_ppalerror">
+            <div id="img">
+                <img src="./images/noaccess.jpg" height="64" width="64"/>
+            </div>
+			<span lang="es" hidden>
+				<h2>Acceso Denegado !!</h2>
+				<h4>Combinacion Usuario / Clave Incorrecta</h4>
+			</span>
+            <span lang="en" hidden>
+				<h2>Access Denied !!</h2>
+				<h4>Bad User or Password entered.</h4>
+			</span>
+            <span lang="fr" hidden>
+				<h2>Acces Refuse !!</h2>
+				<h4>Utilisateur ou mot de passe incorrect.</h4>
+			</span>
+        </section>
+
+        <footer id="_pie1">
+            <span lang="es" hidden>Nucleo Copyright @ 2016-2020. Todos los Derechos Reservados</span>
+            <span lang="en" hidden>Nucleo Copyright @ 2016-2020. All rights reserved</span>
+            <span lang="fr" hidden>Nucleo Copyright @ 2016-2020. Tous droits reserves</span>
+        </footer>
+
+        <script src="./scripts/jquery/jquery-2.1.3.min.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                var userLang = navigator.languages[0];
+                var language = userLang.indexOf("en") == 0 ? "en" : userLang.indexOf("fr") == 0 ? "fr" : "es";
+
+                $("[lang]").each(function () {
+                    if ($(this).attr("lang") == language)
+                        $(this).show();
+                    else
+                        $(this).hide();
+                });
+				
+				$("#_menu").css('border-width', '0');
+								
+				$("#_hfecha").text((new Date()).toLocaleDateString());				
+				$("#_hsolohora").text((new Date()).toLocaleTimeString());
+				setInterval(function() {
+					$("#_hfecha").text((new Date()).toLocaleDateString());				
+					$("#_hsolohora").text((new Date()).toLocaleTimeString());
+					}, 1000);
+				
+            });
+        </script>
+</body>
+</html>
+

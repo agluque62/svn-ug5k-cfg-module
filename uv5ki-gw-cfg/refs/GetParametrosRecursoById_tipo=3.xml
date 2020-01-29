@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tablas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="RecursosTF" xmlns="http://CD40.es/">
+	<ListaEnlacesInternos>
+		<string>LCL</string>
+		<string>PICT05</string>
+		<string>PICT06</string>
+		<string>PICT07</string>
+		<string>PICT08</string>
+		<string>PSSM</string>
+	</ListaEnlacesInternos>
+	<Lado>0</Lado>
+	<Modo>2W</Modo>
+	<GananciaAGCTX>0</GananciaAGCTX>
+	<GananciaAGCTXdBm>0</GananciaAGCTXdBm>
+	<GananciaAGCRX>0</GananciaAGCRX>
+	<GananciaAGCRXdBm>0</GananciaAGCRXdBm>
+	<SupresionSilencio>false</SupresionSilencio>
+	<TamRTP>20</TamRTP>
+	<Codec>0</Codec>
+	<TipoEM>Type_I</TipoEM>
+	<GrabacionEd137>true</GrabacionEd137>
+	<IdSistema>departamento</IdSistema>
+	<IdRecurso>BL_1</IdRecurso>
+	<IdPrefijo>32</IdPrefijo>
+	<TipoDestino>1</TipoDestino>
+	<IdDestino>BL_1</IdDestino>
+</Tablas>

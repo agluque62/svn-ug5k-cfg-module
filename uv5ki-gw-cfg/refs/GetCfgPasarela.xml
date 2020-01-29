@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CfgPasarela xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<Nombre>CGW1</Nombre>
+	<NumRecursos>6</NumRecursos>
+	<ModoSincronizacion>0</ModoSincronizacion>
+	<MasterSincronizacion />
+	<PuertoLocalSNMP>10161</PuertoLocalSNMP>
+	<PuertoRemotoSNMP>10161</PuertoRemotoSNMP>
+	<PuertoRemotoTrapsSNMP>162</PuertoRemotoTrapsSNMP>
+	<PuertoLocalSIP>5060</PuertoLocalSIP>
+	<PeriodoSupervisionSIP>5</PeriodoSupervisionSIP>
+	<ListaRecursos>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>RD01</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_Radio</Interface>
+			<SlotPasarela>0</SlotPasarela>
+			<NumDispositivoSlot>0</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>0</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>LC_1</IdRecurso>
+			<Tipo>0</Tipo>
+			<Interface>TI_LCEN</Interface>
+			<SlotPasarela>0</SlotPasarela>
+			<NumDispositivoSlot>1</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>2</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>BC_1</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_BC</Interface>
+			<SlotPasarela>0</SlotPasarela>
+			<NumDispositivoSlot>2</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>1</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>RD02</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_Radio</Interface>
+			<SlotPasarela>1</SlotPasarela>
+			<NumDispositivoSlot>0</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>0</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>R2_1</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_ATS_R2</Interface>
+			<SlotPasarela>1</SlotPasarela>
+			<NumDispositivoSlot>1</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>1</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+		<RecursosSCV xsi:type="Recursos">
+			<IdRecurso>BL_1</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_BL</Interface>
+			<SlotPasarela>1</SlotPasarela>
+			<NumDispositivoSlot>2</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>1</TipoRecurso>
+			<IdTifX>CGW1</IdTifX>
+		</RecursosSCV>
+	</ListaRecursos>
+</CfgPasarela>

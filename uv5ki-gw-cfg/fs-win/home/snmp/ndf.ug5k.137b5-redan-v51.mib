@@ -1,0 +1,854 @@
+ULISESG5000i DEFINITIONS ::= BEGIN
+
+IMPORTS
+	MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, enterprises
+		FROM SNMPv2-SMI
+	mib-2, system, sysName, sysDescr
+		FROM RFC1213-MIB
+	DisplayString, TestAndIncr, TimeStamp
+        FROM SNMPv2-TC;
+		
+modIdentity MODULE-IDENTITY
+		LAST-UPDATED "201605311638Z"
+		ORGANIZATION "NUCLEODF"
+		CONTACT-INFO 
+			"Nucleo DF. Direccion Tecnica
+			C/ Via de los Poblados, 7. Madrid
+			28033 Madrid.
+			email: direccion.tecnica@nucleodf.com"
+		DESCRIPTION "GW ULISES G 5000. Supervision para REDAN"
+		REVISION "201605311638Z"
+			DESCRIPTION
+         ""
+	::= { ulises5000i-gw 0}
+
+-- Parte PRIVADA	
+-- Globales 
+nucleoDF			OBJECT IDENTIFIER ::= { enterprises 7916 }
+ulises5000i			OBJECT IDENTIFIER ::= { nucleoDF 8 }
+ulises5000i-scv		OBJECT IDENTIFIER ::= { ulises5000i 1 }
+ulises5000i-pic		OBJECT IDENTIFIER ::= { ulises5000i 2 }
+ulises5000i-gw		OBJECT IDENTIFIER ::= { ulises5000i 3 }
+
+-- Nucleo-Pasarela 
+-- ZONA PUBLIC
+ug5kpublic			OBJECT IDENTIFIER 	::= { ulises5000i-gw 1 }
+estado				OBJECT IDENTIFIER 	::= { ug5kpublic 1 }
+identificador		OBJECT-TYPE
+						SYNTAX DisplayString
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "ID de la Pasarela"	
+										::= { estado 1 }										
+estadoGeneral		OBJECT-TYPE
+						SYNTAX INTEGER (0..3)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado Operativo CGW:
+								0 = No Inicializado,
+								1 = Ok,
+								2 = Fallo,
+								3 = Aviso"	
+										::= { estado 2 }
+stdSincroBD			OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado Sicronizacion con BD Srv:
+								0 = Desconocido,
+								1 = OK,
+								2 = Conflicto BD"	
+										::= { estado 3 }
+stdFA	        	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de Fuente Alimentacion:
+								0 = No Presente,
+								1 = Ok,
+								2 = Error"	
+										 ::= { estado 4 }
+reservado        	OBJECT-TYPE
+						SYNTAX INTEGER
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION ""	
+										::= { estado 5 }
+stdLAN1	        	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de ITF LAN1:
+								0 = No Presente,
+								1 = Ok,
+								2 = Error"	
+										::= { estado 6 }
+stdLAN2	        	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de ITF LAN2:
+								0 = No Presente,
+								1 = Ok,
+								2 = Error"	
+										::= { estado 7 }
+stdCPU-Local       	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de CPU Local:
+								0 = No Presente,
+								1 = Principal,
+								2 = Reserva,
+								3 = Arrancando"	
+										::= { estado 8 }
+stdCPU-Dual        	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de CPU Dual:
+								0 = No Presente,
+								1 = Principal,
+								2 = Reserva,
+								3 = Arrancando"	
+										::= { estado 9 }
+stdNTP	        	OBJECT-TYPE
+						SYNTAX INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Estado de NTP:
+								0 = No Configurado,
+								1 = Conectado,
+								2 = DesConectado"	
+										::= { estado 10 }
+ip-CPU-Local		OBJECT-TYPE
+						SYNTAX DisplayString
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "IP fisica CPU Local"	
+										::= { estado 11 }										
+ip-CPU-Dual		OBJECT-TYPE
+						SYNTAX DisplayString
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "IP fisica CPU Dual"	
+										::= { estado 12 }										
+
+-- Control
+control				OBJECT IDENTIFIER 	::= { ug5kpublic 2 }
+reset				OBJECT-TYPE
+						SYNTAX INTEGER 
+						MAX-ACCESS read-write
+						STATUS current
+						DESCRIPTION "Valor a 1. Inicia RESET de CPU"	
+										::= { control 1 }
+										
+test				OBJECT-TYPE
+						SYNTAX INTEGER 
+						MAX-ACCESS read-write
+						STATUS current
+						DESCRIPTION "Valor a 1. Inicia un Procedimiento de Pruebas..."	
+										::= { control 2 }
+
+conmuta				OBJECT-TYPE
+						SYNTAX DisplayString 
+						MAX-ACCESS read-write
+						STATUS current
+						DESCRIPTION "Comando de Seleccion de Equipo Activo:
+								ID Recurso,Num.Emplazamiento,Tipo Equipo,Num.Equipo Seleccionado.
+								Ejemplo: L_GW2_S1.C3,0,TX,1"	
+										::= { control 3 }
+controlseg			OBJECT IDENTIFIER 	::= { control 4 }
+controleve 			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Genera los eventos de seguimiento de un control"
+										::= { controlseg 1 }
+controldat			OBJECT-TYPE
+						SYNTAX DisplayString 
+						MAX-ACCESS read-only
+						STATUS current
+						DESCRIPTION "Datos asociados a los eventos de control"	
+										::= { controlseg 2 }
+
+-- TABLA de TARJETAS
+tarjetas			OBJECT IDENTIFIER 	::= { ug5kpublic 3 }
+tarjNumber 			OBJECT-TYPE 
+						SYNTAX  INTEGER		
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { tarjetas 1 }
+tarjTable 			OBJECT-TYPE
+						SYNTAX  SEQUENCE OF TarjEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION  "Tabla de Configuracion y Estado de Tarjetas Esclavas"			
+										::= { tarjetas 2 }
+tarjEntry 			OBJECT-TYPE
+						SYNTAX  TarjEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION ""			
+						INDEX   { tarjIndex } 
+										::= { tarjTable 1 }
+tarjIndex 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..3)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { tarjEntry 1 }
+tarjTipo 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Tipo de Tarjeta Esclava:
+								0 = Desconocido/error,
+								1 = IA4,
+								2 = IQ1"
+										::= { tarjEntry 2 }
+tarjStatus 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado Tarjeta Esclava:
+								1 = Conectada,
+								0 = Desconectada"
+										::= { tarjEntry 3 }
+tarjCanal0 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Presencia modulo/slot Canal0.
+								1= Conectado,
+								0= No Presente."
+										::= { tarjEntry 4 }
+tarjCanal1 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Presencia modulo/slot Canal1.
+								1= Conectado,
+								0= No Presente."
+										::= { tarjEntry 5 }
+tarjCanal2 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Presencia modulo/slot Canal2.
+								1= Conectado,
+								0= No Presente."
+										::= { tarjEntry 6 }
+tarjCanal3 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Presencia modulo/slot Canal3.
+								1= Conectado,
+								0= No Presente."
+										::= { tarjEntry 7 }
+TarjEntryElement ::= SEQUENCE {tarjIndex INTEGER, tarjTipo INTEGER, tarjStatus INTEGER, tarjCanal0 INTEGER, tarjCanal1 INTEGER, tarjCanal2 INTEGER, tarjCanal3 INTEGER  }
+
+-- TABLA de Interfaces.
+interfaces			OBJECT IDENTIFIER 	::= { ug5kpublic 4 }
+itfNumber 			OBJECT-TYPE 
+						SYNTAX  INTEGER		
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { interfaces 1 }
+itfTable 			OBJECT-TYPE
+						SYNTAX  SEQUENCE OF ItfEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION  ""			
+										::= { interfaces 2 }
+itfEntry 			OBJECT-TYPE
+						SYNTAX  ItfEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION ""			
+						INDEX   { itfIndex } 
+										::= { itfTable 1 }
+itfIndex 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..15)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { itfEntry 1 }
+itfDescr 			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "ID del Recurso Asociado a la Interfaz."
+										::= { itfEntry 2 }
+itfType 			OBJECT-TYPE
+						SYNTAX  INTEGER 
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Tipo de Interfaz: 
+						        0 = Radio, 
+								1 = LCE, 
+								2 = PpBC, 
+								3 = PpBL, 
+								4 = PpAB, 
+								5 = AtsR2, 
+								6 = AtsN5, 
+								7 = AtsQSIG,
+								9 = NO_CONFIG"
+										::= { itfEntry 3 }
+itfTarj 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..3)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Indice de Esclava en la que reside la interfaz"			
+										::= { itfEntry 4 }
+itfSlot 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..3)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Indice de Slot de la esclava en la que reside la interfaz"			
+										::= { itfEntry 5 }
+itfStatusHW 		OBJECT-TYPE
+						SYNTAX  INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado HW Interfaz.
+								0= HW No Presente,
+								1= OK,
+								2= Fallo."			
+										::= { itfEntry 6 }
+itfModoOper 		OBJECT-TYPE
+						SYNTAX  INTEGER (0..1)
+						MAX-ACCESS read-write
+						STATUS  current
+						DESCRIPTION "Modo Operacion Interfaz.
+								0= Normal,
+								1= Mantenimiento,
+								2= Tunel."			
+										::= { itfEntry 7 }
+itfTipoBucle 		OBJECT-TYPE
+						SYNTAX  INTEGER (0..9)
+						MAX-ACCESS read-write
+						STATUS  current
+						DESCRIPTION "Tipo Bucle:
+								0 = OFF,
+								1 = RF Local Simple,
+								2X= RF Local Frecuencias Desplazadas / Emplazamiento."			
+										::= { itfEntry 8 }
+resultadoBucle		OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Resultado ultimo Bucle. Hasta 1024 caracteres"
+										::= { itfEntry 9 }
+itfSubTipoRadio		OBJECT-TYPE
+						SYNTAX  INTEGER 
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "SubTipo de Interfaz Radio: 
+						        0 = Local Simple, 
+								1 = Local P/R, 
+								2 = Local FD Simple, 
+								3 = Local FD P/R, 
+								4 = Remoto Rx Tx, 
+								5 = Remoto Tx, 
+								6 = Remoto RX,
+								9 = NO APLICABLE"
+										::= { itfEntry 10 }										
+itfFrecuenciaRadio	OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Frecuencia de trabajo de la Radio."
+										::= { itfEntry 11 }
+statTramoLocal-TEL	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado tramo Local interfaz de Telefonia: 
+								1 = OK,
+								2 = Fallo,
+								3 = Colgado (BC),
+								4 = Descolgado (BC),
+								9 = No Aplicable"
+										::= { itfEntry 12 }
+statSesion-TEL	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP interfaz de Telefonia: 
+								0 = OFF,
+								1 = Llamada establecida,
+								2 = Fallo,
+								3 = Servicio Entrante (LCEN),
+								4 = Servicio Saliente (LCEN)"
+										::= { itfEntry 13 }
+statTramoRemoto-TEL	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado tramo Remoto interfaz de Telefonia: 
+								0 = No supervisado,
+								1 = OK,
+								2 = Fallo,
+								3 = No Respuesta,
+								9 = No Aplicable"
+										::= { itfEntry 14 }
+itfStatusOper 		OBJECT-TYPE
+						SYNTAX  INTEGER (0..2)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado Operativo Interfaz:
+								0= HW No Presente,
+								1= OK,
+								2= Fallo HW/sesion,
+								3= Degradado"			
+										::= { itfEntry 15 }
+colat-URI-from-TEL	OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "sip URI del colateral conectado de Telefonia"
+										::= { itfEntry 16 }
+
+ItfEntryElement ::= SEQUENCE {itfIndex INTEGER, itfDescr DisplayString, itfType INTEGER, itfTarj INTEGER, itfSlot INTEGER, itfStatusHW INTEGER,
+							  itfModoOper INTEGER, itfTipoBucle INTEGER, resultadoBucle DisplayString, itfSubTipoRadio INTEGER, itfFrecuenciaRadio DisplayString,
+							  statTramoLocal-TEL INTEGER, statSesion-TEL INTEGER, statTramoRemoto-TEL INTEGER, itfStatusOper INTEGER, colat-URI-from-TEL DisplayString}
+
+							  
+-- TABLA de Emplazamientos Radio.
+emplazamientos	OBJECT IDENTIFIER 	::= { ug5kpublic 5 }
+
+empTable 			OBJECT-TYPE
+						SYNTAX  SEQUENCE OF EmpEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION  ""			
+										::= { emplazamientos 1 }
+empEntry 			OBJECT-TYPE
+						SYNTAX  EmpEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION ""			
+						INDEX   { empIndex } 
+										::= { empTable 1 }
+
+empIndex 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..15)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { empEntry 1 }
+emp0-Configurado 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Configuracion Emplazamiento:
+								0 = NO Configurado,
+								1 = Configurado"
+										::= { empEntry 2 }
+emp0-TieneTRX 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TRXs instalados en emplazamiento:
+								0 = NO hay TRX,
+								1 = SI hay TRX"
+										::= { empEntry 3 }
+emp0-SesionTXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-A/TRX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 4 }
+emp0-SesionTXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-B/TRX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 5 }
+emp0-SesionRXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 6 }
+emp0-SesionRXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 7 }
+emp0-TX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TX/TRX Activo:
+								0 = Desconocido,
+								1 = TX/TRX-A,
+								2 = TX/TRX-B,
+								9 = NO Configurado"
+										::= { empEntry 8 }
+emp0-RX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "RX Activo:
+								0 = Desconocido,
+								1 = RX-A,
+								2 = RX-B,
+								9 = NO Configurado"
+										::= { empEntry 9 }
+emp1-Configurado 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Configuracion Emplazamiento:
+								0 = NO Configurado,
+								1 = Configurado"
+										::= { empEntry 10 }
+emp1-TieneTRX 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TRXs instalados en emplazamiento:
+								0 = NO hay TRX,
+								1 = SI hay TRX"
+										::= { empEntry 11 }
+emp1-SesionTXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-A/TRX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 12 }
+emp1-SesionTXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-B/TRX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 13 }
+emp1-SesionRXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 14 }
+emp1-SesionRXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 15 }
+emp1-TX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TX/TRX Activo:
+								0 = Desconocido,
+								1 = TX/TRX-A,
+								2 = TX/TRX-B,
+								9 = NO Configurado"
+										::= { empEntry 16 }
+emp1-RX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "RX Activo:
+								0 = Desconocido,
+								1 = RX-A,
+								2 = RX-B,
+								9 = NO Configurado"
+										::= { empEntry 17 }
+emp2-Configurado 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Configuracion Emplazamiento:
+								0 = NO Configurado,
+								1 = Configurado"
+										::= { empEntry 18 }
+emp2-TieneTRX 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TRXs instalados en emplazamiento:
+								0 = NO hay TRX,
+								1 = SI hay TRX"
+										::= { empEntry 19 }
+emp2-SesionTXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-A/TRX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 20 }
+emp2-SesionTXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con TX-B/TRX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 21 }
+emp2-SesionRXA 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-A:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 22 }
+emp2-SesionRXB 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion SIP con RX-B:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								2 = Fallo Sesion,
+								9 = NO Configurada"
+										::= { empEntry 23 }
+emp2-TX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "TX/TRX Activo:
+								0 = Desconocido,
+								1 = TX/TRX-A,
+								2 = TX/TRX-B,
+								9 = NO Configurado"
+										::= { empEntry 24 }
+emp2-RX-Activo 		OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "RX Activo:
+								0 = Desconocido,
+								1 = RX-A,
+								2 = RX-B,
+								9 = NO Configurado"
+										::= { empEntry 25 }
+
+EmpEntryElement ::= SEQUENCE {
+							empIndex INTEGER,
+							emp0-Configurado INTEGER, emp0-TieneTRX INTEGER, emp0-SesionTXA INTEGER, emp0-SesionTXB INTEGER, emp0-SesionRXA INTEGER, emp0-SesionRXB INTEGER, emp0-TX-Activo INTEGER, emp0-RX-Activo INTEGER,
+							emp1-Configurado INTEGER, emp1-TieneTRX INTEGER, emp1-SesionTXA INTEGER, emp1-SesionTXB INTEGER, emp1-SesionRXA INTEGER, emp1-SesionRXB INTEGER, emp1-TX-Activo INTEGER, emp1-RX-Activo INTEGER,
+							emp2-Configurado INTEGER, emp2-TieneTRX INTEGER, emp2-SesionTXA INTEGER, emp2-SesionTXB INTEGER, emp2-SesionRXA INTEGER, emp2-SesionRXB INTEGER, emp2-TX-Activo INTEGER, emp2-RX-Activo INTEGER	}
+
+							  
+-- TABLA de "sesRadRemotas".
+sesRadRemotas	OBJECT IDENTIFIER 	::= { ug5kpublic 6 }
+
+sesRadRemTable 			OBJECT-TYPE
+						SYNTAX  SEQUENCE OF SesRadRemEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION  ""			
+										::= { sesRadRemotas 1 }
+sesRadRemEntry 			OBJECT-TYPE
+						SYNTAX  SesRadRemEntryElement
+						MAX-ACCESS not-accessible
+						STATUS  current
+						DESCRIPTION ""			
+						INDEX   { sRadRemIndex } 
+										::= { sesRadRemTable 1 }
+
+sRadRemIndex 			OBJECT-TYPE
+						SYNTAX  INTEGER (0..15)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION ""
+										::= { sesRadRemEntry 1 }
+
+colat0-statSesion	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion colateral:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								9 = NO Configurada/OFF"
+										::= { sesRadRemEntry 2 }
+colat0-URI-from			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "sip URI del colateral conectado."
+										::= { sesRadRemEntry 3 }
+colat0-PrioridadSIP	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Prioridad de la sesion SIP:
+								0 = Normal,
+								1 = Emergency,
+								9 = No Aplicable"
+										::= { sesRadRemEntry 4 }
+
+colat1-statSesion	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion colateral:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								9 = NO Configurada/OFF"
+										::= { sesRadRemEntry 5 }
+colat1-URI-from			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "sip URI del colateral conectado."
+										::= { sesRadRemEntry 6 }
+colat1-PrioridadSIP	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Prioridad de la sesion SIP:
+								0 = Normal,
+								1 = Emergency,
+								9 = No Aplicable"
+										::= { sesRadRemEntry 7 }
+
+colat2-statSesion	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion colateral:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								9 = NO Configurada/OFF"
+										::= { sesRadRemEntry 8 }
+colat2-URI-from			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "sip URI del colateral conectado."
+										::= { sesRadRemEntry 9 }
+colat2-PrioridadSIP	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Prioridad de la sesion SIP:
+								0 = Normal,
+								1 = Emergency,
+								9 = No Aplicable"
+										::= { sesRadRemEntry 10 }
+
+colat3-statSesion	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Estado sesion colateral:
+								0 = Sesion Idle,
+								1 = Sesion Activa,
+								9 = NO Configurada/OFF"
+										::= { sesRadRemEntry 11 }
+colat3-URI-from			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "sip URI del colateral conectado."
+										::= { sesRadRemEntry 12 }
+colat3-PrioridadSIP	 	OBJECT-TYPE
+						SYNTAX  INTEGER
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Prioridad de la sesion SIP:
+								0 = Normal,
+								1 = Emergency,
+								9 = No Aplicable"
+										::= { sesRadRemEntry 13 }
+
+
+SesRadRemEntryElement ::= SEQUENCE	{
+							sRadRemIndex INTEGER,
+							colat0-statSesion INTEGER, colat0-URI-from DisplayString, colat0-PrioridadSIP INTEGER,
+							colat1-statSesion INTEGER, colat1-URI-from DisplayString, colat1-PrioridadSIP INTEGER,
+							colat2-statSesion INTEGER, colat2-URI-from DisplayString, colat2-PrioridadSIP INTEGER,
+							colat3-statSesion INTEGER, colat3-URI-from DisplayString, colat3-PrioridadSIP INTEGER
+									}
+										
+-- ZONA PRIVADA
+ug5kprivate			OBJECT IDENTIFIER 	::= { ulises5000i-gw 2 }
+ug5ktraps			OBJECT IDENTIFIER 	::= { ug5kprivate 1 }
+ug5kcfgtrap			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Se genera cuando se recibe un cambio de configuracion"
+										::= { ug5ktraps 1 }
+ug5kgentrap			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Se genera cuando cambia un parametro del grupo estado."
+										::= { ug5ktraps 2 }
+ug5ktrjtrap			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Se genera cuando cambia un parametro del grupo tarjeta"
+										::= { ug5ktraps 3 }
+ug5kitftrap			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Se genera cuando cambia parametro del grupo interfaz"
+										::= { ug5ktraps 4 }
+ug5khistrap			NOTIFICATION-TYPE
+						STATUS  current
+						DESCRIPTION
+							"Evento de Historicos..."
+										::= { ug5ktraps 5 }
+ug5ktrapint			OBJECT-TYPE
+						SYNTAX  INTEGER (0..3)
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "Entero asociado a los TRAPS"			
+										::= { ug5ktraps 6 }
+ug5ktrapstr			OBJECT-TYPE
+						SYNTAX  DisplayString
+						MAX-ACCESS read-only
+						STATUS  current
+						DESCRIPTION "STRING Asociado a los TRAPS"
+										::= { ug5ktraps 7 }
+										
+
+END

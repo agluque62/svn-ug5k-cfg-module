@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfListaTroncales xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<ListaTroncales>
+		<IdTroncal>T_BCN</IdTroncal>
+		<NumeroTest>311199</NumeroTest>
+		<ListaRecursos>
+			<PlanRecursos>
+				<IdRecurso>N5_1</IdRecurso>
+				<Tipo>TI_ATS_N5</Tipo>
+			</PlanRecursos>
+		</ListaRecursos>
+	</ListaTroncales>
+	<ListaTroncales>
+		<IdTroncal>T_MAD</IdTroncal>
+		<NumeroTest>310199</NumeroTest>
+		<ListaRecursos>
+			<PlanRecursos>
+				<IdRecurso>R2_1</IdRecurso>
+				<Tipo>TI_ATS_R2</Tipo>
+			</PlanRecursos>
+		</ListaRecursos>
+	</ListaTroncales>
+	<ListaTroncales>
+		<IdTroncal>T_N5</IdTroncal>
+		<NumeroTest>311189</NumeroTest>
+		<ListaRecursos />
+	</ListaTroncales>
+	<ListaTroncales>
+		<IdTroncal>T_N52</IdTroncal>
+		<NumeroTest>310110</NumeroTest>
+		<ListaRecursos>
+			<PlanRecursos>
+				<IdRecurso>R2_4</IdRecurso>
+				<Tipo>TI_ATS_R2</Tipo>
+			</PlanRecursos>
+		</ListaRecursos>
+	</ListaTroncales>
+	<ListaTroncales>
+		<IdTroncal>T_STGO</IdTroncal>
+		<NumeroTest>315199</NumeroTest>
+		<ListaRecursos>
+			<PlanRecursos>
+				<IdRecurso>N5-2</IdRecurso>
+				<Tipo>TI_ATS_N5</Tipo>
+			</PlanRecursos>
+			<PlanRecursos>
+				<IdRecurso>R2_2</IdRecurso>
+				<Tipo>TI_ATS_R2</Tipo>
+			</PlanRecursos>
+			<PlanRecursos>
+				<IdRecurso>R2_3</IdRecurso>
+				<Tipo>TI_ATS_R2</Tipo>
+			</PlanRecursos>
+		</ListaRecursos>
+	</ListaTroncales>
+	<ListaTroncales>
+		<IdTroncal>T_VLC</IdTroncal>
+		<NumeroTest>312199</NumeroTest>
+		<ListaRecursos />
+	</ListaTroncales>
+</ArrayOfListaTroncales>

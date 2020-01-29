@@ -1,0 +1,342 @@
+<h3 translate>MAN_TITULO</h3>
+<section id="_tabs">
+    <ul class="nav nav-tabs" data-persist="true">
+        <li data-ng-class="{'active': vm.pagina==0}">
+            <a href="" data-ng-click="vm.set_pagina(0)" translate>MAN_PG00</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==1}">
+            <a href="" data-ng-click="vm.set_pagina(1)" translate>MAN_PG01</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==2}">
+            <a href="" data-ng-click="vm.set_pagina(2)" data-ng-show="vm.mostrar_boton(1)" translate>MAN_PG02</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==3}">
+            <a href="" data-ng-click="vm.set_pagina(3)" data-ng-show="vm.mostrar_boton(0)" translate>Usuarios Habilitados</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==4}">
+            <a href="" data-ng-click="vm.set_pagina(4)" translate>MAN_PG03</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==5}">
+            <a href="" data-ng-click="vm.set_pagina(5)" ng-show="false" translate>MAN_PG04</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==6}">
+            <a href="" data-ng-click="vm.set_pagina(6)" ng-show="vm.desarrollo()" translate>Desarrollo</a>
+        </li>
+    </ul>
+</section>
+<section id="_contenido">
+    <div id="Estado" data-ng-show="vm.pagina==0" class="mtto">
+        <table class="table table-striped ug5ktb">
+            <tr>
+                <td class="_cab" ng-style="{'color':'black'}" translate>MAN_PG00_L00</td>
+                <td class="_cab" translate>MAN_PG00_L01</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.stdg)">{{vm.service.textoEstado(vm.std.stdg,0)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L02</td>
+                <td>
+                    <div ng-style="vm.service.styleOther(vm.std.cpua)">{{vm.service.textoEstado(vm.std.cpua,1)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L03</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.stdf)">{{vm.service.textoEstado(vm.std.stdf,2)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L04</td>
+                <td>
+                    <div ng-style="vm.service.styleOther(vm.std.stdn)">{{vm.service.textoEstado(vm.std.stdn,3)}}</div>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-striped ug5ktb">
+            <tr>
+                <td class="_cab" ng-style="{'color':'black'}">{{'CPU-0 ('+vm.std.cpu0.ip+')'}}</td>
+                <td class="_cab" translate>MAN_PG00_L05</td>
+                <td>
+                    <div ng-style="vm.service.styleOther(vm.std.cpu0.st_cpu)">{{vm.service.textoEstado(vm.std.cpu0.st_cpu,4)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L06</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu0.sync)">{{vm.service.textoEstado(vm.std.cpu0.sync,7)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L07</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu0.stl1)">{{vm.service.textoEstado(vm.std.cpu0.stl1,5)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L08</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu0.stl2)">{{vm.service.textoEstado(vm.std.cpu0.stl2,5)}}</div>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-striped ug5ktb" ng-show="vm.show_cpu1()">
+            <tr>
+                <td class="_cab" ng-style="{'color':'black'}">{{'CPU-1 ('+vm.std.cpu1.ip+')'}}</td>
+                <td class="_cab" translate>MAN_PG00_L05</td>
+                <td>
+                    <div ng-style="vm.service.styleOther(vm.std.cpu1.st_cpu)">{{vm.service.textoEstado(vm.std.cpu1.st_cpu,4)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L06</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu1.sync)">{{vm.service.textoEstado(vm.std.cpu1.sync,7)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L07</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu1.stl1)">{{vm.service.textoEstado(vm.std.cpu1.stl1,5)}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="_cab" translate>MAN_PG00_L08</td>
+                <td>
+                    <div ng-style="vm.service.styleEstado(vm.std.cpu1.stl2)">{{vm.service.textoEstado(vm.std.cpu1.stl2,5)}}</div>
+                </td>
+            </tr>
+        </table>
+        <div class="botones">
+            <span uib-dropdown on-toggle="toggled(open)" data-ng-show="vm.mostrar_boton(0)">
+                <button class="btn btn-default" uib-dropdown-toggle>
+                    <p translate>MAN_PG01_L00</p>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="simple-dropdown" role="menu">
+                    <li role="menuitem" data-ng-repeat="logfile in vm.logfiles">
+                        <a href ng-click="vm.showlog(logfile)">{{logfile.res}}</a>
+                    </li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    <div id="Interfaces" data-ng-show="vm.pagina==1" class="mtto">
+        <div id="ntp" class="_tablarec">
+            <table class="table table-striped ug5ktb">
+                <tr>
+                    <th translate>MAN_PG01_L01</th>
+                    <th translate>MAN_PG01_L02</th>
+                    <th translate>MAN_PG01_L03</th>
+                    <th translate>MAN_PG01_L04</th>
+                    <th translate>MAN_PG01_L05</th>
+                    <th translate>MAN_PG01_L06</th>
+                </tr>
+                <tr data-ng-repeat="itf in vm.std.itf">
+                    <td>
+                        <div ng-style="vm.service.styleEstado(1)">{{vm.service.get_slot_itf($index)}}</div>
+                    </td>
+                    <td>
+                        <div ng-style="vm.service.styleEstado(5)">{{itf.id}}</div>
+                    </td>
+                    <td>
+                        <div ng-style="vm.service.styleEstado(5)">{{vm.service.textoTipoItf(itf.tp)}}</div>
+                    </td>
+                    <td>
+                        <div ng-style="vm.service.styleEstado(itf.st)">{{vm.service.textoEstado(itf.st,6)}}</div>
+                    </td>
+                    <td>
+                        <div ng-style="vm.service.styleEstado(1)">{{vm.service.textoModoItf(itf.md)}}</div>
+                    </td>
+                    <td>
+                        <div ng-style="vm.service.styleEstado(5)">{{vm.service.textoBucleItf(itf.bc)}}</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="Control" data-ng-show="vm.pagina==2">
+        <table class="table table-striped ug5ktb">
+            <tr>
+                <td class="_cab" translate>MAN_PG02_L00</td>
+                <td>
+                    <button class="btn btn-default" data-ng-click="vm.bite()" data-ng-show="vm.mostrar_boton(1)" translate>MAN_PG02_L00</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="_cab" translate>MAN_PG02_L01</td>
+                <td>
+                    <button class="btn btn-default" data-ng-click="vm.reset()" data-ng-show="vm.mostrar_boton(2)" translate>MAN_PG02_L01</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+	<div id="users" data-ng-show="vm.pagina==3">
+		<table class="table table-striped ug5ktb">
+			<tr>
+				<th translate>Id. Usuario</th>
+				<th translate>Perfil</th>
+			</tr>
+			<tr data-ng-repeat = "user in vm.users">
+				<td>{{user.name}}</td>
+				<td>{{vm.txt_user_profile(user.perfil)}}</td>
+			</tr>
+		</table>
+	</div>
+    <div id="hSoft" data-ng-show="vm.pagina==4">
+        <ul class="list-group">
+            <li class="list-group-item ndf-ver-01">{{"Ulises G 5000. Version " + vm.versiones.Version + " (" + vm.versiones.Fecha + ")"}}</li>
+            <li class="list-group-item">
+                <ul class="list-group">
+                    <li class="list-group-item" data-ng_repeat="comp in vm.versiones.Components">
+                        <button type="button" class="btn btn-default ndf-ver-02" data-toggle="collapse" data-target="#comp-{{$index}}">{{comp.Id + " Ver " + vm.versiones.Version}}</button>
+                        <div id="comp-{{$index}}" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item  ndf-ver-03" data-ng_repeat="file in comp.Files">
+                                    <div class="row">
+                                        <div class="col-md-3">{{vm.verfname(file.Path)}}</div>
+                                        <div class="col-md-2">{{file.Size}}</div>
+                                        <div class="col-md-2">{{file.Date}}</div>
+                                        <div class="col-md-3">{{file.Hash}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- Pantalla para funciones especificas para desarrollo -->
+    <div id="Desarrollo" data-ng-show="vm.pagina==6">
+        <h4>Controles Desarrollo</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Genera Evento Historico</label>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control input-sm" data-ng-model="vm.historico" />
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-default" data-ng-click="vm.desarrollo_send_historico()">Enviar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Pantalla Modal BITE -->
+    <div id="hBite" class="modal fade" role="dialog" tabindex='-1'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" translate>BITE_MSG_00</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>Global</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{gRes.res}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label translate>BITE_MSG_02</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p id="p" data-ng-repeat="line in gRes.msg">{{line.res}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default bhis" data-dismiss="modal" translate>BITE_MSG_03</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pantall Modal Versiones-->
+    <div id="devVersion" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" translate>Versiones de Desarrollo</h4>
+                </div>
+                <div class="modal-body">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Version</label>
+            </div>
+            <div class="col-md-8">
+                <p>{{gvm.version}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label translate>MAN_PG03_L00</label>
+            </div>
+            <div class="col-md-8">
+                <p>{{vm.std.serv}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label translate>MAN_PG03_L04</label>
+            </div>
+            <div class="col-md-8">
+                <p>{{vm.std.snmp}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label translate>MAN_PG03_L05</label>
+            </div>
+            <div class="col-md-8">
+                <p>{{vm.std.record}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label translate>MAN_PG03_L03</label>
+            </div>
+            <div class="col-md-8">
+                <p data-ng_repeat="line in vm.verbose.lines">{{line.res}}</p>
+            </div>
+        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default bhis" data-dismiss="modal" translate>BITE_MSG_03</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Para la carga de software -->
+    <div id="cargasw" data-ng-show="vm.pagina==5">
+        <table class="ug5ktbPre">
+            <tr>
+                <th translate>MAN_PG04_L00</th>
+                <th translate>MAN_PG04_L01</th>
+                <th translate>MAN_PG04_L02</th>
+                <th translate>MAN_PG04_L03</th>
+            </tr>
+            <tr data-ng-repeat="ver in vm.versiones">
+                <td>{{ver.std}}</td>
+                <td>{{ver.version}}</td>
+                <td>{{ver.fecha}}</td>
+                <td>
+                    <button class="buttonLargo" data-ng-click="ver.std=='Actual' ? vm.software_load() : vm.software_restore()" data-ng-disabled="gvm.enable(32)==0">
+                        {{vm.BtnText(ver)}}
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</section>

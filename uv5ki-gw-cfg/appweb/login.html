@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--<html lang="es">-->
+<head>
+    <meta name="generator"
+        content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <meta charset="windows-1252" />
+    <meta name="description" content="Plantilla Ulises 5000" />
+    <meta name="keywords" content="HTML5, CSS3, JavaScript" />
+    <title>ULISES G 5000 I.</title>
+    <!-- Estilos  -->
+    <link rel="stylesheet" href="./styles/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="./styles/uv5ki-styles.css" />
+</head>
+<body>
+    <div id="agrupar">
+        <header id="cabecera">
+            <div id="_contSupIzq">
+                <div id="_logo" style="width:90%;">
+                    <!-- <img src="images/nucleo-df-new.jpg" /> -->
+                    <img src="./images/corporativo-a.png" 
+						style="width:100%; height: 100%; margin: 0; " />
+                </div>
+            </div>
+            <div id="_tit_ppal">
+                <h1>
+                    <span lang="es">ULISES G 5000</span>
+                    <span lang="en">ULISES G 5000</span>
+                    <span lang="fr">ULISES G 5000</span>
+                </h1> 
+            </div>
+            <div id="_contSupDrcha">
+                <div id="_hfecha"></div>
+				<div id="_hsolohora"></div>
+                <div id="_usuario"></div>
+            </div>
+        </header>
+		
+        <nav id="_menu" class="container">
+		</nav>
+
+        <section id="_ppallog">
+            <h3>
+                <span lang="es" hidden>Control de Acceso</span>
+                <span lang="en" hidden>Access Control</span>
+                <span lang="fr" hidden>Contrôle d'accès</span>
+            </h3>
+            <form class="form-horizontal" role="form" method="POST" id="login">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="email">
+                        <span lang="es" hidden>Usuario</span>
+                        <span lang="en" hidden>User</span>
+                        <span lang="fr" hidden>Utilisateur</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input lang="es" hidden type="text" class="form-control" id="user1" name="name" placeholder="Introduzca Usuario">
+                        <input lang="en" hidden type="text" class="form-control" id="Text1" name="name" placeholder="Enter user">
+                        <input lang="fr" hidden type="text" class="form-control" id="Text2" name="name" placeholder="Entrez un nom d'utilisateur">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="pwd">
+                        <span lang="es" hidden>Clave</span>
+                        <span lang="en" hidden>Password</span>
+                        <span lang="fr" hidden>Mot de Passe</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input lang="es" hidden type="password" class="form-control" id="pwd" name="password" placeholder="Introduzca password">
+                        <input lang="en" hidden type="password" class="form-control" id="Password1" name="password" placeholder="Enter password">
+                        <input lang="fr" hidden type="password" class="form-control" id="Password2" name="password" placeholder="Entrez un Mot de Passe">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">
+                            <span lang="es" hidden>Aceptar</span>
+                            <span lang="en" hidden>Login</span>
+                            <span lang="fr" hidden>Envoyez</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <footer id="_pie1">
+            <span lang="es" hidden>Nucleo Copyright @ 2016-2020. Todos los Derechos Reservados</span>
+            <span lang="en" hidden>Nucleo Copyright @ 2016-2020. All rights reserved</span>
+            <span lang="fr" hidden>Nucleo Copyright @ 2016-2020. Tous droits reserves</span>
+        </footer>
+    </div>
+        <script src="./scripts/jquery/jquery-2.1.3.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var userLang = navigator.languages[0];
+                console.log("UserLang: " + userLang.toString());
+                var language = userLang.indexOf("en") == 0 ? "en" : userLang.indexOf("fr") == 0 ? "fr" : "es";
+                console.log("language: " + language.toString());
+
+                $("[lang]").each(function () {
+                    if ($(this).attr("lang") == language) {
+                        $(this).show();
+                    }
+                    else {
+                        if ($(this).attr("name") != undefined)
+                            $(this).attr("name", "_" + language);
+                        $(this).hide();
+                    }
+                });
+				
+				$("#_menu").css('border-width', '0');
+				
+				$("#_hfecha").text((new Date()).toLocaleDateString());				
+				$("#_hsolohora").text((new Date()).toLocaleTimeString());
+				setInterval(function() {
+					$("#_hfecha").text((new Date()).toLocaleDateString());				
+					$("#_hsolohora").text((new Date()).toLocaleTimeString());
+					}, 1000);
+				
+            });
+        </script>
+</body>
+</html>
+

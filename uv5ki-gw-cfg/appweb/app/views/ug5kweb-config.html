@@ -1,0 +1,43 @@
+<h3 translate>CFG_TITULO</h3>
+<section id="_tabs">
+    <ul class="nav nav-tabs" data-persist="true" data-persist="true">
+        <li data-ng-class="{'active': vm.pagina==1}">
+            <a href="" data-ng-click="vm.Pagina(1)" translate>CFG_PG00</a>
+        </li>
+    </ul>
+</section>
+<section id="_contenido">
+
+    <div id="div2">
+        <table class="table table-striped ug5ktb" id="ug5ktbPre" data-ng-show=" vm.pagina==1">
+            <tr>
+                <th translate>MAN_PG04_L02</th>
+                <th translate>CFG_LIT05</th>
+                <th></th>
+                <th>SEL</th>
+            </tr>
+            <tr data-ng-repeat="pre in vm.preconf.preconfs">
+                <td class="_cab"><label class="control-label">{{pre.fecha}}</label></td>
+                <td>{{pre.name}}</td>
+                <td></td>
+                <td>
+                    <input type="radio" name="pcfgNumber" ng-model="vm.pcfgNumber" ng-value="pre" />
+                </td>
+            </tr>
+        </table>
+
+        <div class="botones">
+            <button class="btn btn-default" data-ng-show="vm.mostrar(4)" data-ng-click="vm.eliminar()" translate>CFG_LIT06</button>
+            <button class="btn btn-default" data-ng-show="vm.mostrar(3)" data-ng-click="vm.activar()" translate>CFG_LIT07</button>
+            <button class="btn btn-default" data-ng-click="vm.salvarcomo()" data-ng-show="vm.mostrar(2)" translate>CFG_LIT04</button>
+            <input style="display: none;" id="openDialog4Import" type="file" accept=".json" />
+            <button class="btn btn-default" data-ng-click="vm.import()" data-ng-show="vm.mostrar(1)" translate>CFG_LIT09</button>
+            <input style="display: none;" id="openDialog4Export" type="file" />
+            <button class="btn btn-default" data-ng-click="vm.export()" data-ng-show="vm.mostrar(0)" translate>CFG_LIT10</button>
+        </div>
+    </div>
+
+</section>
+<!--</body>
+</html>-->
+<!--añadido`parametro fecha en borrrar para borrar solo el señalado y no todos los que compartan nombre-->

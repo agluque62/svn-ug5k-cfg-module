@@ -1,0 +1,39 @@
+    <h3 translate>INICIO_TITULO</h3>
+    <section id="_tabs">
+      <ul class="nav nav-tabs" data-persist="true">
+        <li data-ng-class="{'active': vm.pagina==0}">
+            <a href="" data-ng-click="vm.set_pagina(0)"translate>INICIO_DGEN</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==1}">
+            <a href="" data-ng-click="vm.set_pagina(1)">CPU 0</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==2}">
+			<a href="" data-ng-click="vm.set_pagina(2)" 
+			   data-ng-show="vm.show_cpu2()">CPU 1</a>
+        </li>
+      </ul>
+    </section>
+    <section id="_contenido">
+		<div class="ug5k">
+            <table st-table="vm.v_data" class="table table-striped ug5ktb" ng-model="vm.estado">
+                <!--<tr data-ng-repeat="item in vm.v_data | filter: { Show: true }"
+                    data-ng-show="vm.show({{$index}})" class="ug5ktb_row">-->
+                <tr data-ng-repeat="item in vm.v_data" data-ng-show="item.Show()" class="ug5ktb_row">
+                    <td><label class="control-label input-sm">{{item.Name}}</label></td>
+                    <td data-ng-switch on="item.Input">
+                        <span data-ng-switch-when="0">
+                            <div class="bg-danger text-danger" ng-show="item.Val(item.Value)!=''">{{item.Val(item.Value)}}</div>
+                            <input type="text" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable==false" data-ng-blur="vm.autosave()" />
+                        </span>
+                        <select data-ng-switch-when="1" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable==false" data-ng-blur="vm.autosave()">
+                            <option data-ng-repeat="valor in item.Inputs" data-ng-selected="{{$index==item.Value}}" value="{{$index}}">{{valor}}</option>
+                        </select>
+                        <select data-ng-switch-when="5" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable==false" data-ng-blur="vm.autosave()">
+                            <option data-ng-repeat="valor in item.Inputs" data-ng-selected="{{$index==item.Value}}" value="{{valor.val}}">{{valor.show}}</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+      </div>
+    </section>
+ 

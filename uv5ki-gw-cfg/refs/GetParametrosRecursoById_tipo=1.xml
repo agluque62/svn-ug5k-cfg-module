@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tablas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="RecursosLCEN" xmlns="http://CD40.es/">
+	<ListaEnlacesInternos>
+		<string>GND</string>
+	</ListaEnlacesInternos>
+	<T1>20</T1>
+	<T1Max>100</T1Max>
+	<T2>20</T2>
+	<T2Max>1000</T2Max>
+	<T3>40</T3>
+	<T4>300</T4>
+	<T4Max>1000</T4Max>
+	<T5>60</T5>
+	<T5Max>100</T5Max>
+	<T6>5000</T6>
+	<T6Max>6000</T6Max>
+	<T8>80</T8>
+	<T8Max>150</T8Max>
+	<T9>40</T9>
+	<T9Max>60</T9Max>
+	<T10>20</T10>
+	<T10Max>130</T10Max>
+	<T11>20</T11>
+	<T11Max>130</T11Max>
+	<T12>200</T12>
+	<FrqTonoSQ>0</FrqTonoSQ>
+	<UmbralTonoSQ>-50</UmbralTonoSQ>
+	<FrqTonoPTT>0</FrqTonoPTT>
+	<UmbralTonoPTT>-10</UmbralTonoPTT>
+	<RefrescoEstados>0</RefrescoEstados>
+	<Timeout>0</Timeout>
+	<LongRafagas>0</LongRafagas>
+	<GananciaAGCTX>0</GananciaAGCTX>
+	<GananciaAGCTXdBm>0</GananciaAGCTXdBm>
+	<GananciaAGCRX>0</GananciaAGCRX>
+	<GananciaAGCRXdBm>0</GananciaAGCRXdBm>
+	<SupresionSilencio>false</SupresionSilencio>
+	<TamRTP>20</TamRTP>
+	<Codec>0</Codec>
+	<GrabacionEd137>true</GrabacionEd137>
+	<IdRecurso>LC_1</IdRecurso>
+	<IdSistema>departamento</IdSistema>
+	<IdPrefijo>1</IdPrefijo>
+	<TipoDestino>1</TipoDestino>
+	<IdDestino>LC_1</IdDestino>
+</Tablas>

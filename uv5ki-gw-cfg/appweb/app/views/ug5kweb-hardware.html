@@ -1,0 +1,102 @@
+    <h3 translate>HARDWARE_TITULO</h3>
+    <section id="_tabs">
+      <ul class="nav nav-tabs" data-persist="true">
+        <li data-ng-class="{'active': vm.slv==0}">
+          <a href="" data-ng-click="vm.set_slv(0)" >SLOT 0</a>
+        </li>
+        <li data-ng-class="{'active': vm.slv==1}">
+          <a href="" data-ng-click="vm.set_slv(1)" >SLOT 1</a>
+        </li>
+        <li data-ng-class="{'active': vm.slv==2}">
+          <a href="" data-ng-click="vm.set_slv(2)" >SLOT 2</a>
+        </li>
+        <li data-ng-class="{'active': vm.slv==3}">
+          <a href="" data-ng-click="vm.set_slv(3)" >SLOT 3</a>
+        </li>
+      </ul>
+    </section>
+    <section id="_contenido">
+      <div id="slv0" class="ug5k">
+        <table class="table table-striped ug5ktb">
+          <tr data-ng-show="false" class="ug5ktb_row">
+            <td>TIPO</td>
+            <td>
+              <select id="selectCorto" data-ng-model="vm.jslv.tp" 
+					data-ng-disabled="true" class="form-control input-sm" >
+                <option value="0">NCFG</option>
+                <option value="1">IA4</option>
+                <option value="2">IQ1</option>
+              </select>
+            </td>
+            <td></td>
+          </tr>
+          <!--<tr>
+            <td class="_cab">ESTADO</td>
+            <td>
+              <select data-ng-model="vm.jslv.std" disabled="disabled" class="form-control" >
+                <option value="0">No Presente</option>
+                <option value="1">Presente</option>
+              </select>
+            </td>
+          </tr>-->
+          <tr>
+            <td><label class="control-label input-sm">Posicion 0</label></td>
+            <td>
+              <select data-ng-model="vm.jslv.pos[0].cfg"
+				data-ng-disabled="vm.enable_pos(0)==false" 
+				data-ng-change="vm.pos_change(0)" class="form-control input-sm">
+                <option value="0" translate>HARDWARE_NOCONF</option>
+                <option value="1" translate>HARDWARE_RADIO</option>
+                <option value="2" translate>HARDWARE_TELEF</option>
+              </select>
+            </td>
+            <td>
+				<button class="form-control input-sm" data-ng-disabled="vm.jslv.pos[0].cfg==0" 
+					data-ng-click="vm.pos_click(0,vm.jslv.pos[0].cfg)" translate >HARDWARE_IR</button></td>
+          </tr>
+          <tr>
+            <td><label class="control-label input-sm">Posicion 1</label></td>
+            <td>
+              <select  data-ng-model="vm.jslv.pos[1].cfg" 
+					data-ng-disabled="vm.enable_pos(1)==false" 
+					data-ng-change="vm.pos_change(1)" class="form-control input-sm" >
+                <option value="0" translate>HARDWARE_NOCONF</option>
+                <option value="1" translate>HARDWARE_RADIO</option>
+                <option value="2" translate>HARDWARE_TELEF</option>
+              </select>
+            </td>
+            <td><button class="form-control input-sm" data-ng-disabled="vm.jslv.pos[1].cfg==0" 
+					data-ng-click="vm.pos_click(1,vm.jslv.pos[1].cfg)" translate>HARDWARE_IR</button></td>
+          </tr>
+          <tr>
+            <td><label class="control-label input-sm">Posicion 2</label></td>
+            <td>
+              <select data-ng-model="vm.jslv.pos[2].cfg" 
+					data-ng-disabled="vm.enable_pos(2)==false" 
+					data-ng-change="vm.pos_change(2)" class="form-control input-sm" >
+                <option value="0" translate>HARDWARE_NOCONF</option>
+                <option value="1" translate>HARDWARE_RADIO</option>
+                <option value="2" translate>HARDWARE_TELEF</option>
+              </select>
+            </td>
+            <td><button class="form-control input-sm" data-ng-disabled="vm.jslv.pos[2].cfg==0" 
+					data-ng-click="vm.pos_click(2,vm.jslv.pos[2].cfg)" translate>HARDWARE_IR</button></td>
+          </tr>
+          <tr>
+            <td><label class="control-label input-sm">Posicion 3</label></td>
+            <td>
+              <select data-ng-model="vm.jslv.pos[3].cfg" 
+					data-ng-disabled="vm.enable_pos(3)==false" 
+					data-ng-change="vm.pos_change(3)" class="form-control input-sm" >
+                <option value="0" translate>HARDWARE_NOCONF</option>
+                <option value="1" translate>HARDWARE_RADIO</option>
+                <option value="2" translate>HARDWARE_TELEF</option>
+              </select>
+            </td>
+            <td><button class="form-control input-sm"  data-ng-disabled="vm.jslv.pos[3].cfg==0" 
+					data-ng-click="vm.pos_click(3,vm.jslv.pos[3].cfg)" translate>HARDWARE_IR</button></td>
+          </tr>
+          <tr>
+        </table>
+      </div>
+    </section>

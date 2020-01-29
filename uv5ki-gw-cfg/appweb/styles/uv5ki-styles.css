@@ -1,0 +1,515 @@
+:root {
+	--main-color: #4A7729/*#bf2a36*/;
+	--hover-color: #93ce7b;
+	--grad-color-start: /*#FFCCCC*/#dfd8d8;
+	--grad-color-end: /*#FF6666*/#f4f4f4;
+	--tb-grad-color01: /*#FFCCCC*/white;
+	--tb-grad-color02: /*#FFF6F9*/#ecf4eb;
+	--tb-grad-color03: /*#F9D3E0*/#c5e7c6;
+	--tbh-grad-color01: /*#FFCCCC*/white;
+	--tbh-grad-color02: /*#FFF6F9*/#9ee7a0;
+	--tbh-grad-color03: /*#F9D3E0*/#4A7729;
+}
+html, body
+{
+    /*font-family: Verdana;
+    font-size: 10pt;
+    color: #C1022C;*/
+    font-family: Arial;
+    font-size: 10pt;
+    color: var(--main-color);
+}
+
+html
+{
+}
+
+body
+{
+    text-align: center;
+    margin: 2%;
+    padding: 0;
+    margin-left: 0%;
+}
+
+.noborder 
+{
+    border: none;
+}
+
+div#agrupar
+{
+    margin-left: 2%;
+    width: 96%;
+    height: 90%;
+    text-align: left;
+}
+
+/** */
+div#agrupar header#cabecera
+{
+	height: 70px;
+    padding: 0;
+}
+
+#cabecera #_contSupIzq
+{
+    border: 1px solid var(--main-color);
+    display: inline;
+    float: left;
+    height: 70px;
+    width: 18%; /* 180px; */
+    padding-left: 10px;
+    border-radius: 5px 0 0 0;
+}
+
+#cabecera #_contSupIzq #_logo
+{
+	display: block;
+    float: left;
+    width: 64px;
+    height: 64px;
+    margin: 2px;
+    margin-left: 5px;
+}
+
+#cabecera #_tit_ppal
+{
+    float: left;
+    width: 60%;
+    height: 70px;
+    text-align: center;
+    margin-left: 1%;
+    border: 1px solid var(--main-color);
+}
+ 
+#cabecera #_tit_ppal h1
+{
+	font-size: 150%;
+	margin-top: 2px;
+	margin-bottom: 5px;
+}
+
+#cabecera #_tit_ppal p
+{
+	margin: 1px;
+	color: black;
+}
+
+#cabecera div#_contSupDrcha
+{
+    width: 20%;
+    margin-left: 1%;
+    display: inline;
+    float: right;
+    height: 70px;
+    padding-top: 4px;
+    padding-right: 10px;
+    padding-left: 10px;
+    text-align: center;
+    border: 1px solid var(--main-color);
+    border-radius: 0 5px 0 0;
+}
+
+#cabecera div#_contSupDrcha div#_hfecha
+{
+	float: right;
+    display: inline;
+    margin-top: 1px;
+    width: 100%;
+    text-align: right;
+}
+
+#cabecera div#_contSupDrcha div#_hsolohora
+{
+	float: right;
+    display: inline;
+    margin-top: 1px;
+    width: 100%;
+    text-align: right;
+}
+
+#cabecera div#_contSupDrcha div#_usuario
+{
+	display: inline;
+	float: right;
+	text-align: right;
+	width: 100%;
+	margin-top: 2px;
+}
+
+#cabecera #_manual
+{
+    text-align: left;
+    margin-left: 5px;
+    font-size: 55%;
+}
+
+#_menu
+{
+    float: left;
+    width: 18%;
+    height: 70%;
+    padding: 0;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--main-color);
+    border-radius: 5px 5px 5px 5px;
+    overflow: hidden;
+}
+
+#_menu ul
+{
+    width: 80%;
+	margin-top: 5px;
+    margin-left: 5%;
+    margin-bottom: 20px;
+}
+
+#_menu li
+{
+}
+
+#_menu li a
+{
+	padding: 5px;
+}
+
+#_menu ul li#aplicar/* :nth-child(8)*/
+{
+    margin-top: 3em;
+}
+
+#_menu ul li#logout /*:nth-child(10)*/
+{
+    margin-top: 2em;
+}
+
+#_ppalerror
+{
+    float: left;
+    width: 60%;
+    margin-left: 1%;
+	margin-top: 8px;	
+	margin-bottom: 8px;	
+    padding: 5em;
+    border: 1px solid black;	
+}
+
+#_ppalerror #img
+{
+	text-align: center;
+	margin-top: 1em;
+}
+
+#_ppalerror h2, h4
+{
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#_ppallog
+{	
+    float: left;
+    width: 60%;
+    margin-left: 1%;
+	margin-top: 8px;	
+	margin-bottom: 8px;	
+    padding: 5em;
+    border: 1px solid black;
+}
+
+#_ppallog h3
+{
+	font-size: 120%;
+	background-color: var(--main-color);
+	color: white;
+	width: 100%;
+	margin: 0;
+	margin-bottom: 1.5em;
+	padding: 0.4em;
+    text-align:center;
+}
+
+#_ppallog .btn
+{
+	float: right;
+}
+
+section#_ppal
+{
+    float: right;
+    width: 81%;
+    margin-top: 10px;
+    margin-left: 1%;
+ }
+
+#_ppal #_ppal_view
+{
+	width:100%;
+}
+
+section#_ppal #_ppal_view h3
+{
+	font-size: 120%;
+	background-color: var(--main-color);
+	color: white;
+	width: 100%;
+	margin: 0;
+	margin-bottom: 5px;
+	padding: 0.4em;
+}
+
+section#_ppal #_tabs
+{
+	float: left;
+	width: 100%;
+}
+
+#_contenido
+{
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ug5k
+{
+}
+    .ug5k table tr td
+    {
+        font-size: 90%;
+        padding: 3px;
+        color: black;
+    }
+
+.ug5ktb 
+{
+    width: 90%;
+    margin-top: 1em;
+    margin-left: 5%;
+	border-bottom: 1px solid var(--main-color);
+}
+
+.ug5ktb tr td
+{
+}
+
+.ug5ktb tr td:last-child,th:last-child
+{
+	text-align: right;
+}
+
+.ug5ktb label {
+    color: var(--main-color);
+    padding-top:0.3em;
+    margin: 0px;
+}
+
+.ug5ktb input
+{
+    margin: 0px;
+}
+
+.ug5ktb .error
+{
+	padding-right: 1em;
+}
+
+.ug5ktb .lista input
+{
+    margin-bottom: 0.5em;
+}
+
+.ug5ktb .col-sm-11 input
+{
+    /*float: right;*/
+}
+
+#Estado .ug5ktb
+{
+}
+
+#Estado .ug5ktb tr td:first-child
+{
+    width: 30%;
+}
+
+#Estado .ug5ktb tr td:last-child
+{
+    width: 20%;
+}
+
+#hBite .row
+{
+    width: 80%;
+    margin-left: 10%;
+}
+
+#hBite p
+{
+    color: black;    
+}
+
+#hSoft
+{
+    margin-top: 1em;
+}
+
+#hSoft .row
+{
+    width: 90%;
+    margin-left: 5%;
+}
+
+#hSoft p
+{
+    color: black;    
+}
+
+    .ndf-ver-01
+    {
+        font-size: 120%;
+        color: var(--main-color);
+    }
+    .ndf-ver-02
+    {
+        white-space:normal;
+        word-wrap:break-word;
+        text-align: left;
+        font-size: 90%;
+        padding: 4px; 
+    }
+    .ndf-ver-03
+    {
+        padding: 4px; 
+        font-size: 90%;
+        color: blue;
+    }
+
+#_contenido .botones
+{
+    width: 90%;
+    margin-left: 5%;
+    text-align: right;
+}
+
+    #_contenido .botones .btn
+    {
+    }
+
+.ulises
+{
+}
+    .ulises #pdir,#pasg,#ats
+    {
+        margin-left: 2em;
+    }
+
+    .ulises .list-group-item
+    {
+        padding: 4px;
+        margin-left: 1em;
+    }
+
+    .ulises button.level-0
+    {
+        min-width: 15em;
+        text-align: left;
+    }
+
+    .ulises button.level-1
+    {
+        text-align: left;
+        padding: 4px;
+        font-size: 80%;
+        min-width: 8em;
+    }
+
+    .ulises div.level-1
+    {
+        font-size: 80%;
+        color: blue;
+        margin-left: 1em;
+        padding-left: 4px;
+        padding-right: 4px;
+        width:10em;
+    }
+
+    .ulises div.v-align
+    {
+        padding-top: 4px;
+    }
+
+    .ulises button.level-2
+    {
+        min-width: 7em;
+        text-align: left;
+        padding: 4px;
+        font-size: 80%;
+    }
+
+.mtto
+{
+}
+    .mtto table tr td
+    {
+        font-size: 90%;
+        padding: 4px;
+        color: black;
+    }
+
+.statusbar
+{
+    clear: both;
+    min-height: 20px;
+    margin-bottom: 1px;
+}
+
+    .statusbar .navbar-text
+    {
+        margin-top: 2px;
+        margin-bottom: 2px;
+        margin-left: 2px;
+        margin-right: 2px;
+        float: right;
+        font-weight: bold;
+        font-size: 80%;
+        width: 5%;
+        text-align: right;
+    }
+
+    .statusbar .navbar-text.pie
+    {
+        color: var(--main-color);
+        float: left;
+        width: 65%;
+        text-align:center;
+    }
+
+    .statusbar .navbar-text.modo
+    {
+        float: left;
+        width: 15%;
+        text-align:left;
+    }
+
+#_pie
+{
+    clear: both;
+}
+
+#_pie1
+{
+    clear: both;
+    text-align: center;
+    padding: 6px;
+    color: var(--main-color);
+    font-weight: bold;
+    width: 100%;
+    border: 1px solid var(--main-color);
+    border-radius: 3px 3px 3px 3px;
+    background-color: transparent;
+}

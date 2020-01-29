@@ -1,0 +1,34 @@
+Version: BETA12. Fecha: 13/03/2017
+
+    Linux version 2.4.32 NUCLEODF (gcc version 3.2.2 20030217 (Yellow Dog Linux 3.0 3.2.2-2a_1)) #48 mi may 11 11:10:16 CEST 2016
+
+    UG5K Nucleo VoIP
+                         nucleopsrla:  (26/01/2017 -  686948)
+                              rclcen:  (26/01/2017 -  421684)
+                              rcr2n5:  (26/01/2017 -  451472)
+                             rcradio:  (26/01/2017 -  470748)
+                               rctlf:  (26/01/2017 -  430660)
+                             servdsp:  (26/01/2017 -  341952)
+                          82xx_spi.o:         (??? -       0)
+                            eeprom.o:         (??? -       0)
+                       esdiscretas.o:         (??? -       0)
+                            hpidsp.o:         (??? -       0)
+                             mtifm.o:         (??? -       0)
+                               pcm.o:         (??? -       0)
+                        risctimers.o:         (??? -       0)
+                         cgw6747.bin:  (05/01/2017 -  291328)
+                     libeXosip2.so.6:         (??? -       0)
+                       libosip2.so.6:         (??? -       0)
+                 libosipparser2.so.6:         (??? -       0)
+
+    UG5K Modulo Gestor de Configuracion
+                          uvki-gwser:  (26/01/2017 - 2506084)
+
+    UG5K Modulo Agente SNMP
+                            ug5ksnmp:  (26/01/2017 -  711616)
+                       libagent++.so:         (??? -       0)
+                           libdes.so:         (??? -       0)
+                        libsnmp++.so:         (??? -       0)
+
+    UG5K Modulo Gestor de Grabaciones
+                             ug5krec:  (26/01/2017 -  265476)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ParametrosGeneralesSistema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<TiempoMaximoPTT>0</TiempoMaximoPTT>
+	<TiempoSinJack1>0</TiempoSinJack1>
+	<TiempoSinJack2>0</TiempoSinJack2>
+	<TamLiteralEnlExt>32</TamLiteralEnlExt>
+	<TamLiteralEnlDA>32</TamLiteralEnlDA>
+	<TamLiteralEnlIA>32</TamLiteralEnlIA>
+	<TamLiteralEnlAG>32</TamLiteralEnlAG>
+	<TamLiteralEmplazamiento>32</TamLiteralEmplazamiento>
+</ParametrosGeneralesSistema>

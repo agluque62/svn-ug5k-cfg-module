@@ -1,0 +1,174 @@
+{
+	"Version" : "BETA12",
+	"Fecha": "13/03/2017",
+	"Components" : [
+		{
+			"Name": "UG5K-Linux",
+			"Id": "Linux version 2.4.32 NUCLEODF (gcc version 3.2.2 20030217 (Yellow Dog Linux 3.0 3.2.2-2a_1)) #48 mi may 11 11:10:16 CEST 2016",
+			"Files" : [
+			]
+		},
+		{
+			"Name": "UG5K-Nucleo",
+			"Id": "UG5K Nucleo VoIP",
+			"Files" : [
+				{
+					"Path": "/usr/bin/nucleopsrla",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/bin/rclcen",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/bin/rcr2n5",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/bin/rcradio",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/bin/rctlf",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/bin/servdsp",
+					"Modo": 2,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/82xx_spi.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/eeprom.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/esdiscretas.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/hpidsp.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/mtifm.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/pcm.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/lib/modules/2.4.32/misc/risctimers.o",
+					"Modo": 3,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/home/cd40cgw/cgw6747.bin",
+					"Modo": 4,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libeXosip2.so.6",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libosip2.so.6",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libosipparser2.so.6",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				}
+			]
+		},
+		{
+			"Name": "UG5K-CFGL",
+			"Id": "UG5K Modulo Gestor de Configuracion",
+			"Files" : [
+				{
+					"Path": "/home/serv/uvki-gwser",
+					"Modo": 1,
+					"Date": "",
+					"Size": ""
+				}
+			]
+		},
+		{
+			"Name": "UG5K-SNMP",
+			"Id": "UG5K Modulo Agente SNMP",
+			"Files" : [
+				{
+					"Path": "/home/snmp/ug5ksnmp",
+					"Modo": 1,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libagent++.so",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libdes.so",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				},
+				{
+					"Path": "/usr/lib/libsnmp++.so",
+					"Modo": 0,
+					"Date": "",
+					"Size": ""
+				}
+			]
+		},
+		{
+			"Name": "UG5K-REC",
+			"Id": "UG5K Modulo Gestor de Grabaciones",
+			"Files" : [
+				{
+					"Path": "/home/rec/ug5krec",
+					"Modo": 1,
+					"Date": "",
+					"Size": ""
+				}
+			]
+		}		
+	]
+}

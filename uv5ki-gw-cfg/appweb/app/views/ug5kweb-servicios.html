@@ -1,0 +1,62 @@
+<h3 translate>SERV_TITULO</h3>
+<section id="_tabs">
+    <ul class="nav nav-tabs" data-persist="true">
+        <li data-ng-class="{'active': vm.index==0}">
+            <a href="" data-ng-click="vm.set_index(0)" translate>SERV_PG00</a>
+        </li>
+        <li data-ng-class="{'active': vm.index==1}">
+            <a href="" data-ng-click="vm.set_index(1)" translate>SERV_PG01</a>
+        </li>
+        <li data-ng-class="{'active': vm.index==2}">
+            <a href="" data-ng-click="vm.set_index(2)" translate>SERV_PG02</a>
+        </li>
+        <li data-ng-class="{'active': vm.index==3}">
+            <a href="" data-ng-click="vm.set_index(3)" translate>SERV_PG03</a>
+        </li>
+        <li data-ng-class="{'active': vm.index==4}">
+            <a href="" data-ng-click="vm.set_index(4)" translate>SERV_PG04</a>
+        </li>
+    </ul>
+</section>
+<section id="_contenido">
+    <div id="ntp" class="_tablarec ug5k">
+        <table class="table table-striped ug5ktb">
+            <tr data-ng-repeat="item in vm.data" data-ng-show="item.Show()">
+                <td class="_cab"><label class="control-label">{{item.Name}}</label></td>
+                <td data-ng-switch on="item.Input">
+                    <span data-ng-switch-when="0">
+                        <!--<span class="error" ng-show="item.Val(item.Value)==false" translate>SERV_ERROR</span>-->
+                        <div class="bg-danger text-danger" ng-show="item.Val(item.Value)!=''">{{item.Val(item.Value)}}</div>
+                        <input type="text" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable==false" data-ng-blur="vm.autosave()" />
+                    </span>
+                    <select data-ng-switch-when="1" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable==false" data-ng-blur="vm.autosave()">
+                        <option data-ng-repeat="valor in item.Inputs" data-ng-selected="{{$index==item.Value}}" value="{{$index}}">{{valor}}</option>
+                    </select>
+                    <ul data-ng-switch-when="2" data-ng-disabled="item.Enable==false" class="list-unstyled">
+                        <li data-ng-repeat="item1 in item.Value track by $index">
+                            <!--style="list-style-type: none">-->
+                            <!--<span class="error" ng-show="item.Val(item.Value[$index])==false" translate>SERV_ERROR</span>-->
+                            <div class="bg-danger text-danger" ng-show="item.Val(item.Value[$index])!=''">{{item.Val(item.Value[$index])}}</div>
+                            <span class="lista">
+                                <input type="text" class="form-control input-sm" data-ng-model="item.Value[$index]" data-ng-blur="vm.autosave()" data-ng-disabled="item.Enable==false" />
+                            </span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <!--
+        <table class="tbBotones">
+            <tr>
+                <td></td>
+                <td>
+                    <button class="buttonLargo" data-ng-click="vm.restore()">Descartar Cambios</button>
+                    <button class="button" ng-click="vm.post_data()" ng-show="gvm.enable(32)==1">Enviar</button>
+                </td>
+            </tr>
+        </table>
+        -->
+    </div>
+</section>
+<!--</body>
+</html>-->

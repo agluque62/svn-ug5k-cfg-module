@@ -1,0 +1,80 @@
+<h3 translate>TELEF_TITULO</h3>
+<section id="_tabs">
+    <ul class="nav nav-tabs" data-persist="true">
+        <li data-ng-class="{'active': vm.pagina==0}">
+            <a href="" data-ng-click="vm.set_pagina(0)" translate>TELEF_PG00</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==1}">
+            <a href="" data-ng-click="vm.set_pagina(1)" translate>TELEF_PG01</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==2}">
+            <a href="" data-ng-click="vm.set_pagina(2)" translate>TELEF_PG02</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==3}" >
+            <a href="" data-ng-click="vm.set_pagina(3)" data-ng-show="vm.show_plbn()">{{vm.bnorats()}}</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==4}" >
+            <a href="" data-ng-click="vm.set_pagina(4)" data-ng-show="vm.show_penl()" translate>Enlaces Internos</a>
+        </li>
+    </ul>
+</section>
+<section id="_contenido">
+    <div>
+        <div class="_listaifaces">
+            <p class="_textLista">
+                <b translate>TELEF_REC</b>
+                <select class="form-control" data-ng-model="vm.selected" data-ng-change="vm.update_telef()">
+                    <option data-ng-repeat="telef in vm.ltelef" data-ng-selected="{{vm.selected==$index}}" value="{{$index}}">{{telef.hw + ' ' + telef.id}}</option>
+                </select>
+            </p>
+        </div>
+        <div class="_tablarec ug5k">
+            <table class="table table-striped ug5ktb">
+                <tr data-ng-repeat="item in vm.vdata" data-ng-show="item.Show({{$index}})">
+                    <td class="_cab" style="width:40%;"><label class="control-label">{{item.Name}}</label></td>
+                    <td data-ng-switch on="item.Input">
+                        <span data-ng-switch-when="0">
+                            <div class="bg-danger text-danger" ng-show="item.Val(item.Value)!=''">{{item.Val(item.Value)}}</div>
+                            <input type="text" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable()==false" data-ng-blur="vm.autosave()" />
+                        </span>
+                        <select data-ng-switch-when="1" class="form-control input-sm" data-ng-model="item.Value" data-ng-disabled="item.Enable()==false" data-ng-blur="vm.autosave()">
+                            <option data-ng-repeat="valor in item.Inputs" data-ng-selected="{{$index==item.Value}}" value="{{$index}}">{{valor}}</option>
+                        </select>
+                        <ol data-ng-switch-when="2" data-ng-disabled="item.Enable()==false">
+                            <li data-ng-repeat="item1 in item.Value track by $index" style="list-style-type: none">
+                                <div class="bg-danger text-danger" ng-show="item.Val(item.Value[$index])!=''">{{item.Val(item.Value[$index])}}</div>
+                                <input type="text" class="form-control input-sm" data-ng-model="item.Value[$index]" data-ng-blur="vm.autosave()" data-ng-disabled="item.Enable()==false"></input>
+                            </li>
+                        </ol>
+                        <span data-ng-switch-when="3">
+                            <div class="bg-danger text-danger" ng-show="item.Val(item.Value)!=''">{{item.Val(item.Value)}}</div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <label class="control-label">Sip:</label>
+                                </div>
+                                <div class="col-sm-10" style="float:right;">
+                                    <input type="text" class="form-control input-sm" style="font-size:90%"
+                                           data-ng-model="item.Value" data-ng-disabled="item.Enable()==false" data-ng-blur="vm.autosave()" />
+                                </div>
+                            </div>
+                        </span>
+                        <ol data-ng-switch-when="4" data-ng-disabled="item.Enable()==false">
+                            <li data-ng-repeat="item1 in item.Value track by $index" style="list-style-type: none">
+                                <div class="bg-danger text-danger" ng-show="item.Val(item.Value[$index])!=''">{{item.Val(item.Value[$index])}}</div>
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <label class="control-label">Sip:</label>
+                                    </div>
+                                    <div class="col-sm-10" style="float:right;">
+                                        <input type="text" class="form-control input-sm" data-ng-model="item.Value[$index]" data-ng-blur="vm.autosave()"></input>
+                                    </div>
+                                </div>
+                            </li>
+                        </ol>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+

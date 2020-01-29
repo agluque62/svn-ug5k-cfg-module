@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tablas xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="RecursosRadio" xmlns="http://CD40.es/">
+	<EM>true</EM>
+	<SQ>h</SQ>
+	<PTT>h</PTT>
+	<FrqTonoE>0</FrqTonoE>
+	<UmbralTonoE>-30</UmbralTonoE>
+	<FrqTonoM>0</FrqTonoM>
+	<UmbralTonoM>-30</UmbralTonoM>
+	<FrqTonoSQ>0</FrqTonoSQ>
+	<UmbralTonoSQ>-33</UmbralTonoSQ>
+	<FrqTonoPTT>0</FrqTonoPTT>
+	<UmbralTonoPTT>-18</UmbralTonoPTT>
+	<BSS>false</BSS>
+	<NTZ>false</NTZ>
+	<TipoNTZ>0</TipoNTZ>
+	<Cifrado>false</Cifrado>
+	<SupervPortadoraTx>false</SupervPortadoraTx>
+	<SupervModuladoraTx>false</SupervModuladoraTx>
+	<ModoConfPTT>0</ModoConfPTT>
+	<RepSQyBSS>1</RepSQyBSS>
+	<DesactivacionSQ>1</DesactivacionSQ>
+	<TimeoutPTT>200</TimeoutPTT>
+	<MetodoBSS>0</MetodoBSS>
+	<UmbralVAD>-33</UmbralVAD>
+	<TiempoPTT>120</TiempoPTT>
+	<NumFlujosAudio>1</NumFlujosAudio>
+	<GananciaAGCTX>0</GananciaAGCTX>
+	<GananciaAGCTXdBm>0</GananciaAGCTXdBm>
+	<GananciaAGCRX>0</GananciaAGCRX>
+	<GananciaAGCRXdBm>0</GananciaAGCRXdBm>
+	<SupresionSilencio>true</SupresionSilencio>
+	<TamRTP>20</TamRTP>
+	<Codec>0</Codec>
+	<GrabacionEd137>true</GrabacionEd137>
+	<KeepAlivePeriod>200</KeepAlivePeriod>
+	<KeepAliveMultiplier>10</KeepAliveMultiplier>
+	<IdRecurso>RD01</IdRecurso>
+	<IdSistema>departamento</IdSistema>
+	<TipoDestino>0</TipoDestino>
+	<IdDestino>118.675</IdDestino>
+	<IdEmplazamiento>TWR</IdEmplazamiento>
+	<Tipo>2</Tipo>
+</Tablas>

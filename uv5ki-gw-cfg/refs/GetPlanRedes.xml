@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfListaRedes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<ListaRedes>
+		<IdRed>ATS</IdRed>
+		<Prefijo>3</Prefijo>
+		<ListaRecursos />
+	</ListaRedes>
+	<ListaRedes>
+		<IdRed>RTB</IdRed>
+		<Prefijo>4</Prefijo>
+		<ListaRecursos>
+			<PlanRecursos>
+				<IdRecurso>PABX-01</IdRecurso>
+				<Tipo>TI_Radio</Tipo>
+			</PlanRecursos>
+		</ListaRecursos>
+	</ListaRedes>
+</ArrayOfListaRedes>

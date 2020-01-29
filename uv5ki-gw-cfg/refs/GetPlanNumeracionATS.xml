@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfNumeracionATS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<NumeracionATS>
+		<CentralPropia>false</CentralPropia>
+		<Throwswitching>true</Throwswitching>
+		<RangosOperador>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado />
+				<Inicial>311101</Inicial>
+				<Final>311199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>BCN</Central>
+				<Tipo>O</Tipo>
+			</RangosSCV>
+		</RangosOperador>
+		<RangosPrivilegiados />
+		<ListaRutas>
+			<PlanRutas>
+				<TipoRuta>D</TipoRuta>
+				<ListaTroncales>
+					<string>T_BCN</string>
+				</ListaTroncales>
+			</PlanRutas>
+		</ListaRutas>
+		<NumTest />
+	</NumeracionATS>
+	<NumeracionATS>
+		<CentralPropia>false</CentralPropia>
+		<Throwswitching>true</Throwswitching>
+		<RangosOperador>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado />
+				<Inicial>310101</Inicial>
+				<Final>310199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>MADRID</Central>
+				<Tipo>O</Tipo>
+			</RangosSCV>
+		</RangosOperador>
+		<RangosPrivilegiados />
+		<ListaRutas>
+			<PlanRutas>
+				<TipoRuta>D</TipoRuta>
+				<ListaTroncales>
+					<string>T_MAD</string>
+				</ListaTroncales>
+			</PlanRutas>
+		</ListaRutas>
+		<NumTest />
+	</NumeracionATS>
+	<NumeracionATS>
+		<CentralPropia>false</CentralPropia>
+		<Throwswitching>false</Throwswitching>
+		<RangosOperador />
+		<RangosPrivilegiados>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado />
+				<Inicial>315101</Inicial>
+				<Final>315199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>STGO</Central>
+				<Tipo>P</Tipo>
+			</RangosSCV>
+		</RangosPrivilegiados>
+		<ListaRutas>
+			<PlanRutas>
+				<TipoRuta>D</TipoRuta>
+				<ListaTroncales>
+					<string>T_STGO</string>
+				</ListaTroncales>
+			</PlanRutas>
+		</ListaRutas>
+		<NumTest />
+	</NumeracionATS>
+	<NumeracionATS>
+		<CentralPropia>false</CentralPropia>
+		<Throwswitching>false</Throwswitching>
+		<RangosOperador>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado />
+				<Inicial>313101</Inicial>
+				<Final>313199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>SVL</Central>
+				<Tipo>O</Tipo>
+			</RangosSCV>
+		</RangosOperador>
+		<RangosPrivilegiados />
+		<ListaRutas>
+			<PlanRutas>
+				<TipoRuta>D</TipoRuta>
+				<ListaTroncales />
+			</PlanRutas>
+		</ListaRutas>
+		<NumTest />
+	</NumeracionATS>
+	<NumeracionATS>
+		<CentralPropia>true</CentralPropia>
+		<Throwswitching>true</Throwswitching>
+		<RangosOperador>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado />
+				<Inicial>316101</Inicial>
+				<Final>316199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>TFS</Central>
+				<Tipo>O</Tipo>
+			</RangosSCV>
+		</RangosOperador>
+		<RangosPrivilegiados />
+		<ListaRutas />
+		<NumTest>316199</NumTest>
+	</NumeracionATS>
+	<NumeracionATS>
+		<CentralPropia>false</CentralPropia>
+		<Throwswitching>false</Throwswitching>
+		<RangosOperador>
+			<RangosSCV xsi:type="Rangos">
+				<IdPrefijo>3</IdPrefijo>
+				<IdAbonado>312199</IdAbonado>
+				<Inicial>312101</Inicial>
+				<Final>312199</Final>
+				<IdSistema>departamento</IdSistema>
+				<Central>VLC</Central>
+				<Tipo>O</Tipo>
+			</RangosSCV>
+		</RangosOperador>
+		<RangosPrivilegiados />
+		<ListaRutas>
+			<PlanRutas>
+				<TipoRuta>D</TipoRuta>
+				<ListaTroncales>
+					<string>T_VLC</string>
+				</ListaTroncales>
+			</PlanRutas>
+		</ListaRutas>
+		<NumTest />
+	</NumeracionATS>
+</ArrayOfNumeracionATS>

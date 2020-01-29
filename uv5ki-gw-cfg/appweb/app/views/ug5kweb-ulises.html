@@ -1,0 +1,294 @@
+<h3 translate>Tablas de ULISES</h3>
+<section id="_tabs">
+    <ul class="nav nav-tabs" data-persist="true" data-persist="true">
+        <li data-ng-class="{'active': vm.pagina==0}">
+            <a href="" data-ng-click="vm.Pagina(0)" translate>Direccionamiento</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==1}">
+            <a href="" data-ng-click="vm.Pagina(1)" translate>Asignaciones</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==2}">
+            <a href="" data-ng-click="vm.Pagina(2)" translate>ATS</a>
+        </li>
+    </ul>
+</section>
+<section id="_contenido" class="ulises">
+    <!-- Pagina 0 -->
+    <div id="pdir" ng-show="vm.pagina==0">
+        <div class="row">
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#ipt">{{"Plan IP Puestos"}}</button>
+                        <div id="ipt" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pdir_ip | filter:{ tipohost: 0 }">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idhost}}</div>
+                                        <div class="col-md-3 level-1">{{item.ipred1}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#ipp">{{"Plan IP Pasarelas"}}</button>
+                        <div id="ipp" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pdir_ip | filter:{ tipohost: 1 }">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idhost}}</div>
+                                        <div class="col-md-3 level-1">{{item.ipred1}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#ipr">{{"Plan IP Radios"}}</button>
+                        <div id="ipr" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pdir_ip | filter:{ tipohost: 2 }">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idhost}}</div>
+                                        <div class="col-md-3 level-1">{{item.ipred1}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#ipa">{{"Plan IP Telefonos"}}</button>
+                        <div id="ipa" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pdir_ip | filter:{ tipohost: 3 }">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idhost}}</div>
+                                        <div class="col-md-3 level-1">{{item.ipred1}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Pagina 1 -->
+    <div id="pasg" ng-show="vm.pagina==1">
+        <div class="row">
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#usera">{{"Usuarios > Posiciones"}}</button>
+                        <div id="usera" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pasg_usu">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idusuario}}</div>
+                                        <div class="col-md-3 level-1">{{"> " + item.idhost}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#resa">{{"Recursos > Equipos"}}</button>
+                        <div id="resa" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pasg_rec">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idrecurso}}</div>
+                                        <div class="col-md-3 level-1">{{"> " + item.idhost}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Pagina 2 -->
+    <div id="ats" ng-show="vm.pagina==2">
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#redes">{{"Redes"}}</button>
+                        <div id="redes" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.ats_red">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idred}}</div>
+                                        <div class="col-md-3 level-1">{{item.prefijo}}</div>
+                                        <div class="col-md-3" ng-show="vm.show_rec_red(item)">
+                                            <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#red-{{$index}}">Recursos</button>
+                                            <div id="red-{{$index}}" class="collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" data-ng_repeat="rec in item.listarecursos track by $index">
+                                                        <div class="row">
+                                                            <div class="col-md-3 level-1">{{rec.idrec + " (" + vm.id_tipo_rec(rec.tipo) + ")"}}</div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#trc">{{"Troncales"}}</button>
+                        <div id="trc" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.ats_trc">
+                                    <div class="row">
+                                        <div class="col-md-3 level-1">{{item.idtroncal}}</div>
+                                        <div class="col-md-3 level-1">{{item.item.no_test}}</div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#trc-{{$index}}" ng-disabled="vm.show_rec_troncal(item)==false">Recursos</button>
+                                            <div id="trc-{{$index}}" class="collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" data-ng_repeat="rec in item.listarecursos track by $index">
+                                                        <div class="row">
+                                                            <div class="col-md-3 level-1">{{rec.idrec + " (" + vm.id_tipo_rec(rec.tipo) + ")"}}</div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#cent">{{"Centrales"}}</button>
+                        <div id="cent" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.ats_num" ng-init="cenIndex = $index">
+                                    <div class="row">
+                                        <div class="col-md-4 level-1 v-align">{{vm.id_central(item)}}</div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#rope-{{cenIndex}}" ng-disabled="vm.show_rangos_central(item)==false">Rangos</button>
+                                            <div id="rope-{{cenIndex}}" class="collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" data-ng_repeat="ope in item.rangosoperador track by $index">
+                                                        <div class="row">
+                                                            <div class="col-md-3 level-1">
+                                                                {{ope.inicial + "-" + ope.final}}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#rpri-{{cenIndex}}" ng-disabled="vm.show_rangosp_central(item)==false">Privilegidos</button>
+                                            <div id="rpri-{{cenIndex}}" class="collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" data-ng_repeat="ope in item.rangosprivilegiados track by $index">
+                                                        <div class="row">
+                                                            <div class="col-md-3 level-1">
+                                                                {{ope.inicial + "-" + ope.final}}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" ng_show="vm.show_rutas_central(item)">
+                                            <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#rut-{{cenIndex}}">Rutas</button>
+                                            <div id="rut-{{cenIndex}}" class="collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" data-ng_repeat="rut in item.listarutas track by $index" ng-init="rutIndex = $index">
+                                                        <button type="button" class="btn btn-default level-2" data-toggle="collapse" data-target="#rtrc-{{cenIndex}}-{{rutIndex}}">{{vm.id_tipo_ruta(rut)}}</button>
+                                                        <div id="rtrc-{{cenIndex}}-{{rutIndex}}" class="collapse">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item" data-ng_repeat="trc in rut.listatroncales track by $index">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3 level-1">{{trc}}</div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default level-0" data-toggle="collapse" data-target="#sip">{{"Usuarios"}}</button>
+                        <div id="sip" class="collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item" data-ng_repeat="item in vm.pdir_sip">
+                                    <button type="button" class="btn btn-default level-1" data-toggle="collapse" data-target="#sip-{{$index}}">{{item.idusuario}}</button>
+                                    <div id="sip-{{$index}}" class="collapse">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" data-ng_repeat="abn in item.array_abonados track by $index">
+                                                <div class="row">
+                                                    <div class="col-md-3 level-1">
+                                                        {{vm.id_red_byprefix(abn.prefijo)}}
+                                                    </div>
+                                                    <div class="col-md-3 level-1">
+                                                        {{abn.abonado}}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>

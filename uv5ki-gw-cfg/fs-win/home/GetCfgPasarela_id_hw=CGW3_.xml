@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CfgPasarela xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<Nombre>CGW3</Nombre>
+	<NumRecursos>1</NumRecursos>
+	<ModoSincronizacion>2</ModoSincronizacion>
+	<MasterSincronizacion>192.168.0.129</MasterSincronizacion>
+	<PuertoLocalSNMP>161</PuertoLocalSNMP>
+	<PuertoRemotoSNMP>161</PuertoRemotoSNMP>
+	<PuertoRemotoTrapsSNMP>162</PuertoRemotoTrapsSNMP>
+	<PuertoLocalSIP>5060</PuertoLocalSIP>
+	<PeriodoSupervisionSIP>5</PeriodoSupervisionSIP>
+	<ListaRecursos>
+		<RecursosSCV xsi:type="Recursos">
+			<InsertedId>0</InsertedId>
+			<IdRecurso>RD-SIM</IdRecurso>
+			<Tipo>2</Tipo>
+			<Interface>TI_Radio</Interface>
+			<SlotPasarela>0</SlotPasarela>
+			<NumDispositivoSlot>0</NumDispositivoSlot>
+			<ServidorSIP />
+			<Diffserv>false</Diffserv>
+			<IdSistema>departamento</IdSistema>
+			<TipoRecurso>0</TipoRecurso>
+			<IdTifX>CGW3</IdTifX>
+			<PuertoSip>5060</PuertoSip>
+		</RecursosSCV>
+	</ListaRecursos>
+	<Grabador1>192.168.0.71</Grabador1>
+	<Grabador2>192.168.0.71</Grabador2>
+</CfgPasarela>

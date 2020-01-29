@@ -1,0 +1,532 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{2a04ef1c-422b-481f-997a-d380996de52a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp">
+      <UniqueIdentifier>{fb30d2d5-331c-4e8f-a461-40059b51cd08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\app">
+      <UniqueIdentifier>{7de292d6-b8f5-41f0-8f98-f9485e1d7e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\app\controllers">
+      <UniqueIdentifier>{17c9d0da-597a-4560-8633-567e6dcb6b66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\app\services">
+      <UniqueIdentifier>{506fc116-17c8-4c66-87d6-3dd4f1a1aaf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\app\views">
+      <UniqueIdentifier>{2d02d88f-4643-4d84-8b74-34aad97d21db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\scripts">
+      <UniqueIdentifier>{0dc30324-2ec4-42f7-b80d-b47c27f7d601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\styles">
+      <UniqueIdentifier>{2a7b20e9-c98e-450d-a03e-ab4552b52046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\languages">
+      <UniqueIdentifier>{63bfee38-c84f-4d38-af52-cf508c95aaaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webapp\simulate">
+      <UniqueIdentifier>{befde517-64ed-4345-9932-505bd4463646}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+    <Text Include="VERSION.TXT" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\base\code-base.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\exception.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\plog.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pthreads\include\pthread.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pthreads\include\sched.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pthreads\include\semaphore.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\thread.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\socket.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\websrv\mongoose.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\websrv\web-app-server.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\websrv\uv5kigwcfg-web-app.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\websrv\uv5kigwcfg-web-app-data.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\sqlite3.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\sistema.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\stlini.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\sqlite3++.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\base64.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\tools.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\man-proc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\his-proc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\local-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\users-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-gen-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-ser-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-har-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-res-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-res-radio-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-res-telef-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-preconf.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\error\en.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\error\error.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\biginteger.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\diyfp.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\dtoa.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\ieee754.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\itoa.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\meta.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\pow10.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\stack.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\strfunc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\strtod.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\internal\swap.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\msinttypes\inttypes.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\msinttypes\stdint.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\allocators.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\document.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\encodedstream.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\encodings.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\filereadstream.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\filestream.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\filewritestream.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\memorybuffer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\memorystream.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\pointer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\prettywriter.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\rapidjson.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\reader.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\stringbuffer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\writer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\working-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-conversor.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cfg-proc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\Parse.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\soap-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\ftp-client.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file-supervisor.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tools\http-client.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\comm-uv5-config.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\md5.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa001.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa002.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa003.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa004.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa005.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa006.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa007.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa008.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config\cfgpasa009.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidxml-1.13\rapidxml.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_iterators.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_print.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_utils.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\versiones-old.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="uv5ki-gw-cfg.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\code-base.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\exception.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\thread.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\socket.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\websrv\mongoose.c">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\websrv\web-app-server.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\websrv\uv5kigwcfg-web-app.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\websrv\uv5kigwcfg-web-app-data.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\sqlite3.c">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\sistema.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\stlini.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\sqlite3++.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\base64.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\tools.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\man-proc.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\his-proc.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\local-config.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\comm-preconf.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\working-config.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\comm-conversor.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cfg-proc.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\Parse.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\comm-config.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config\soap-config.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\ftp-client.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\file-supervisor.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\http-client.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\md5.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wplog.conf" />
+    <None Include="ug5k.db" />
+    <None Include="u5kweb-config.ini" />
+    <None Include="plog.conf" />
+    <None Include="Makefile" />
+    <None Include="wlib\pthreadVC2.dll">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="appweb\styles\uv5ki-styles.css">
+      <Filter>webapp\styles</Filter>
+    </None>
+    <None Include="appweb\languages\en_US.json">
+      <Filter>webapp\languages</Filter>
+    </None>
+    <None Include="appweb\languages\es_ES.json">
+      <Filter>webapp\languages</Filter>
+    </None>
+    <None Include="appweb\languages\fr_FR.json">
+      <Filter>webapp\languages</Filter>
+    </None>
+    <None Include="appweb\simulate\config.json">
+      <Filter>webapp\simulate</Filter>
+    </None>
+    <None Include="appweb\simulate\tses.json">
+      <Filter>webapp\simulate</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kConfCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kGlobalCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kHardCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kInicioCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kMantCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kRecrCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kRectCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kAuthService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kCfgService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kCommService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kMantService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kTranslateService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\services\ug5kValidationService.js">
+      <Filter>webapp\app\services</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kServCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="appweb\app\routes\ug5kRoutes.js">
+      <Filter>webapp\app</Filter>
+    </None>
+    <None Include="appweb\app\modules\ug5kweb.js">
+      <Filter>webapp\app</Filter>
+    </None>
+    <None Include="appweb\error1.html">
+      <Filter>webapp</Filter>
+    </None>
+    <None Include="appweb\error2.html">
+      <Filter>webapp</Filter>
+    </None>
+    <None Include="appweb\login.html">
+      <Filter>webapp</Filter>
+    </None>
+    <None Include="appweb\session-expired.html">
+      <Filter>webapp</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-config.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-hardware.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-inicio.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-mant.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-recr.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-rect.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-servicios.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\templates\ug5kweb-swload-templ.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\ug5kweb-index.html">
+      <Filter>webapp\app</Filter>
+    </None>
+    <None Include="appweb\app\views\ug5kweb-ulises.html">
+      <Filter>webapp\app\views</Filter>
+    </None>
+    <None Include="appweb\app\controllers\ug5kUlisesCtrl.js">
+      <Filter>webapp\app\controllers</Filter>
+    </None>
+    <None Include="include\rapidxml-1.13\manual.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="appweb\images\noaccess.jpg">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="appweb\images\nucleo-df-new.jpg">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="wlib\pthreadVC2.lib">
+      <Filter>Lib</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAsignacionUsuariosTV xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://CD40.es/">
+	<AsignacionUsuariosTV>
+		<IdUsuario>GND</IdUsuario>
+		<IdHost>PICT01</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>LCL</IdUsuario>
+		<IdHost>PICT02</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PICT04</IdUsuario>
+		<IdHost>PICT04</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PICT05</IdUsuario>
+		<IdHost>PICT05</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PICT06</IdUsuario>
+		<IdHost>PICT06</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PICT07</IdUsuario>
+		<IdHost>PICT07</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PICT08</IdUsuario>
+		<IdHost>PICT08</IdHost>
+	</AsignacionUsuariosTV>
+	<AsignacionUsuariosTV>
+		<IdUsuario>PSSM</IdUsuario>
+		<IdHost>PICT03</IdHost>
+	</AsignacionUsuariosTV>
+</ArrayOfAsignacionUsuariosTV>
