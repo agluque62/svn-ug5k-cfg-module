@@ -62,21 +62,14 @@
         <header id="cabecera">
             <div id="_contSupIzq">
                 <div id="_logo" style="width:90%;">
-                    <!-- <img src="images/nucleo-df-new.jpg" /> -->
                     <img src="./images/corporativo-a.png"
                          style="width:100%; height: 100%; margin: 0; " />
                 </div>
             </div>
             <div id="_tit_ppal">
-                <!--                <h2>Ulises G 5000</h2>-->
                 <h1 translate><mark>INDEX_TITULO</mark></h1>
                 <p>{{gvm.gw_id()}}</p>
                 <p>{{gvm.cfg_act}}</p>
-                <!--                    <nav class="statusbar navbar navbar-default">
-                                        <p class="navbar-text">{{"CFG: Aislada"}}</p>
-                                        <p class="navbar-text">{{"CFG Date: 01/02/2017 14:48:52 UTC"}}</p>
-                                    </nav>-->
-
             </div>
             <div id="_contSupDrcha">
                 <div id="_hfecha">{{gvm.date}}</div>
@@ -84,8 +77,6 @@
                 <div id="_usuario">
                     <i translate>INDEX_USER</i><b>{{gvm.user_str()}}</b>
                 </div>
-                <!--                <div id="_hfecha">{{gvm.date}}</div>
-                                <div id="_hsolohora">{{gvm.hora}}</div>-->
             </div>
         </header>
         <!--<section id="_separador"></section>-->
@@ -142,21 +133,21 @@
         </section>
         <footer id="_pie">
             <div>
-                <nav class="statusbar navbar navbar-default">
-                    <p class="navbar-text">{{gvm.gw_ic()}}</p>
-                    <p class="navbar-text">{{gvm.gw_ntp()}}</p>
-                    <p class="navbar-text">{{gvm.gw_lt()}}</p>
-                    <p class="navbar-text modo">{{gvm.gw_modo()}}</p>
-                    <p class="navbar-text pie" translate>INDEX_PIE</p>
-                </nav>
+                <!--<nav class="statusbar navbar navbar-default">
+                    <p class="navbar-text" style="width: 5%;">{{gvm.gw_ic()}}</p>
+                    <p class="navbar-text" style="width: 5%;">{{gvm.gw_ntp()}}</p>
+                    <p class="navbar-text" style="width: 15%;">{{gvm.gw_lt()}}</p>
+                    <p class="navbar-text modo" style="width: 15%;">{{gvm.gw_modo()}}</p>
+                    <p class="navbar-text pie" style="width: 60%;" translate>INDEX_PIE</p>
+                </nav>-->
+                <div class="row nsb">
+                    <div class="col-md-2 text-left text-nowrap">{{gvm.gw_modo()}}</div>
+                    <div class="col-md-6 text-center" translate="">INDEX_PIE</div>
+                    <div class="col-md-2 text-right text-nowrap">{{gvm.gw_lt()}}</div>
+                    <div class="col-md-1 text-right">{{gvm.gw_ntp()}}</div>
+                    <div class="col-md-1 text-right">{{gvm.gw_ic()}}</div>
+                </div>
             </div>
-                    <!--<div class="row nbs">
-                        <div class="col-md-2 text">{{gvm.gw_modo()}}</div>
-                        <div class="col-md-7" translate="">INDEX_PIE</div>
-                        <div class="col-md-1">{{gvm.gw_lt()}}</div>
-                        <div class="col-md-1">{{gvm.gw_ntp()}}</div>
-                        <div class="col-md-1">{{gvm.gw_ic()}}</div>
-                    </div>-->
         </footer>
     </div>
     </body>

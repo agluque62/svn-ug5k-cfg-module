@@ -485,14 +485,12 @@ section#_ppal #_tabs
     {
         color: var(--main-color);
         float: left;
-        width: 65%;
         text-align:center;
     }
 
     .statusbar .navbar-text.modo
     {
         float: left;
-        width: 15%;
         text-align:left;
     }
 
@@ -512,4 +510,13 @@ section#_ppal #_tabs
     border: 1px solid var(--main-color);
     border-radius: 3px 3px 3px 3px;
     background-color: transparent;
+}
+
+.nsb {
+    font-size: 90%;
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid LightGrey;
+    border-radius: 3px 3px 3px 3px;
+    background-color: WhiteSmoke;
 }

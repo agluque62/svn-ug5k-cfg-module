@@ -2,10 +2,10 @@
 	"std": "-3",
 	"idc": "PRUEBA",
 	"tim": "11/11/1962, 10:00",
-	"ver": "SIMUL-01",
+	"ver": "V: 2.5.9.7a ULISES",
 	"modo": "rd",
 	"modo_redan": "1",
 	"ntpsync": 1,
-	"localdate": "----",
+	"localdate": "06/01/1970 22:35:49 UTC",
 	"timr": "++++"
 }
