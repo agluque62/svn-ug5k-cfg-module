@@ -41,3 +41,8 @@ nbproject
 /uv5ki-gw-cfg/*.md5
 /uv5ki-gw-cfg/uv5ki-gw-cfg.exe
 /uv5ki-gw-cfg/*.soap
+/.vs/uv5ki
+/uv5ki-gw-cfg/fs-win/home/GetCfgPasarela_id_hw=CGW3_.xml
+/uv5ki-gw-cfg/fs-win/home/GetParametrosRecursoById_idRecurso=RD-SIM_tipo=0.xml
+/packages
+/uv5k-tools-vs2010.sln
