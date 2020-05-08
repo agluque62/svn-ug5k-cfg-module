@@ -59,6 +59,7 @@ using namespace std;
 #define strRuntimeItemTcpConnTimeout			((const char *)"TCP_CONN_TIMEOUT")
 #define strRuntimeItemColateralIpInfoPath		((const char *)"COLATERAL_IP_INFO_PATH")
 #define strRuntimeItemSoapServicePath			((const char *)"SOAP-SERVICE-PATH")
+#define strRuntimeItemForceRdAudioNormal		((const char *)"FORCE_RDAUDIO_NORMAL")
 
 
 #define strFilesSupervidor				((const char *)"FILESUPERVISOR")

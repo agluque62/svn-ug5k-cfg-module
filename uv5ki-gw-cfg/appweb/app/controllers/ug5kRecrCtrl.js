@@ -190,7 +190,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             case 5:         // Jitter Buffer
                 return false;
             case 6:         // Precision Audio.
-                return true;
+                return !force_rdaudio_normal;           // true; 20200508. Opcion de 16 canales radio sin audio stricto
         }
         return false;
     };

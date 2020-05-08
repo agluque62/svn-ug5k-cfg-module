@@ -4,6 +4,8 @@
 
 #define mcfg	((ug5k_mem_config *)vp_mcfg)
 
+int force_rdaudio_normal = 0;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** */
 int CfgConversor::TelefoniaJ2M(int iItf)
@@ -149,6 +151,9 @@ void CommConversor::SetTipoConmutacionRadio(char *actual, int nuevo)
 /** */
 vector<CommConvertEvent> *CommConversor::convierte(CommConfig &cfgIn, void *p_mcfg, bool actualiza_ini)
 {
+	/** 20200508 Inicializar opciones */
+	force_rdaudio_normal = LocalConfig::p_cfg->getint(strRuntime, strRuntimeItemForceRdAudioNormal, "0");
+
 	/** Inicializar Variables Internas. */
 	p_cfg_in = &cfgIn;
 	vp_mcfg = p_mcfg;
@@ -537,6 +542,11 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 
 	/** 20160830. Precision de Audio.. */
 	SetInt((int *)&mrad->iPrecisionAudio, p_rec->radio.iPrecisionAudio, INCI_MPSW, "PRECISION DE AUDIO");
+	/** 20200508. Precision de Audio No Estricta para Version de 16 Canales Radio / Remoto */
+	if (force_rdaudio_normal == 1) {
+		mrad->iPrecisionAudio = PRECISION_NORMAL;
+	}
+
 	SetInt((int *)&mgen->iEnableGI, p_rec->radio.iEnableGI, INCI_MPSW, "IP-REC ENABLE");
 	/** PTT y Sesiones Prioritarias */
 	SetInt((int *)&mrad->iPttPrio, p_rec->radio.iPttPrio, INCI_MPSW, "PTT-PRIO", CommConversor::RadioPttPrioJ2M);
