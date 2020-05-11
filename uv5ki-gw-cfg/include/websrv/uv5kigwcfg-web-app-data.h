@@ -337,6 +337,7 @@ private:
 	int ntpsync;
 	string localdate;
 	string timr;
+	int modo_16r;
 #if LOCAL_TEST_1
 	webData_line msg;
 	vector<string> val_prueba1;

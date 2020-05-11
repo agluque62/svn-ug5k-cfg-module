@@ -3,7 +3,7 @@ var Simulate = location.port == 8888;
 var Desarrollando = false;
 var session_supervision = !Simulate;
 var altfy = true;
-var force_rdaudio_normal = true;
+var force_rdaudio_normal = false;
 
 var ug5kApp = angular.module('Ug5kweb', ['ngRoute', 'ui.bootstrap', 'smart-table', 'pascalprecht.translate']);
 

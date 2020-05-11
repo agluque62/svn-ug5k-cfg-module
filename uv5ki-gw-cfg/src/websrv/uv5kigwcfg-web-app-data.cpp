@@ -16,6 +16,8 @@ webData_tses::webData_tses(int parStd, string parIdc, string parTim, string parM
 	timr = P_CFG_PROC->LastServCfgTime();
 
 	modo_redan = LocalConfig().get(strRuntime, strRuntimeItemModoRedan, "0");
+	modo_16r = LocalConfig::p_cfg->getint(strRuntime, strRuntimeItemForceRdAudioNormal, "0");
+
 
 #if LOCAL_TEST_1
 	val_prueba1.push_back("Valor-1");
@@ -43,6 +45,7 @@ void webData_tses::jwrite(Writer<StringBuffer> &writer)
 	write_key/*_string*/(writer, "idc", idc);
 	write_key/*_string*/(writer, "tim", tim);
 	write_key/*_string*/(writer, "timr", timr);
+	write_key/*_string*/(writer, "modo_16r", modo_16r);
 #if LOCAL_TEST_1
 	write_key/*_object*/(writer, "msg", msg);
 	write_key(writer, "ArrayPrueba1", val_prueba1);

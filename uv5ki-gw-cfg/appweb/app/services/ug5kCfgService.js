@@ -505,18 +505,19 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
                         switch (rec.radio.tipo) {
                             case 0: // Radio Local Simple o P/R
                             case 1:
-                                ic += (rec.radio.iPrecisionAudio == 0 ? 2 : 1);
-                                break;
+                                //ic += (rec.radio.iPrecisionAudio == 0 ? 2 : 1);
+                                ic += (force_rdaudio_normal == true ? 1 : 2);
+                                break;;
                             case 2: // Radio Local FD Simple o P/R
                             case 3:
                                 ic += 8;
                                 break;
                             case 4: // Radio Remota Receptores
                             case 6:
-                                ic += 4;
+                                ic += (force_rdaudio_normal == true ? 1 : 4);
                                 break;
                             case 5: // Radio Remota Transmisor.
-                                ic += 2;                    // (rec.radio.iPrecisionAudio == 0 ? 2 : 1);
+                                ic += (force_rdaudio_normal == true ? 1 : 2);
                                 break;
                         }
                     }

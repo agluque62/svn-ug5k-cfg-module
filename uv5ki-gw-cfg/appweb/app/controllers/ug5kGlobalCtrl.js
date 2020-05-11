@@ -179,6 +179,7 @@ function ug5kGlobalCtrl($scope, $rootScope, $interval, $translate, dataservice, 
         var modo = MantService.modo();
         var modo_redan = MantService.modo_redan();
         var vmodo = modo == "ul" ? " ULISES" : modo_redan == "0" ? " REDAN config-WARNING" : " REDAN";
+        vmodo += (force_rdaudio_normal == 1 ? " 16R" : "");
         return "V: " + vm.version + vmodo;
     };
 
@@ -303,6 +304,8 @@ function ug5kGlobalCtrl($scope, $rootScope, $interval, $translate, dataservice, 
 
                         MantService.global_estado(data.std);
                         MantService.ntpsync(data.ntpsync);
+
+                        force_rdaudio_normal = data.modo_16r == 1 ? true : false;
                     }
                     else {
                         vm.timer = 0;
