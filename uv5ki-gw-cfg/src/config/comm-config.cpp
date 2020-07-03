@@ -261,18 +261,14 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 			this->telefonia.h2h4 = 0;								 // TODO: Confirmar.
 			this->telefonia.ladoeym = 0;								 // TODO: Confirmar.
 			this->telefonia.modo = 0;								 // TODO: Confirmar.
-			this->telefonia.r_automatica = 0;						 // Dejar a Cero.
 			this->telefonia.no_test_local = AtsLocalTestNumber(sc);						// Numero de la Central PROPIA.
 			this->telefonia.no_test_remoto = AtsRemoteTestNumber(sc, this->IdRecurso);	// Numero del troncal que contiene al recurso.
 			this->telefonia.it_release = 5;							 // Dejar a 5.
-			this->telefonia.uri_remota = "";							 // Dejar vacio.
 			this->telefonia.detect_vox = 0;							 // Dejar a 0. En ULISES no hay deteccion de cuelgue.
 			this->telefonia.umbral_vox = -26;						 // 
 			this->telefonia.tm_inactividad = 0;						 // 20170628. Se cambia de 12 a 0 para que en ULISES no se supervise inactividad.
 		
 		    /** 20181016. U2510. SP#01-15*/
-			this->telefonia.superv_options = sres.info.telef.superv_options;
-			this->telefonia.tm_superv_options = sres.info.telef.tm_superv_options;
 			this->telefonia.TReleaseBL = sres.info.telef.TReleaseBL;
 			this->telefonia.iDetCallerId = sres.info.telef.iDetCallerId;
 			this->telefonia.iTmCallerId = sres.info.telef.iTmCallerId;
@@ -290,6 +286,23 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 			this->telefonia.ats_rangos_dst.clear();					 // Dejar Vacio.
 			this->telefonia.ats_rangos_org.clear();					 // Dejar Vacio.
 
+			/** 20200703. Nuevos parámetros de líneas Telefónicas */
+			this->telefonia.iDetLineaAB = 0;
+			this->telefonia.iEnableNoED137 = 0;
+			/** 20200703. Nueva Estructura de Colateral Remoto */
+				// Elementos existentes.
+			this->telefonia.r_automatica = 0; // Dejar a Cero.
+			this->telefonia.tm_superv_options = sres.info.telef.tm_superv_options;
+			this->telefonia.uri_remota = "";							 // Dejar vacio.
+			this->telefonia.superv_options = sres.info.telef.superv_options;
+				// Elementos Añadidos.
+			this->telefonia.itiporespuesta = 0;
+
+			this->telefonia.additional_uri_remota = "";
+			this->telefonia.additional_superv_options = 0;
+			this->telefonia.additional_itiporespuesta = 0;
+
+				// Exclusivas de Ulises.
 			this->telefonia.idRed = sres.info.telef.IdRed;
 			this->telefonia.idTroncal = sres.info.telef.IdTroncal;
 			this->telefonia.listaEnlacesInternos = sres.info.telef.ListaEnlacesInternos;

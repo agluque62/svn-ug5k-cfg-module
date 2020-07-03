@@ -416,24 +416,70 @@ void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneral
 	{
 		memcpy(mgen->aListaEnlacesExternos[iex].szId, p_rec->telefonia.listaEnlacesInternos[iex].c_str(), MAX_ENLACES_EXTERNOS_POR_REC);
 	}
+#ifdef V110
+	for (size_t i = 0; i < p_rec->telefonia.ats_rangos_dst.size() && i < N_MAX_RANGOS_ATS; i++)
+	{
+#if __POR_REFERENCIA__
+		memcpy(mgen->rangos_dst[i].inicial, p_rec->telefonia.ats_rangos_dst[i].inicial.c_str(), LONG_AB_ATS);
+		memcpy(mgen->rangos_dst[i].final, p_rec->telefonia.ats_rangos_dst[i].final.c_str(), LONG_AB_ATS);
+#else
+		memcpy(mgen->rangos_dst[i].inicial, p_rec->telefonia.ats_rangos_dst[i]->inicial.c_str(), LONG_AB_ATS);
+		memcpy(mgen->rangos_dst[i].final, p_rec->telefonia.ats_rangos_dst[i]->final.c_str(), LONG_AB_ATS);
+#endif
+	}
+	for (size_t i = 0; i < p_rec->telefonia.ats_rangos_org.size() && i < N_MAX_RANGOS_ATS; i++)
+	{
+#if __POR_REFERENCIA__
+		memcpy(mgen->rangos_org[i].inicial, p_rec->telefonia.ats_rangos_org[i].inicial.c_str(), LONG_AB_ATS);
+		memcpy(mgen->rangos_org[i].final, p_rec->telefonia.ats_rangos_org[i].final.c_str(), LONG_AB_ATS);
+#else
+		memcpy(mgen->rangos_org[i].inicial, p_rec->telefonia.ats_rangos_org[i]->inicial.c_str(), LONG_AB_ATS);
+		memcpy(mgen->rangos_org[i].final, p_rec->telefonia.ats_rangos_org[i]->final.c_str(), LONG_AB_ATS);
+#endif
+	}
+	mgen->iEnableNoED137 = p_rec->telefonia.iEnableNoED137;
+#endif
+
 }
 
 /** */
 void CommConversor::RecursoColateralTPP(CommResConfig *p_rec, struct cfgColateralPP   *mcol, bool spvoptions)
 {
 	SetInt(&mcol->iRespuestaAutomatica,p_rec->telefonia.r_automatica, INCI_MPSW, "RESPUESTA AUTOMATICA TPP");
-	SetString(mcol->szUriRemota, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA TPP",MAX_LONG_DIR_URI);
-
+#ifndef V110
+	SetString(mcol->szUriRemota, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA1 TPP", MAX_LONG_DIR_AMPLIADA);
 	if (spvoptions == true) {
-		SetInt(&mcol->isuperv_options, p_rec->telefonia.superv_options, INCI_MPSW, "HABILITA OPTIONS");
 		SetInt(&mcol->itm_superv_options, p_rec->telefonia.tm_superv_options, INCI_MPSW, "TIEMPO OPTIONS");
+		SetInt(&mcol->isuperv_options, p_rec->telefonia.superv_options, INCI_MPSW, "HABILITA OPTIONS1");
 	}
 	else {
-		p_rec->telefonia.superv_options = 0;
-		p_rec->telefonia.tm_superv_options = 10;
+		//p_rec->telefonia.tm_superv_options = 10;
+		//p_rec->telefonia.superv_options = 0;
+		mcol->itm_superv_options = 10;
+		mcol->isuperv_options = 0;
 	}
-
-	SetInt(&mcol->iColateralSCV, p_rec->telefonia.colateral_scv, INCI_MPSW, "TIPO COLATERAL");	
+#else
+	SetString(mcol->szUriRemota1, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA1 TPP", MAX_LONG_DIR_AMPLIADA);
+	SetString(mcol->szUriRemota2, p_rec->telefonia.additional_uri_remota, INCI_MPSW, "URI-REMOTA2 TPP", MAX_LONG_DIR_AMPLIADA);
+	if (spvoptions == true) {
+		SetInt(&mcol->itm_superv_options, p_rec->telefonia.tm_superv_options, INCI_MPSW, "TIEMPO OPTIONS");
+		SetInt(&mcol->isuperv_options1, p_rec->telefonia.superv_options, INCI_MPSW, "HABILITA OPTIONS1");
+		SetInt(&mcol->isuperv_options2, p_rec->telefonia.additional_superv_options, INCI_MPSW, "HABILITA OPTIONS2");
+		SetInt(&mcol->itiporespuesta1, p_rec->telefonia.itiporespuesta, INCI_MPSW, "TIPO RSP-OPTIONS1");
+		SetInt(&mcol->itiporespuesta2, p_rec->telefonia.additional_itiporespuesta, INCI_MPSW, "TIPO RSP-OPTIONS1");
+	}
+	else {
+		//p_rec->telefonia.tm_superv_options = 10;
+		//p_rec->telefonia.superv_options = 0;
+		mcol->itm_superv_options = 10;
+		mcol->isuperv_options1 = 0;
+		mcol->isuperv_options2 = 0;
+		mcol->itiporespuesta1 = 0;
+		mcol->itiporespuesta2 = 0;
+	}
+	
+#endif
+	SetInt(&mcol->iColateralSCV, p_rec->telefonia.colateral_scv, INCI_MPSW, "TIPO COLATERAL");
 }
 
 /** */
@@ -700,6 +746,9 @@ void CommConversor::RecursoTelefoniaR2N5(CommResConfig *p_rec, struct cfgConfigI
 	/** 20160830. Periodo de Interrupt Warning... */
 	SetInt((int *)&mr2n5->iT_Int_Warning, p_rec->telefonia.iT_Int_Warning, INCI_MPSW, "PERIODO INTERRUPT WARNING");
 
+#ifndef V110
+
+
 	/** */
 	for (size_t i=0; i<p_rec->telefonia.ats_rangos_dst.size() && i<N_MAX_RANGOS_ATS; i++)
 	{
@@ -721,6 +770,7 @@ void CommConversor::RecursoTelefoniaR2N5(CommResConfig *p_rec, struct cfgConfigI
 		memcpy(mr2n5->rangos_org[i].final, p_rec->telefonia.ats_rangos_org[i]->final.c_str(),LONG_AB_ATS);
 #endif
 	}
+#endif // !V110
 
 	/** */
 	memcpy(mr2n5->szIdRed, p_rec->telefonia.idRed.c_str(), CFG_MAX_LONG_NOMBRE_RED);
@@ -847,6 +897,10 @@ void CommConversor::RecursoTelefoniaAnalogica(CommResConfig *p_rec, struct cfgCo
 	mgen->iRestriccion=0;
 	// mgen->iEnableRegistro = 0;
 	/*************/
+#ifdef V110
+	mtlf->iDetLineaAB = p_rec->telefonia.iDetLineaAB;
+#endif // V110
+
 
 }
 

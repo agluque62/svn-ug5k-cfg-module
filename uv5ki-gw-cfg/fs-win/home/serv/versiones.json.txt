@@ -1,4 +1,4 @@
-Version: BETA12. Fecha: 13/03/2017
+Version: 1.1.0. Fecha: 14/05/2020
 
     Linux version 2.4.32 NUCLEODF (gcc version 3.2.2 20030217 (Yellow Dog Linux 3.0 3.2.2-2a_1)) #48 mi may 11 11:10:16 CEST 2016
 

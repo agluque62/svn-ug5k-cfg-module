@@ -215,16 +215,12 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
                 h2h4: 0,
                 ladoeym: 0,
                 modo: 0,
-                r_automatica: 1,
                 no_test_local: "",
                 no_test_remoto: "",
                 it_release: 5,
-                uri_remota: "",
                 detect_vox: 1,
                 umbral_vox: -20,
                 tm_inactividad: 2,
-                superv_options: 1,
-                tm_superv_options: 5,
                 colateral_scv: 0,
                 iT_Int_Warning: 5,
                 ats_rangos_dst: [
@@ -245,11 +241,23 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
 				, iTmDetFinLlamada: 6
 				, TReleaseBL: 3
 				, iDetCallerId: 1
-				, iTmCallerId: 30
+				, iTmCallerId: 2500
 				, iDetInversionPol: 1
 				, iPeriodoSpvRing: 200
 				, iFiltroSpvRing: 2
-				, iDetDtmf: 0
+                , iDetDtmf: 0
+            /** 20200703. Nuevos parámetros de líneas Telefónicas */
+                , iDetLineaAB: 0
+                , iEnableNoED137: 0
+            /** 20200703. Nueva Estructura de Colateral Remoto */
+                , r_automatica: 1
+                , tm_superv_options: 5
+                , uri_remota: ""
+                , superv_options: 1
+                , itiporespuesta: 0
+                , additional_uri_remota: ""
+                , additional_superv_options: 0
+                , additional_itiporespuesta: 0
             },
             LlamadaAutomatica: 0,
             restriccion: 0,

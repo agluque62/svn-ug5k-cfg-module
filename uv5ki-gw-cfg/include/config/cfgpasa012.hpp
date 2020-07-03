@@ -30,7 +30,6 @@
 #define MODO_ULISES		0
 #define MODO_REDAN		1
 
-#define V110			//para añadir los parametros que faltan
 
 #define PRECISION_ESTRICTA 0
 #define PRECISION_NORMAL   1
@@ -609,20 +608,6 @@ struct st_rangoATS {
     asEmpl: array de informacion de cada emplazamiento
  *
  */
-#ifdef V110
-struct cfgColateralPP
-{
-    int iRespuestaAutomatica;
-    char szUriRemota1[MAX_LONG_DIR_AMPLIADA+1];
-    char szUriRemota2[MAX_LONG_DIR_AMPLIADA+1];
-    int isuperv_options1;
-    int isuperv_options2;
-    int itiporespuesta1;
-    int itiporespuesta2;
-    int itm_superv_options;                 /* temporizador supervision options */
-    int iColateralSCV;                    /* indica si el colateral es un recurso de una pasarela (0) o un SCV (1)*/
-};
-#else
 
 struct cfgColateralPP
 {
@@ -633,7 +618,7 @@ struct cfgColateralPP
     int iColateralSCV;                    /* indica si el colateral es un recurso de una pasarela (0) o un SCV (1)*/
 
 };
-#endif
+
 
 //esta estructura se deja de momento porque en redan se utiliza, se pasa cfgsistema a los recursos para que tengan la ip para darla a grabación.
 struct st_config_sistema
@@ -689,11 +674,6 @@ struct cfgConfigGeneralRecurso
 
     int size_aListaEnlacesExternos;
     struct cfgEnlaceExterno aListaEnlacesExternos[MAX_ENLACES_EXTERNOS_POR_REC];
-#ifdef V110
-    int iEnableNoED137;
-    struct st_rangoATS rangos_dst[N_MAX_RANGOS_ATS];      /*array de rangos de nuemros destino */
-    struct st_rangoATS rangos_org[N_MAX_RANGOS_ATS];      /*array de rangos de numeros origen */
-#endif
     cfgConfigGeneralRecurso();
     void TomaSlot( int );
     void TomaDispositivo( int );
@@ -925,9 +905,6 @@ struct cfgConfigIfLcen
 
     int iT_Release;
     void PorDefecto();
-    bool operator ==( const cfgConfigIfLcen &sLaOtra );
-    bool operator !=( const cfgConfigIfLcen &sLaOtra );
-
 };
 
 
@@ -997,10 +974,9 @@ struct cfgConfigIfR2N5
 
     char ntest_local[LONG_AB_ATS];
     char ntest_remoto[LONG_AB_ATS];
-#ifndef V110
     struct st_rangoATS rangos_dst[N_MAX_RANGOS_ATS];      /*array de rangos de nuemros destino */
     struct st_rangoATS rangos_org[N_MAX_RANGOS_ATS];      /*array de rangos de numeros origen */
-#endif
+
     char szIdTroncal[CFG_MAX_LONG_NOMBRE_TRONCAL+1];
     char szIdRed[CFG_MAX_LONG_NOMBRE_RED+1];
     int iNumRangosOperador;
@@ -1057,9 +1033,7 @@ struct cfgConfigIfTlf
     int iDetInversionPol;
     int iDetCallerId;
     int iTmCallerId;
-#ifdef V110
-    int iDetLineaAB;
-#endif
+
     int iPeriodoSpvRing;
     int iFiltroSpvRing;
 
@@ -1202,9 +1176,10 @@ struct cfgConfigPasarela
 
     int iSupervLanGW;
 	int itmmaxSupervLanGW;
+
 	int idelayIniciaVrrp;
 
-	int iNumRecursos;
+    int iNumRecursos;
 
     char acTipoSlot[MAX_SLOTS_PASARELA];
     struct LocalizadorRecurso asLocRec[MAX_RECURSOS_TIFX];

@@ -262,33 +262,6 @@
     <ClInclude Include="include\base\md5.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\config\cfgpasa001.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa002.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa003.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa004.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa005.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa006.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa007.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa008.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\config\cfgpasa009.hpp">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\rapidxml-1.13\rapidxml.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>

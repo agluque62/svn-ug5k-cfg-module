@@ -101,15 +101,6 @@
     <ClInclude Include="include\base\thread.h" />
     <ClInclude Include="include\cfg-proc.h" />
     <ClInclude Include="include\config\cfgpasa.hpp" />
-    <ClInclude Include="include\config\cfgpasa001.hpp" />
-    <ClInclude Include="include\config\cfgpasa002.hpp" />
-    <ClInclude Include="include\config\cfgpasa003.hpp" />
-    <ClInclude Include="include\config\cfgpasa004.hpp" />
-    <ClInclude Include="include\config\cfgpasa005.hpp" />
-    <ClInclude Include="include\config\cfgpasa006.hpp" />
-    <ClInclude Include="include\config\cfgpasa007.hpp" />
-    <ClInclude Include="include\config\cfgpasa008.hpp" />
-    <ClInclude Include="include\config\cfgpasa009.hpp" />
     <ClInclude Include="include\config\comm-config.h" />
     <ClInclude Include="include\config\comm-conversor.h" />
     <ClInclude Include="include\config\comm-gen-config.h" />
