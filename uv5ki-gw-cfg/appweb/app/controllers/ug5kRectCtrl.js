@@ -146,7 +146,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
 
         if (vm.tdata == undefined)
             return false;
-
+/* 20200706. En todas las líneas telefonicas se muestran al menos los rangos de Origen.
         switch (vm.pagina) {
             case 0:
                 return (vm.vdata.length > 0) && (vm.vdata[2].Value == 3 || vm.vdata[2].Value == 4 || vm.vdata[2].Value == 6);
@@ -158,12 +158,20 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 return (vm.vdata.length > 0) && (vm.vdata[0].Value == 3 || vm.vdata[0].Value == 4 || vm.vdata[2].Value == 6);
         }
         return false;
+*/
+        return true;
     };
 
     /* */
     vm.bnorats = function () {
         return vm.show_rangos_ats() ? /*"Rangos ATS"*/transerv.translate('TCTRL_PG03_OPT1') : /*"Listas B/N"*/transerv.translate('TCTRL_PG03_OPT2');
     };
+
+    vm.AtsRangesLabelShow = () => { return { show: true, label: transerv.translate('TCTRL_PG03_OPT1') } };
+    vm.AtsRangesShow = (IsOrg, LineType) =>
+    {
+        return IsOrg == true ? true : (LineType == 3 || LineType == 4 || LineType == 6) ? true : false;
+    }
 
     /* */
     vm.telgain_show = function (ind) {
@@ -366,6 +374,29 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
         }
     }
 
+    function Page5OtherParameterShow(LineType) {
+        if (MantService.hide_on_ulises() == false)
+            return false;
+        return true;
+    }
+
+    function Page5SupervisionTimeShow(LineType, Sp1, Sp2) {
+        if (MantService.hide_on_ulises() == false)
+            return false;
+        return LineType==7 ? Sp1==1 : Sp1==1 || Sp2==1;
+    }
+
+    function Page5AutomaticRspShow(LineType) {
+        if (MantService.hide_on_ulises() == false)
+            return false;
+        return (LineType == 3 || LineType == 4 || LineType == 5);
+    }
+
+    function Page5AdditionalUriAndDataShow(LineType) {
+        if (MantService.hide_on_ulises() == false)
+            return false;
+        return LineType != 7;
+    }
     /* */
     function j2vdata() {
 
@@ -453,6 +484,18 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Show: vm.p0_tel_show,
 
                         Val: ValidateService.max_long_val
+                    },
+                    {
+                        // 0 - 6
+                        Name: transerv.translate('Acepta Llamadas No ED137 ?'),
+                        Value: vm.tdata.telefonia.iEnableNoED137.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: function () { return vm.vdata[2].Value != "5"; },    // Todas las Líneas menos LCEN
+                        Val: function () { return ""; }
                     }
                 ];
                 break;
@@ -547,7 +590,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: jamp_no_sip == 1 ? 3 : 0,
                         Inputs: [],
-                        Show: vm.p2_tel_show,
+                        Show: /*vm.p2_tel_show*/() => { return false; },
                         Val: vm.uri_val
                     },
                     {
@@ -559,7 +602,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 1,
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
-                        Show: vm.p2_tel_show,
+                        Show: /*vm.p2_tel_show*/() => { return false; },
                         Val: vm.dval
                     },
                     {
@@ -619,7 +662,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 1,
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
-                        Show: function () { return vm.vdata[0].Value === "3" || vm.vdata[0].Value === "4" || vm.vdata[0].Value === "5"; },
+                        Show: /*function () { return vm.vdata[0].Value === "3" || vm.vdata[0].Value === "4" || vm.vdata[0].Value === "5"; }*/() => { return false; },
                         Val: function () { return ""; }
                     },
                     {
@@ -631,7 +674,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 0,
                         Inputs: [/*"5", "10", "15", "20", "25", "30"*/]/*[]*/,
-                        Show: function () { return (vm.vdata[0].Value === "3" || vm.vdata[0].Value === "4" || vm.vdata[0].Value === "5") && vm.vdata[7].Value==="1"; },
+                        Show: /*function () { return (vm.vdata[0].Value === "3" || vm.vdata[0].Value === "4" || vm.vdata[0].Value === "5") && vm.vdata[7].Value==="1"; }*/() => { return false; },
                         Val: function () { return vm.vdata[8].Value > 0 && vm.vdata[8].Value <= 20 ? "" : transerv.translate("El valor debe estar entre: ") + "1 y 20"; }
                     },
                     {
@@ -813,6 +856,18 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
                         Show: function () { return vm.vdata[0].Value === "1"; },
                         Val: function () { return ""; }
+                    },
+                    {
+                        // 2 - 24
+                        Name: transerv.translate('Detección de Fallo en Línea de Abonado ?'),
+                        Value: vm.tdata.telefonia.iDetLineaAB.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: function () { return vm.vdata[0].Value === "2"; },    // Solo en Lineas AB
+                        Val: function () { return ""; }
                     }
                 ];
                 break;
@@ -862,7 +917,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: -1,
                         Inputs: [],
-                        Show: vm.show_rangos_ats,
+                        Show: () => {
+                            return vm.AtsRangesShow(true, vm.tdata.telefonia.tipo);
+                        },
                         Val: vm.dval
                     },
                     {
@@ -873,7 +930,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 2,
                         Inputs: [],
-                        Show: vm.show_rangos_ats,
+                        Show: () => {
+                            return vm.AtsRangesShow(true, vm.tdata.telefonia.tipo);
+                        },
                         Val: vm.validate_ats_range
                     },
                     {
@@ -884,7 +943,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: -1,
                         Inputs: [],
-                        Show: vm.show_rangos_ats,
+                        Show: () => {
+                            return vm.AtsRangesShow(false, vm.tdata.telefonia.tipo);
+                        },
                         Val: vm.dval
                     },
                     {
@@ -895,7 +956,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 2,
                         Inputs: [],
-                        Show: vm.show_rangos_ats,
+                        Show: () => {
+                            return vm.AtsRangesShow(false, vm.tdata.telefonia.tipo);
+                        },
                         Val: vm.validate_ats_range
                     }
                 ];
@@ -916,6 +979,127 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                     }
                 ];
                 break;
+            case 5:                 // 20200706. Página específica para colaterales.
+                vm.vdata = [
+                    {
+                        // 5 - 00
+                        Name: /*'Tipo de Interfaz Telefonico:'*/transerv.translate('TCTRL_P00_ITF'),
+                        Value: vm.tdata.telefonia.tipo.toString(),
+                        Enable: function () {
+                            return false;
+                        },
+                        Input: 1,
+                        Inputs: [
+                              /*"PP-BL"   */transerv.translate('TCTRL_P00_IBL'),
+                              /*"PP-BC"   */transerv.translate('TCTRL_P00_IBC'),
+                              /*"PP-AB"   */transerv.translate('TCTRL_P00_IAB'),
+                              /*"ATS-R2"  */transerv.translate('TCTRL_P00_IR2'),
+                              /*"ATS-N5"  */transerv.translate('TCTRL_P00_IN5'),
+                              /*"LCEN"    */transerv.translate('TCTRL_P00_ILC'),
+                              /*"ATS-QSIG"*/transerv.translate('TCTRL_P00_IQS'),
+                              /*"TUN-LOC" */transerv.translate('TCTRL_P00_LTU'),
+                              /*"TUN-REM" */transerv.translate('TCTRL_P00_RTU')],
+                        Show: () => { return true; },
+                        Val: vm.dval
+                    },
+                    {
+                        // 5 - 01
+                        Name: /*'Respuesta Automatica Simulada ?:'*/transerv.translate('TCTRL_P02_ARSP'),
+                        Value: vm.tdata.telefonia.r_automatica.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: () => { return Page5AutomaticRspShow(vm.vdata[0].Value); },//Cambiar
+                        Val: vm.dval
+                    },
+                    {
+                        // 5 - 02
+                        Name: /*'Tiempo Supervision (s):'*/transerv.translate('TCTRL_P02_TSUP'),
+                        Value: /*NormalizeTmSuperv(true, vm.tdata.telefonia.tm_superv_options).toString()*/vm.tdata.telefonia.tm_superv_options,
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 0,
+                        Inputs: [/*"5", "10", "15", "20", "25", "30"*/]/*[]*/,
+                        Show: () => { return Page5SupervisionTimeShow(vm.vdata[0].Value, vm.vdata[4].Value, vm.vdata[7].Value); },
+                        Val: function () { return vm.vdata[2].Value > 0 && vm.vdata[2].Value <= 20 ? "" : transerv.translate("El valor debe estar entre: ") + "1 y 20"; }
+                    },
+                    {
+                        // 5 - 03
+                        Name: /*'URI Remota:'*/transerv.translate('TCTRL_P02_RURI'),
+                        Value: jamp_no_sip == 1 ? CfgService.quitar_sip(vm.tdata.telefonia.uri_remota) : vm.tdata.telefonia.uri_remota,
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: jamp_no_sip == 1 ? 3 : 0,
+                        Inputs: [],
+                        Show: () => { return Page5OtherParameterShow(vm.vdata[0].Value); },
+                        Val: vm.uri_val
+                    },
+                    {
+                        // 5-4
+                        Name: /*'Supervisa Colateral ?:'*/transerv.translate('TCTRL_P02_CSUP'),
+                        Value: vm.tdata.telefonia.superv_options.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: () => { return Page5OtherParameterShow(vm.vdata[0].Value); },
+                        Val: function () { return ""; }
+                    },
+                    {
+                        // 5-5
+                        Name: /*'Cualquier Respuesta Valida ?:'*/transerv.translate('Cualquier Respuesta es válida?'),
+                        Value: vm.tdata.telefonia.itiporespuesta.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: () => { return Page5OtherParameterShow(vm.vdata[0].Value); },
+                        Val: function () { return ""; }
+                    },
+                    {
+                        // 5 - 6
+                        Name: /*'URI Remota adicional'*/transerv.translate('Uri Remota Adicional'),
+                        Value: jamp_no_sip == 1 ? CfgService.quitar_sip(vm.tdata.telefonia.additional_uri_remota) : vm.tdata.telefonia.additional_uri_remota,
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: jamp_no_sip == 1 ? 3 : 0,
+                        Inputs: [],
+                        Show: () => { return Page5AdditionalUriAndDataShow(vm.vdata[0].Value); },
+                        Val: vm.uri_val
+                    },
+                    {
+                        // 5-7
+                        Name: /*'Supervisa Colateral adicional ?:'*/transerv.translate('Supervisa Colateral adicional ?:'),
+                        Value: vm.tdata.telefonia.additional_superv_options.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: () => { return Page5AdditionalUriAndDataShow(vm.vdata[0].Value); },
+                        Val: function () { return ""; }
+                    },
+                    {
+                        // 5-8
+                        Name: /*'Cualquier Respuesta Valida (en adicional) ?:'*/transerv.translate('Cualquier Respuesta Valida (en adicional) ?:'),
+                        Value: vm.tdata.telefonia.additional_itiporespuesta.toString(),
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: () => { return Page5AdditionalUriAndDataShow(vm.vdata[0].Value); },
+                        Val: function () { return ""; }
+                    },
+                ];
+                break;
 
             default:
                 vm.vdata = [];
@@ -934,6 +1118,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 vm.tdata.Uri_Local = jamp_no_sip == 1 ? CfgService.poner_sip(vm.vdata[3].Value) : vm.vdata[3].Value;
                 vm.tdata.enableRegistro = parseInt(vm.vdata[4].Value);
                 vm.tdata.szClave = vm.vdata[5].Value;
+                vm.tdata.telefonia.iEnableNoED137 = parseInt(vm.vdata[6].Value);
                 break;
             case 1:
                 vm.tdata.Codec = parseInt(vm.vdata[0].Value);
@@ -968,6 +1153,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 vm.tdata.telefonia.iPeriodoSpvRing = vm.vdata[21].Value;
                 vm.tdata.telefonia.iFiltroSpvRing = vm.vdata[22].Value;
                 vm.tdata.telefonia.iDetDtmf = parseInt(vm.vdata[23].Value);
+                vm.tdata.telefonia.iDetLineaAB = parseInt(vm.vdata[24].Value);
 
                 break;
             case 3:
@@ -985,6 +1171,17 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
 
                 break;
             case 4:                     // TODO.
+                break;
+            case 5:     // Colaterales.
+                vm.tdata.telefonia.r_automatica = parseInt(vm.vdata[1].Value);
+                vm.tdata.telefonia.tm_superv_options = parseInt(vm.vdata[2].Value); // Tiempo Supervision Colateral
+                vm.tdata.telefonia.uri_remota = jamp_no_sip == 1 ? CfgService.poner_sip(vm.vdata[3].Value) : vm.vdata[3].Value;
+                vm.tdata.telefonia.superv_options = parseInt(vm.vdata[4].Value);// Supervisa Colateral ???
+                vm.tdata.telefonia.itiporespuesta = parseInt(vm.vdata[5].Value);
+
+                vm.tdata.telefonia.additional_uri_remota = jamp_no_sip == 1 ? CfgService.poner_sip(vm.vdata[6].Value) : vm.vdata[6].Value;
+                vm.tdata.telefonia.additional_superv_options = parseInt(vm.vdata[7].Value);// Supervisa Colateral ???
+                vm.tdata.telefonia.additional_itiporespuesta = parseInt(vm.vdata[8].Value);
                 break;
         }
     }

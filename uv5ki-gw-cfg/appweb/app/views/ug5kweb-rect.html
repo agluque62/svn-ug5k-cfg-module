@@ -10,10 +10,13 @@
         <li data-ng-class="{'active': vm.pagina==2}">
             <a href="" data-ng-click="vm.set_pagina(2)" translate>TELEF_PG02</a>
         </li>
-        <li data-ng-class="{'active': vm.pagina==3}" >
-            <a href="" data-ng-click="vm.set_pagina(3)" data-ng-show="vm.show_plbn()">{{vm.bnorats()}}</a>
+        <li data-ng-class="{'active': vm.pagina==5}">
+            <a href="" data-ng-click="vm.set_pagina(5)" translate>Colaterales</a>
         </li>
-        <li data-ng-class="{'active': vm.pagina==4}" >
+        <li data-ng-class="{'active': vm.pagina==3}">
+            <a href="" data-ng-click="vm.set_pagina(3)" data-ng-show="vm.AtsRangesLabelShow().show">{{vm.AtsRangesLabelShow().label}}</a>
+        </li>
+        <li data-ng-class="{'active': vm.pagina==4}">
             <a href="" data-ng-click="vm.set_pagina(4)" data-ng-show="vm.show_penl()" translate>Enlaces Internos</a>
         </li>
     </ul>
