@@ -68,6 +68,8 @@ public:
 				mode==false ? string("REDAN-" + redan_mode).c_str() : "ULISES", 
 				acBuildString, 
 				WORKING_DIR);
+			Tools::fatalerror("Recibida Signal %d. PID=%d...", 321, getpid());
+
 #else
 			PLOG_INFO("%s (%s) CfgServer(pid: %d): (%s) Iniciado en \"%s\". PIPE-ID: %s", 
 				Tools::read_txt_file(ON_WORKING_DIR("VERSION.TXT")).c_str(),  
@@ -177,7 +179,8 @@ private:
 #ifndef _WIN32
 	static void traceSIGSEGV()
 	{
-	  PLOG_ERROR("********* SEGMENTATION FAULT *********" );
+	  //PLOG_ERROR("********* SEGMENTATION FAULT *********" );
+	  Tools::fatalerror("********* SEGMENTATION FAULT *********");
 
 	  void *trace[32];
 	  size_t size, i;
@@ -186,13 +189,16 @@ private:
 	  size    = backtrace( trace, 32 );
 	  strings = backtrace_symbols( trace, size );
 
-	  PLOG_ERROR("BACKTRACE:\n" );
+	  //PLOG_ERROR("BACKTRACE:\n" );
+	  Tools::fatalerror("BACKTRACE:\n");
 
 	  for( i = 0; i < size; i++ ){
-		  PLOG_ERROR("  %s", strings[i] );
+		  //PLOG_ERROR("  %s", strings[i]);
+		  Tools::fatalerror("  %s", strings[i] );
 	  }
 
-	  PLOG_ERROR("***************************************" );
+	  //PLOG_ERROR("***************************************");
+	  Tools::fatalerror("***************************************" );
 	}
 #ifdef _SIGACTION_
 	static void catchAllSignal (int sig, siginfo_t *siginfo, void *context)
@@ -215,7 +221,9 @@ private:
 #else
 	static  void catchAllSignal(int sig)
 	{
-		PLOG_ERROR("Recibida Signal %d. PID=%d...", sig, getpid());
+		//PLOG_ERROR("Recibida Signal %d. PID=%d...", sig, getpid());
+		Tools::fatalerror("Recibida Signal %d. PID=%d...", sig, getpid());
+
 		switch(sig)
 		{
 			case SIGINT:

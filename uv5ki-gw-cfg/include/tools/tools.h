@@ -87,6 +87,17 @@ public:
 	static void append2file(string name, string msg);
 
 	static void fatalerror(string msg);
+	static void fatalerror(const char* fmt, ...) {
+		va_list args;
+		va_start(args, fmt);
+		char textString[256] = { '\0' };
+#ifdef _WIN32
+		vsnprintf_s(textString, sizeof(textString), fmt, args);
+#else
+		vsnprintf(textString, sizeof(textString), fmt, args);
+#endif
+		fatalerror(string(textString));
+	}
 
 };
 
