@@ -60,6 +60,7 @@ using namespace std;
 #define strRuntimeItemColateralIpInfoPath		((const char *)"COLATERAL_IP_INFO_PATH")
 #define strRuntimeItemSoapServicePath			((const char *)"SOAP-SERVICE-PATH")
 #define strRuntimeItemForceRdAudioNormal		((const char *)"FORCE_RDAUDIO_NORMAL")
+#define strRuntimeItemSignalMsgTarget			((const char *)"SIGNAL_MSG_TARGET")
 
 
 #define strFilesSupervidor				((const char *)"FILESUPERVISOR")

@@ -41,6 +41,7 @@ char *acStrVersion()
 	return buffer;
 }
 
+
 /** */
 class U5kiGwCfg : public CodeBase
 {
@@ -68,7 +69,7 @@ public:
 				mode==false ? string("REDAN-" + redan_mode).c_str() : "ULISES", 
 				acBuildString, 
 				WORKING_DIR);
-			Tools::fatalerror("Recibida Signal %d. PID=%d...", 321, getpid());
+			SignalMessage("Recibida Signal %d. PID=%d...", 321, getpid());
 
 #else
 			PLOG_INFO("%s (%s) CfgServer(pid: %d): (%s) Iniciado en \"%s\". PIPE-ID: %s", 
@@ -176,11 +177,30 @@ public:
 	}
 
 private:
+	static void SignalMessage(const char* fmt, ...) {
+		int target = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemSignalMsgTarget, "1") == "1" ? 1 : 0;
+		va_list args;
+		va_start(args, fmt);
+		char textString[256] = { '\0' };
+#ifdef _WIN32
+		vsnprintf_s(textString, sizeof(textString), fmt, args);
+#else
+		vsnprintf(textString, sizeof(textString), fmt, args);
+#endif
+		switch (target)
+		{
+		case 0:
+			PLOG_ERROR(textString);
+			break;
+		default:
+			Tools::fatalerror(string(textString));
+			break;
+		}
+	}
 #ifndef _WIN32
 	static void traceSIGSEGV()
 	{
-	  //PLOG_ERROR("********* SEGMENTATION FAULT *********" );
-	  Tools::fatalerror("********* SEGMENTATION FAULT *********");
+		SignalMessage("********* SEGMENTATION FAULT *********");
 
 	  void *trace[32];
 	  size_t size, i;
@@ -189,21 +209,17 @@ private:
 	  size    = backtrace( trace, 32 );
 	  strings = backtrace_symbols( trace, size );
 
-	  //PLOG_ERROR("BACKTRACE:\n" );
-	  Tools::fatalerror("BACKTRACE:\n");
+	  SignalMessage("BACKTRACE:\n");
 
 	  for( i = 0; i < size; i++ ){
-		  //PLOG_ERROR("  %s", strings[i]);
-		  Tools::fatalerror("  %s", strings[i] );
+		  SignalMessage("  %s", strings[i] );
 	  }
-
-	  //PLOG_ERROR("***************************************");
-	  Tools::fatalerror("***************************************" );
+	  SignalMessage("***************************************" );
 	}
 #ifdef _SIGACTION_
 	static void catchAllSignal (int sig, siginfo_t *siginfo, void *context)
 	{
-		PLOG_ERROR("Recibida Signal %d. de PID=%ld, Code: %ld, UID: %ld.", sig, (long)siginfo->si_pid, (long)siginfo->si_code, (long)siginfo->si_uid);
+		SignalMessage("Recibida Signal %d. de PID=%ld, Code: %ld, UID: %ld.", sig, (long)siginfo->si_pid, (long)siginfo->si_code, (long)siginfo->si_uid);
 		switch(sig)
 		{
 			case SIGINT:
@@ -221,8 +237,7 @@ private:
 #else
 	static  void catchAllSignal(int sig)
 	{
-		//PLOG_ERROR("Recibida Signal %d. PID=%d...", sig, getpid());
-		Tools::fatalerror("Recibida Signal %d. PID=%d...", sig, getpid());
+		SignalMessage("Recibida Signal %d. PID=%d...", sig, getpid());
 
 		switch(sig)
 		{
