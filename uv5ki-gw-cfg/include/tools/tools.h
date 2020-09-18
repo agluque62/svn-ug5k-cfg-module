@@ -96,6 +96,8 @@ public:
 #else
 		vsnprintf(textString, sizeof(textString), fmt, args);
 #endif
+		va_end(args);
+
 		fatalerror(string(textString));
 	}
 

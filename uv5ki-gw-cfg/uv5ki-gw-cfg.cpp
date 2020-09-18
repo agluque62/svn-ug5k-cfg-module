@@ -187,6 +187,8 @@ private:
 #else
 		vsnprintf(textString, sizeof(textString), fmt, args);
 #endif
+		va_end(args);
+
 		switch (target)
 		{
 		case 0:
