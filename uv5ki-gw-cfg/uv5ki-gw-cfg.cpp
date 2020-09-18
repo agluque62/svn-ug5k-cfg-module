@@ -131,14 +131,26 @@ public:
 			{
 				CThread::sleep(100);
 
-				if (iDescPerro != -1)
-				{
-					write( iDescPerro, &ucPerro, 1 );
-					if ( (MainLoopLogInfoCount % 50) == 0) {
+				if ((MainLoopLogInfoCount % 20) == 0) {
+					if (iDescPerro != -1){
+
+						write(iDescPerro, &ucPerro, 1);
 						PLOG_INFO("Escribiendo en Pipe ID: %d.", iDescPerro);
 					}
-					MainLoopLogInfoCount++;
 				}
+				if ((MainLoopLogInfoCount % 600) == 0 && iDescPerro == -1) {
+					PLOG_ERROR("Error PIPE to CARPER NO Abierta.");
+				}
+				MainLoopLogInfoCount++;
+
+				//if (iDescPerro != -1)
+				//{
+				//	write( iDescPerro, &ucPerro, 1 );
+				//	if ( (MainLoopLogInfoCount % 50) == 0) {
+				//		PLOG_INFO("Escribiendo en Pipe ID: %d.", iDescPerro);
+				//	}
+				//	MainLoopLogInfoCount++;
+				//}
 
 				SupervisaProcesos();
 			}
