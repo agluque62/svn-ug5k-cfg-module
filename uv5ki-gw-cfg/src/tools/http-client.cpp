@@ -24,21 +24,19 @@ ParseResponse HttpClient::SendHttpCmd(string cmd, int ms_timeout)
 	CIPAddress host(ip, port);
 	CTCPSocket sck;
 
-	try 
+	Tools::Trace("HttpClient::SendHttpCmd CmdSize %d.", sizeof(cmd));
+
+	try
 	{
 		if (!sck.Connect(host, conn_timeout))
 			throw Exception("No puedo conectarme al HOST: " + server);
 		if (sck.Send(cmd.c_str(), cmd.length()) != (int) cmd.length())
 			throw Exception("Error al Enviar request: " + cmd);
 
-		//string respuesta;
-		////sck.Recv_text(respuesta, ms_timeout, char_timeout);
-		//sck.Recv_http(respuesta);
-		//sck.Close();
-		//return ParseResponse(respuesta.c_str());
-
 		ParseResponse respuesta(sck, ms_timeout);
+		Tools::Trace("HttpClient::SendHttpCmd ResponseSize %d.", sizeof(respuesta));
 		sck.Close();
+
 		return respuesta;
 
 	} 

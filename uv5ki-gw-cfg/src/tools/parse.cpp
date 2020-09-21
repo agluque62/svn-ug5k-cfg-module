@@ -345,11 +345,17 @@ bool ParseResponse::Parse(CTCPSocket &sck,int timeout)
 	string line;
 	int len=0;
 
+	Tools::Trace("Parseando Respuesta HTTP...");
+
 	/** Procesar la Primera Linea */
 	if (sck.ReadLine(line, timeout)<=0)
 		return false;
-	if (ParseStatus(line)==false)
-		return false;	
+	Tools::Trace("Parseando Respuesta HTTP. Primera Linea Leida =  %s", line.c_str());
+
+	if (ParseStatus(line) == false)
+		return false;
+
+	Tools::Trace("Parseando Respuesta HTTP. Primera Linea Procesada.");
 
 	/** Procesar los HEADERS */
 	do {
@@ -358,6 +364,7 @@ bool ParseResponse::Parse(CTCPSocket &sck,int timeout)
 		if (len < 0 )
 			return false;
 		
+		Tools::Trace("Parseando Respuesta HTTP. Leido HEADER = %s.", line.c_str());
 		ParseHeader(line);
 
 	} while (len > 0);
@@ -365,18 +372,22 @@ bool ParseResponse::Parse(CTCPSocket &sck,int timeout)
 	/** Leer el Body */
 	if (Header("Transfer-Encoding")=="chunked")
 	{
+		Tools::Trace("Parseando Respuesta HTTP. Procesando CHUNK.");
 		return ParseCkunked(sck, timeout);
 	}
 	else 
 	{
 		string strLen = Header("Content-Length");
+		Tools::Trace("Parseando Respuesta HTTP. Procesando Content-Length %s.", strLen.c_str());
+
 		len = Tools::atoi(strLen);
 		if (len <= 0)
 			return false;
 
 		len = sck.Recv_text(_body, len, timeout);		
-		if (len < 0) 		
+		if (len < 0)
 			return false;
+		Tools::Trace("Parseando Respuesta HTTP. Contenido Leido.");
 	}
 	return true;
 }
@@ -390,8 +401,12 @@ bool ParseResponse::ParseCkunked(CTCPSocket &sck, int timeout)
 	bool retorno = true;
 	do
 	{
+		Tools::Trace("Parseando Respuesta HTTP. Leyendo Chunk.");
 		/** La primera Linea del chunk es la longitud en hexadecimal */
 		lenline = sck.ReadLine(line, timeout);
+		
+		Tools::Trace("Parseando Respuesta HTTP. Chunk Length %s.", line.c_str());
+
 		if (lenline > 0)
 		{
 			long chunklen = strtol(line.c_str(), NULL, 16);
@@ -402,6 +417,7 @@ bool ParseResponse::ParseCkunked(CTCPSocket &sck, int timeout)
 				if (lenline > 0)
 				{
 					_body += line;
+					Tools::Trace("Parseando Respuesta HTTP. Chunk leido.");
 				}
 				else if (lenline < 0)
 					retorno = false;

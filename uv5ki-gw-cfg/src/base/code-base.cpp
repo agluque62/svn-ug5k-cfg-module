@@ -77,7 +77,7 @@ void CodeBase::_Log(plog::Severity level, const char *from, int line, const char
 	}
 
 	//util::MutexLock lock(plog_mutex);
-	Tools::Trace("PID %d. Locking Log Mutex...", Tools::Pid());
+	//Tools::Trace("PID %d. Locking Log Mutex...", Tools::Pid());
 	SysMutexLock global_lock(global_mutex);
 
 	static char textString[1024] = {'\0'};
@@ -98,7 +98,7 @@ void CodeBase::_Log(plog::Severity level, const char *from, int line, const char
 	else
 		Tools::fatalerror(string("Cola de Log llena... Tamaño Maximo: ") + Tools::itoa(mcola));
 
-	Tools::Trace("PID %d. unlocking Log Mutex...", Tools::Pid());
+	//Tools::Trace("PID %d. unlocking Log Mutex. &event=%08X...", Tools::Pid(), (unsigned int)(&evento));
 }
 
 /** */
@@ -125,16 +125,17 @@ util::Mutex CodeBase::plog_mutex;
 bool CodeBase::plog_queue_event_get(PLogEvent *p_evento) 
 {
 	//util::MutexLock lock(plog_mutex);
-	Tools::Trace("PID %d. Locking Log Mutex (1) ...", Tools::Pid());
+	//Tools::Trace("PID %d. Locking Log Mutex (1) ...", Tools::Pid());
 	SysMutexLock global_lock(global_mutex);
 	if (!plog_queue.empty())
 	{
 		*p_evento = plog_queue.front();
 		plog_queue.pop();
-		Tools::Trace("PID %d. Unlocking Log Mutex (1)...", Tools::Pid());
+		//Tools::Trace("PID %d. Unlocking Log Mutex (1)...", Tools::Pid());
+		//Tools::Trace("PID %d. GetEvent ... &event=%08X...", Tools::Pid(), (unsigned int)&(*p_evento));
 		return true;
 	}
-	Tools::Trace("PID %d. Unlocking Log Mutex (2)...", Tools::Pid());
+	//Tools::Trace("PID %d. Unlocking Log Mutex (2)...", Tools::Pid());
 	return false;
 }
 
