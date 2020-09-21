@@ -251,6 +251,8 @@ private:
 #else
 	static  void catchAllSignal(int sig)
 	{
+		Tools::Trace("pid %d. Recibida Signal %d", getpid(), sig);
+
 		SignalMessage("Recibida Signal %d. PID=%d...", sig, getpid());
 
 		switch(sig)
@@ -267,6 +269,7 @@ private:
 				break;            
         
 		}
+		Tools::Trace("pid %d. Fin Signal %d", getpid(), sig);
 	}
 #endif
 	void setAllSignalCatch() 

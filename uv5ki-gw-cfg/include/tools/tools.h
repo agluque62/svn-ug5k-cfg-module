@@ -100,7 +100,11 @@ public:
 
 		fatalerror(string(textString));
 	}
+	static void Trace(const char* fmt, ...);
 
+	static int Pid() {
+		return getpid();
+	}
 };
 
 #endif

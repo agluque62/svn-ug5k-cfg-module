@@ -118,6 +118,7 @@ std::queue<PLogEvent > CodeBase::plog_queue;
 util::Mutex CodeBase::plog_mutex;
 bool CodeBase::plog_queue_event_get(PLogEvent *p_evento) 
 {
+	Tools::Trace("Locking queue_event. pid %d", getpid());
 	util::MutexLock lock(plog_mutex);
 	if (!plog_queue.empty())
 	{

@@ -409,10 +409,11 @@ void Tools::append2file(string name, string msg)
 }
 
 /** */
-static int current_file_error = 4, max_files_error=4;
-static int current_file_entry = 250, max_file_entries=250;
 void Tools::fatalerror(string msg)
 {
+	static int current_file_error = 4, max_files_error = 4;
+	static int current_file_entry = 1024, max_file_entries = 1024;
+
 	if (++current_file_entry >= max_file_entries) {
 		current_file_entry = 0;
 		if (++current_file_error >= max_files_error) {
@@ -425,4 +426,34 @@ void Tools::fatalerror(string msg)
 
 	string name = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
 	Tools::append2file(onflash(name), Tools::Int2String(current_file_entry) + ", " + Tools::Ahora() + ": " + msg);
+}
+
+void Tools::Trace(const char* fmt, ...) {
+	static int current_file_trace = 4, max_files_trace = 4;
+	static int current_file_trace_entry = 1024, max_file_trace_entries = 1024;
+	static SysMutex mtx;
+
+	va_list args;
+	va_start(args, fmt);
+	char textString[256] = { '\0' };
+#ifdef _WIN32
+	vsnprintf_s(textString, sizeof(textString), fmt, args);
+#else
+	vsnprintf(textString, sizeof(textString), fmt, args);
+#endif
+	va_end(args);
+
+	SysMutexLock lock(mtx);
+	if (++current_file_trace_entry >= max_file_trace_entries) {
+		current_file_trace_entry = 0;
+		if (++current_file_trace >= max_files_trace) {
+			current_file_trace = 0;
+		}
+		/** Inicializar el fichero para la proxima escritura */
+		string name_prox = "trace_" + Tools::Int2String(current_file_trace) + ".log";
+		remove(onflash(name_prox).c_str());
+	}
+
+	string name = "trace_" + Tools::Int2String(current_file_trace) + ".log";
+	Tools::append2file(onflash(name), Tools::Int2String(current_file_trace_entry) + ", " + Tools::Ahora() + ": " + textString);
 }
