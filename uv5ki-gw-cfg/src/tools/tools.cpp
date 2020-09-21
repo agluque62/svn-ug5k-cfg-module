@@ -455,5 +455,5 @@ void Tools::Trace(const char* fmt, ...) {
 	}
 
 	string name = "trace_" + Tools::Int2String(current_file_trace) + ".log";
-	Tools::append2file(onflash(name), Tools::Int2String(current_file_trace_entry) + ", " + Tools::Ahora() + ": " + textString);
+	Tools::append2file(onflash(name), /*Tools::Int2String(current_file_trace_entry) + ", " + */Tools::Ahora() + ": " + textString);
 }

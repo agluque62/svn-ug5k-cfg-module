@@ -15,6 +15,9 @@
 #include <iostream>
 #include <fstream>
 
+#include "../../include/base/thread.h"
+
+
 #ifdef _WIN32
 	#include <Windows.h>
 	#pragma warning (disable:4996) 
