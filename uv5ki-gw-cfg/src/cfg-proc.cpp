@@ -602,6 +602,7 @@ void SoapClientProc::PedirConfiguracion(string cfg)
 {
 	try
 	{
+#ifdef _NOPOINTERS_
 		/** Lee la configuracion recibida */
 		soap_config sConfig(getXml, hwIp, hwName, SERVER_URL/*hwServer*/);
 
@@ -613,6 +614,18 @@ void SoapClientProc::PedirConfiguracion(string cfg)
 
 		/** Activa la configuracion recibida */
  		p_working_config->set(sConfig);
+#else
+		soap_config* pConfig = new soap_config(getXml, hwIp, hwName, SERVER_URL);
+		if (pConfig != NULL) {
+			pConfig->saveIn(LAST_SOAP_REC(Tools::Int2String(_lastcfg & 3)));
+			p_working_config->save_to(LAST_SAVE(Tools::Int2String(_lastcfg++ & 3)));
+			p_working_config->set(*pConfig);
+			delete pConfig;
+		}
+		else {
+			PLOG_ERROR("No se ha podido recibir la configuracion.");
+		}
+#endif
 
 		/** Actualiza la configuracion recibida... */
 		p_working_config->save_to(LAST_CFG);
