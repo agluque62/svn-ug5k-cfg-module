@@ -23,8 +23,13 @@ public:
 	~HttpClient(void){}
 
 public:
+#ifdef _POINTER_TO_RESPONSE_
 	ParseResponse SendHttpCmd(string cmd, int ms_timeout);
 	ParseResponse SendHttpCmd(string metodo, string cmd, int ms_timeout, string jdata="");
+#else
+	void SendHttpCmd(string cmd, ParseResponse *httpResp, int ms_timeout);
+	void SendHttpCmd(string metodo, string cmd, ParseResponse* httpResp, int ms_timeout, string jdata = "");
+#endif
 
 public:
 	static void ParseHost(string host, string &ip, int &port);

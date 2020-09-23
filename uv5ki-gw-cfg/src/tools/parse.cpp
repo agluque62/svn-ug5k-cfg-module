@@ -347,6 +347,8 @@ bool ParseResponse::Parse(CTCPSocket &sck,int timeout)
 
 	Tools::Trace("Parseando Respuesta HTTP...");
 
+	Clear();
+
 	/** Procesar la Primera Linea */
 	if (sck.ReadLine(line, timeout)<=0)
 		return false;

@@ -7,6 +7,7 @@
 #include "./base/sistema.h"
 #include "./tools/tools.h"
 #include "./tools/ftp-client.h"
+#include "./tools/http-client.h"
 #include "./config/local-config.h"
 
 using namespace std;
@@ -96,6 +97,9 @@ private:
 	struct stat _currentMod;
 #endif
 	time_t _lock;
+#ifndef _POINTER_TO_RESPONSE_
+	ParseResponse httpResponse;
+#endif
 };
 
 /**

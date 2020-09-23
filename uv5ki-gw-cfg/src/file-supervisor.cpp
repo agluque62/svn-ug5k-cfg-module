@@ -200,10 +200,14 @@ bool SupervisedFile::RemoteLock(string httpHost)
 		"Host: " + httpHost + 
 		"\r\n\r\n" + 
 		_dstpath;
-	ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
-	if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+	ParseResponse httpResponse = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
+#else
+	HttpClient(httpHost).SendHttpCmd(request, &httpResponse, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
+#endif
+	if (httpResponse.Status() != "200")
 	{
-		throw Exception("REQUEST ERROR: PUT /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_REMOTE_LOCK) + " Host: " + httpHost +  ". " + response.Status());
+		throw Exception("REQUEST ERROR: PUT /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_REMOTE_LOCK) + " Host: " + httpHost +  ". " + httpResponse.Status());
 	}
 	return true;
 }
@@ -217,10 +221,14 @@ bool SupervisedFile::RemoteUnlock(string httpHost)
 		"Host: " + httpHost + 
 		"\r\n\r\n" +
 		_dstpath;
-	ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
-	if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+	ParseResponse httpResponse = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
+#else
+	HttpClient(httpHost).SendHttpCmd(request, &httpResponse, LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"));
+#endif
+	if (httpResponse.Status() != "200")
 	{
-		throw Exception("REQUEST ERROR: PUT /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_REMOTE_LOCK) + " Host: " + httpHost +  ". " + response.Status());
+		throw Exception("REQUEST ERROR: PUT /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_REMOTE_LOCK) + " Host: " + httpHost +  ". " + httpResponse.Status());
 	}
 	return true;
 }

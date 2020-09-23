@@ -101,6 +101,9 @@ private:
 	static web_config  _web_config;
 	static webData_VersionNucleoNew _versiones;
 	static void *file_version_load_thread_routine(void *arg);
+#ifndef _POINTER_TO_RESPONSE_
+	static ParseResponse httpResponse;
+#endif
 };
 
 #endif

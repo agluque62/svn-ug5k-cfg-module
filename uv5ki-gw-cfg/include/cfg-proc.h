@@ -96,6 +96,8 @@ protected:
 	static string hwName;
 	static string hwServer;
 	string _last_cfgr_time;
+protected:
+	static ParseResponse httpResp;
 };
 
 

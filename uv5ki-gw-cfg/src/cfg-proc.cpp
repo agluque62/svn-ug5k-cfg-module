@@ -16,6 +16,7 @@ CfgProc *CfgProc::p_cfg_proc=NULL;
 string CfgProc::hwName;
 string CfgProc::hwIp;
 string CfgProc::hwServer;
+ParseResponse CfgProc::httpResp;
 
 /** */
 CfgProc::CfgProc(void) {
@@ -284,20 +285,24 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 {
 	string path = "/configurations/" + cfg + "/gateways/" + _ip_propia + "/all";
 	string request = "GET " + path + " HTTP/1.1\r\nHost: " + SERVER_URL /*_host_config*/ + "\r\nContent-Type: application/json\r\n\r\n";
-	ParseResponse response = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
-	if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+#else
+	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+#endif
+	if (httpResp.Status() != "200")
 	{
 		throw Exception("REQUEST ERROR: GET " + path + 
-			" Host: " + SERVER_URL/*_host_config*/ +  ". " + response.StatusText());
+			" Host: " + SERVER_URL/*_host_config*/ +  ". " + httpResp.StatusText());
 	}
 	/** Salva los datos recibidos */
-	sistema::DataSaveAs(response.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
+	sistema::DataSaveAs(httpResp.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
 
 	/** Salva ultima configuracion */
 	p_working_config->save_to(LAST_SAVE(Tools::Int2String(_lastcfg++ & 3)));
 
 	/** Lee la configuracion recibida */
-	CommConfig cfg_redan(response.Body());
+	CommConfig cfg_redan(httpResp.Body());
 	p_working_config->config.tipo = 0;
 	
 	/** Activa la configuracion recibida */
@@ -314,14 +319,18 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 void JsonClientProc::ChequearConfiguracion() 
 {
 	string request = "GET /gateways/" + _ip_propia + "/" + MAIN_TEST_CONFIG + "?std=" + StdSincrGet() + " HTTP/1.1\r\nHost: " + SERVER_URL/*_host_config*/ + "\r\nContent-Type: application/json\r\n\r\n";
-	ParseResponse response = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
-	if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+#else
+	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+#endif
+	if (httpResp.Status() != "200")
 	{
 		throw Exception("REQUEST ERROR: GET /" + _ip_propia + "/" + MAIN_TEST_CONFIG + 
-			" Host: " + SERVER_URL/*_host_config*/ +  ". " + response.Status() + ":" + response.StatusText());
+			" Host: " + SERVER_URL/*_host_config*/ +  ". " + httpResp.Status() + ":" + httpResp.StatusText());
 	}
 
-	RedanTestComm cfgRemota(response.Body());
+	RedanTestComm cfgRemota(httpResp.Body());
 
 	if (_modo_redan=="0") 
 	{
@@ -370,14 +379,18 @@ void JsonClientProc::SubirConfiguracion()
 		string path = "/configurations/" + cfgname + "/gateways/" + _ip_propia + "/all";
 		string request = "POST " + path + " HTTP/1.1\r\nHost: " + SERVER_URL/*_host_config*/ + "\r\nContent-Type: application/json; charset=utf-8\r\n" +
 			"Content-Length: " + Tools::Int2String((int )cfg.size()) + "\r\n\r\n" + 	cfg + "\r\n";
-		ParseResponse response = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
-		if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+		ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
+#else
+		HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
+#endif
+		if (httpResp.Status() != "200")
 		{
 			throw Exception("REQUEST ERROR: POST " + path + 
-				" Host: " + SERVER_URL/*_host_config*/ +  ". " + response.Status() + ":" + response.StatusText());
+				" Host: " + SERVER_URL/*_host_config*/ +  ". " + httpResp.Status() + ":" + httpResp.StatusText());
 		}
 
-		RedanTestComm cfgRemota(response.Body());
+		RedanTestComm cfgRemota(httpResp.Body());
 		p_working_config->TimeStamp(cfgRemota);
 		p_working_config->save_to(LAST_CFG);
 		PLOG_INFO("Configuracion Enviada Correctamente (%s).", cfgRemota.fechaHora.c_str());
@@ -516,18 +529,22 @@ string SoapClientProc::getXml(string proc, string p1, string p2, string p3)
 		"\r\nContent-Type: application/x-www-form-urlencoded\r\n" +
 		"Content-Length: " + Tools::Int2String((int )data.size()) + 
 		"\r\n\r\n" + 	data /*+ "\r\n"*/;
-	ParseResponse response = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
-	if (response.Status() != "200")
+#ifdef _POINTER_TO_RESPONSE_
+	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
+#else
+	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
+#endif
+	if (httpResp.Status() != "200")
 	{
-		PLOG_DEBUG("SoapClientProc::getXml: %s", response.Status().c_str());
+		PLOG_DEBUG("SoapClientProc::getXml: %s", httpResp.Status().c_str());
 		throw Exception("REQUEST ERROR: POST " + path + 
-		" Host: " + SERVER_URL/*hwServer*/ +  ". " + response.Status() + ":" + response.StatusText());
+		" Host: " + SERVER_URL/*hwServer*/ +  ". " + httpResp.Status() + ":" + httpResp.StatusText());
 	}
 
 #ifdef _WIN32 
-	sistema::DataSaveAs(response.Body(), proc+"_" + p2 + "_" + p3 + ".xml");
+	sistema::DataSaveAs(httpResp.Body(), proc+"_" + p2 + "_" + p3 + ".xml");
 #endif	
-	return response.Body();
+	return httpResp.Body();
 }
 
 /** */
