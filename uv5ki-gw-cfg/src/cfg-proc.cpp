@@ -58,7 +58,7 @@ bool CfgProc::IdConfig(int &std, string &id, string &tim)
 /** */
 void CfgProc::AvisaSubirConfiguracion() 
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "CfgProc");
 	stAviso aviso;
 
 	aviso.ip = SERVER_URL; // _host_config;
@@ -72,7 +72,7 @@ void CfgProc::AvisaSubirConfiguracion()
 /** */
 void CfgProc::AvisaPideConfiguracion(string cfg) 
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "CfgProc");
 
 	stAviso aviso;
 	aviso.ip = SERVER_URL;	// _host_config;
@@ -85,7 +85,7 @@ void CfgProc::AvisaPideConfiguracion(string cfg)
 /** */
 void CfgProc::AvisaChequearConfiguracion() 
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "CfgProc");
 
 #ifdef _WIN32
 	if (LocalConfig::p_cfg->get(strWindowsTest, strItemWindowsTestServidor)=="1"/*.winSyncSer()*/)
@@ -105,7 +105,7 @@ void CfgProc::AvisaChequearConfiguracion()
 /** */
 bool CfgProc::Get(stAviso &aviso)
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "CfgProc");
 	return avisos.get(aviso);
 }
 
@@ -288,7 +288,8 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 #ifdef _POINTER_TO_RESPONSE_
 	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
 #else
-	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+	HttpClient client(SERVER_URL);
+	client.SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
 #endif
 	if (httpResp.Status() != "200")
 	{
@@ -322,7 +323,8 @@ void JsonClientProc::ChequearConfiguracion()
 #ifdef _POINTER_TO_RESPONSE_
 	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
 #else
-	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+	HttpClient client(SERVER_URL);
+	client.SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
 #endif
 	if (httpResp.Status() != "200")
 	{
@@ -382,7 +384,8 @@ void JsonClientProc::SubirConfiguracion()
 #ifdef _POINTER_TO_RESPONSE_
 		ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
 #else
-		HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
+		HttpClient client(SERVER_URL);
+		client.SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpPostTimeout, "5000"));
 #endif
 		if (httpResp.Status() != "200")
 		{
@@ -532,7 +535,8 @@ string SoapClientProc::getXml(string proc, string p1, string p2, string p3)
 #ifdef _POINTER_TO_RESPONSE_
 	ParseResponse httpResp = HttpClient(SERVER_URL).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
 #else
-	HttpClient(SERVER_URL).SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
+	HttpClient client(SERVER_URL);
+	client.SendHttpCmd(request, &httpResp, LocalConfig().getint(strRuntime, strRuntimeItemUlisesHttpTimeout, "5000"));
 #endif
 	if (httpResp.Status() != "200")
 	{

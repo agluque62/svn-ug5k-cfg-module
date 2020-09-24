@@ -66,7 +66,7 @@ void ManProc::Run()
 		if (LocalConfig::p_cfg->get(strWindowsTest, strItemWindowsTestSnmpStd, "0")=="1"/*.winStdSnmp()*/)
 #endif
 		{
-			CCSLock _lock(m_lock);
+			CCSLock _lock(m_lock, "ManPRoc");
 			if ((--_cnt) <= 0)
 			{
 				GetEstadoCpu(0);
@@ -101,7 +101,7 @@ void ManProc::Dispose()
 /** */
 string ManProc::jestado()
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "ManPRoc");
 
 	/** Esta activa la pagina acelero el Polling */
 	_cnt = _cnt >= 2 ? 2 : _cnt;
@@ -125,7 +125,7 @@ void ManProc::resetCpu(ePRIdentity quien, jCpu &cpu)
 /** */
 void ManProc::setEstadoCpu(ePRIdentity quien, jCpu &cpu, int len, void *data, bool inicializando)
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "ManPRoc");
 
 	vector<std::string> nivel1;
 	string rsp = string((char *)data);
@@ -229,7 +229,7 @@ void ManProc::SetEstadoPRCpu(ePRIdentity quien, /*ePRIdentity que, */int nestado
 /** */
 void ManProc::setBite(int len, void *data)
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "ManPRoc");
 
 	((char *)data)[len]=0;
 
@@ -270,7 +270,7 @@ void ManProc::setBite(int len, void *data)
 */
 string ManProc::jbite()
 {
-	CCSLock _lock(m_lock);
+	CCSLock _lock(m_lock, "ManPRoc");
 
 	return bite.JSerialize();
 }

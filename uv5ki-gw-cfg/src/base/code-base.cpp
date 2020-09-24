@@ -1,6 +1,7 @@
 #include "../../include/base/code-base.h"
-#include "../../include/base/sistema.h"
 #include "../../include/tools/tools.h"
+#include "../../include/base/sistema.h"
+#include "../../include/base/thread.h"
 
 /** MACROS */
 #define LOGCONF	ON_WORKING_DIR("plog.conf")
@@ -174,8 +175,7 @@ void *CodeBase::plog_thread_routine(void *arg)
 			Tools::fatalerror("PlogThread Exception...");
 #endif
 		}
-		//Sleep(10);
-		Sleep(50);
+		Sleep(10);
 	}
 	return NULL;
 }

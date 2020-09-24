@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <assert.h>
 
+#include "../tools/tools.h"
 #include "code-base.h"
 #include "sistema.h"
 
@@ -87,16 +88,21 @@ private:
 class CCSLock
 {
 public:
-    CCSLock(CCritSec &cs) : m_cs(cs)
-    {
-		pthread_mutex_lock((pthread_mutex_t *)m_cs);
-    }
-    ~CCSLock()
-    {
-		pthread_mutex_unlock((pthread_mutex_t *)m_cs);
-    }
+ //   CCSLock(CCritSec &cs, string id) : m_cs(cs), m_id(id)
+ //   {
+	//	Tools::Trace("CCSLock %s. Locking by %d", id, Tools::Pid());
+	//	pthread_mutex_lock((pthread_mutex_t *)m_cs);
+ //   }
+ //   ~CCSLock()
+ //   {
+	//	pthread_mutex_unlock((pthread_mutex_t *)m_cs);
+	//	Tools::Trace("CCSLock %s. Unlocked by %d", m_id, Tools::Pid());
+	//}
+	CCSLock(CCritSec& cs, string id);
+	~CCSLock();
 private:
     CCritSec& m_cs;
+	string m_id;
 };
 
 /**

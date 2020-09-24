@@ -24,7 +24,7 @@ FileSupervisor::~FileSupervisor(void)
 */
 bool FileSupervisor::LocalLock(string pathoffile)
 {
-	CCSLock lock(_acceso);
+	CCSLock lock(_acceso, "FileSupervisor");
 	SupervisedFile *file = Find(pathoffile);
 	if (file==NULL)
 		return false;
@@ -39,7 +39,7 @@ bool FileSupervisor::LocalLock(string pathoffile)
 */
 bool FileSupervisor::LocalUnlock(string pathoffile)
 {
-	CCSLock lock(_acceso);
+	CCSLock lock(_acceso, "FileSupervisor");
 	SupervisedFile *file = Find(pathoffile);
 	if (file==NULL)
 		return false;
@@ -66,7 +66,7 @@ void FileSupervisor::Run()
 		this->sleep(500);
 		try 
 		{
-			CCSLock lock(_acceso);
+			CCSLock lock(_acceso, "FileSupervisor");
 			for (list<SupervisedFile >::iterator file = _files.begin(); file != _files.end(); file++)
 			{
 				if ((*file).HasChanged()==true)

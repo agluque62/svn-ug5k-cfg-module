@@ -1,5 +1,5 @@
-#ifndef _TOOLS_
-#define _TOOLS_
+#ifndef _UG5K_TOOLS_
+#define _UG5K_TOOLS_
 
 #include <stdio.h>
 #include <string.h>

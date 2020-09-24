@@ -247,11 +247,13 @@ public:
 protected:
 	void GlobalAccessAcquire() 
 	{
+		Tools::Trace("(LConf Lock) <= Locking by %d", Tools::Pid());
 		pthread_mutex_lock(&LocalConfig::global_mutex);
 	}
 	void GlobalAccessRelease()
 	{
 		pthread_mutex_unlock(&LocalConfig::global_mutex);
+		Tools::Trace("(LConf Lock) => Unlocking by %d", Tools::Pid());
 	}
 private:
 	INIFile ini;

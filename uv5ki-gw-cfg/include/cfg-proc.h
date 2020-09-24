@@ -67,7 +67,7 @@ public:
 	bool IdConfig(int &std, string &id, string &tim);
 	eStdLocalConfig GetStdLocalConfig()
 	{
-		CCSLock _lock(m_lock);
+		CCSLock _lock(m_lock, "CfgProc");
 		return _stdLocalConfig;
 	}
 	string Modo() {
