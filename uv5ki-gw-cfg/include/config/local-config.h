@@ -60,7 +60,6 @@ using namespace std;
 #define strRuntimeItemColateralIpInfoPath		((const char *)"COLATERAL_IP_INFO_PATH")
 #define strRuntimeItemSoapServicePath			((const char *)"SOAP-SERVICE-PATH")
 #define strRuntimeItemForceRdAudioNormal		((const char *)"FORCE_RDAUDIO_NORMAL")
-#define strRuntimeItemSignalMsgTarget			((const char *)"SIGNAL_MSG_TARGET")
 
 
 #define strFilesSupervidor				((const char *)"FILESUPERVISOR")
@@ -247,13 +246,11 @@ public:
 protected:
 	void GlobalAccessAcquire() 
 	{
-		Tools::Trace("(LConf Lock) <= Locking by %d", Tools::Pid());
 		pthread_mutex_lock(&LocalConfig::global_mutex);
 	}
 	void GlobalAccessRelease()
 	{
 		pthread_mutex_unlock(&LocalConfig::global_mutex);
-		Tools::Trace("(LConf Lock) => Unlocking by %d", Tools::Pid());
 	}
 private:
 	INIFile ini;

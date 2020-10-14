@@ -1,5 +1,5 @@
-#ifndef _UG5K_TOOLS_
-#define _UG5K_TOOLS_
+#ifndef _TOOLS_
+#define _TOOLS_
 
 #include <stdio.h>
 #include <string.h>
@@ -14,9 +14,6 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-
-#include "../../include/base/thread.h"
-
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -90,24 +87,7 @@ public:
 	static void append2file(string name, string msg);
 
 	static void fatalerror(string msg);
-	static void fatalerror(const char* fmt, ...) {
-		va_list args;
-		va_start(args, fmt);
-		char textString[256] = { '\0' };
-#ifdef _WIN32
-		vsnprintf_s(textString, sizeof(textString), fmt, args);
-#else
-		vsnprintf(textString, sizeof(textString), fmt, args);
-#endif
-		va_end(args);
 
-		fatalerror(string(textString));
-	}
-	static void Trace(const char* fmt, ...);
-
-	static int Pid() {
-		return getpid();
-	}
 };
 
 #endif

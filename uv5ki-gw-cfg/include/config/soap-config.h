@@ -761,8 +761,11 @@ public:
 class soap_config : public xml_data
 {
 public:
+	soap_config(){}
 	soap_config(remoteGetXdataFunc remoteFunc, string ip, string hwName, string ipServer);
 	~soap_config(void);
+public:
+	void get(remoteGetXdataFunc remoteFunc, string ip, string hwName, string ipServer);
 
 public:
 	void xread(xml_node<> * xnode) {

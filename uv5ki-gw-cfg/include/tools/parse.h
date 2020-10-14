@@ -66,7 +66,6 @@ public:
 	string StatusText(){return _status_text;}
 
 	bool Error(){return _error;}
-	bool Parse(CTCPSocket& sck, int timeout);
 
 private:
 	bool Parse(string response);
@@ -74,12 +73,9 @@ private:
 	bool ParseStatus(string line);
 	bool ParseHeader(string line);
 	string ParseCkunked(vector<string> &data, vector<string>::iterator &it);
+	bool Parse(CTCPSocket &sck, int timeout);
 	bool ParseCkunked(CTCPSocket &sck, int timeout);
 	void SetError(){_error=true;}
-	void Clear() {
-		_status = _httpv = _status_text = _body = "";
-		_headers.clear();
-	}
 
 private:
 	string _status,_httpv, _status_text, _body;

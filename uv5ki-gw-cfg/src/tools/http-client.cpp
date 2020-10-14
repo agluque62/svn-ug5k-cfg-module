@@ -15,7 +15,6 @@ void HttpClient::ParseHost(string host, string &ip, int &port)
 	}
 }
 
-#ifdef _POINTER_TO_RESPONSE_
 /** */
 ParseResponse HttpClient::SendHttpCmd(string cmd, int ms_timeout)
 {
@@ -25,19 +24,21 @@ ParseResponse HttpClient::SendHttpCmd(string cmd, int ms_timeout)
 	CIPAddress host(ip, port);
 	CTCPSocket sck;
 
-	Tools::Trace("HttpClient::SendHttpCmd CmdSize %d.", sizeof(cmd));
-
-	try
+	try 
 	{
 		if (!sck.Connect(host, conn_timeout))
 			throw Exception("No puedo conectarme al HOST: " + server);
 		if (sck.Send(cmd.c_str(), cmd.length()) != (int) cmd.length())
 			throw Exception("Error al Enviar request: " + cmd);
 
-		ParseResponse respuesta(sck, ms_timeout);
-		Tools::Trace("HttpClient::SendHttpCmd ResponseSize %d.", sizeof(respuesta));
-		sck.Close();
+		//string respuesta;
+		////sck.Recv_text(respuesta, ms_timeout, char_timeout);
+		//sck.Recv_http(respuesta);
+		//sck.Close();
+		//return ParseResponse(respuesta.c_str());
 
+		ParseResponse respuesta(sck, ms_timeout);
+		sck.Close();
 		return respuesta;
 
 	} 
@@ -68,46 +69,3 @@ void HttpClient::TestChunkResponse()
 	string request = "GET /ntpstatus  HTTP/1.1\r\nHost: 192.168.0.53:8080\r\nContent-Type: application/json\r\n\r\n";
 	ParseResponse response = SendHttpCmd(request, 5000);
 }
-#else
-void HttpClient::SendHttpCmd(string metodo, string cmd, ParseResponse *httpResponse, int ms_timeout, string jdata)
-{
-	string line1 = metodo + " /" + cmd + " HTTP/1.1\r\n";
-	string line2 = "Host: " + server + "\r\n";
-	string line3 = "Content-Type: application/json\r\n";
-	string line4 = "Content-Length: " + Tools::itoa(jdata.length()) + "\r\n";
-
-	string request = line1 + line2 + line3 + line4 + "\r\n" + jdata + "\r\n";
-	// string request = metodo + "/" + cmd + " HTTP/1.1\r\nHost: " + server + "\r\nContent-Type: application/json\r\n\r\n" + jdata + "\r\n";
-
-	SendHttpCmd(request, httpResponse, ms_timeout);
-}
-
-void HttpClient::SendHttpCmd(string cmd, ParseResponse *httpResponse, int ms_timeout)
-{
-	string ip;
-	int port;
-	ParseHost(server, ip, port);
-	CIPAddress host(ip, port);
-	CTCPSocket sck;
-
-	Tools::Trace("HttpClient::SendHttpCmd CmdSize %d.", sizeof(cmd));
-
-	try
-	{
-		if (!sck.Connect(host, conn_timeout))
-			throw Exception("No puedo conectarme al HOST: " + server);
-		if (sck.Send(cmd.c_str(), cmd.length()) != (int)cmd.length())
-			throw Exception("Error al Enviar request: " + cmd);
-
-		httpResponse->Parse(sck, ms_timeout);
-		Tools::Trace("HttpClient::SendHttpCmd Response %s.", httpResponse->Status());
-		sck.Close();
-	}
-	catch (socket_error e)
-	{
-		// throw Exception(e);
-		throw Exception("Error al Conectarme al HOST " + server + ": " + e.Message(), e.Code());
-	}
-}
-
-#endif

@@ -41,7 +41,6 @@ char *acStrVersion()
 	return buffer;
 }
 
-
 /** */
 class U5kiGwCfg : public CodeBase
 {
@@ -58,7 +57,7 @@ public:
 			/** 20171016. Timeout maximo que acota posibles actualizaciones de RELOJ */
 			hangup_timeout_max = hangup_timeout_min + 60;
 #if defined (_WIN32)
-			bool mode = true;	/** false: REDAN, true: ULISES */
+			bool mode = false;	/** false: REDAN, true: ULISES */
 #else
 			bool mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoGlobal, "0")=="1"/*.ModoUlises()*/;
 #endif
@@ -69,8 +68,6 @@ public:
 				mode==false ? string("REDAN-" + redan_mode).c_str() : "ULISES", 
 				acBuildString, 
 				WORKING_DIR);
-			SignalMessage("Recibida Signal %d. PID=%d...", 321, getpid());
-
 #else
 			PLOG_INFO("%s (%s) CfgServer(pid: %d): (%s) Iniciado en \"%s\". PIPE-ID: %s", 
 				Tools::read_txt_file(ON_WORKING_DIR("VERSION.TXT")).c_str(),  
@@ -131,26 +128,14 @@ public:
 			{
 				CThread::sleep(100);
 
-				if ((MainLoopLogInfoCount % 20) == 0) {
-					if (iDescPerro != -1){
-
-						write(iDescPerro, &ucPerro, 1);
+				if (iDescPerro != -1)
+				{
+					write( iDescPerro, &ucPerro, 1 );
+					if ( (MainLoopLogInfoCount % 50) == 0) {
 						PLOG_INFO("Escribiendo en Pipe ID: %d.", iDescPerro);
 					}
+					MainLoopLogInfoCount++;
 				}
-				if ((MainLoopLogInfoCount % 600) == 0 && iDescPerro == -1) {
-					PLOG_ERROR("Error PIPE to CARPER NO Abierta.");
-				}
-				MainLoopLogInfoCount++;
-
-				//if (iDescPerro != -1)
-				//{
-				//	write( iDescPerro, &ucPerro, 1 );
-				//	if ( (MainLoopLogInfoCount % 50) == 0) {
-				//		PLOG_INFO("Escribiendo en Pipe ID: %d.", iDescPerro);
-				//	}
-				//	MainLoopLogInfoCount++;
-				//}
 
 				SupervisaProcesos();
 			}
@@ -189,32 +174,10 @@ public:
 	}
 
 private:
-	static void SignalMessage(const char* fmt, ...) {
-		int target = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemSignalMsgTarget, "1") == "1" ? 1 : 0;
-		va_list args;
-		va_start(args, fmt);
-		char textString[256] = { '\0' };
-#ifdef _WIN32
-		vsnprintf_s(textString, sizeof(textString), fmt, args);
-#else
-		vsnprintf(textString, sizeof(textString), fmt, args);
-#endif
-		va_end(args);
-
-		switch (target)
-		{
-		case 0:
-			PLOG_ERROR(textString);
-			break;
-		default:
-			Tools::fatalerror(string(textString));
-			break;
-		}
-	}
 #ifndef _WIN32
 	static void traceSIGSEGV()
 	{
-		SignalMessage("********* SEGMENTATION FAULT *********");
+	  PLOG_ERROR("********* SEGMENTATION FAULT *********" );
 
 	  void *trace[32];
 	  size_t size, i;
@@ -223,17 +186,18 @@ private:
 	  size    = backtrace( trace, 32 );
 	  strings = backtrace_symbols( trace, size );
 
-	  SignalMessage("BACKTRACE:\n");
+	  PLOG_ERROR("BACKTRACE:\n" );
 
 	  for( i = 0; i < size; i++ ){
-		  SignalMessage("  %s", strings[i] );
+		  PLOG_ERROR("  %s", strings[i] );
 	  }
-	  SignalMessage("***************************************" );
+
+	  PLOG_ERROR("***************************************" );
 	}
 #ifdef _SIGACTION_
 	static void catchAllSignal (int sig, siginfo_t *siginfo, void *context)
 	{
-		SignalMessage("Recibida Signal %d. de PID=%ld, Code: %ld, UID: %ld.", sig, (long)siginfo->si_pid, (long)siginfo->si_code, (long)siginfo->si_uid);
+		PLOG_ERROR("Recibida Signal %d. de PID=%ld, Code: %ld, UID: %ld.", sig, (long)siginfo->si_pid, (long)siginfo->si_code, (long)siginfo->si_uid);
 		switch(sig)
 		{
 			case SIGINT:
@@ -251,10 +215,7 @@ private:
 #else
 	static  void catchAllSignal(int sig)
 	{
-		Tools::Trace("pid %d. Recibida Signal %d", getpid(), sig);
-
-		SignalMessage("Recibida Signal %d. PID=%d...", sig, getpid());
-
+		PLOG_ERROR("Recibida Signal %d. PID=%d...", sig, getpid());
 		switch(sig)
 		{
 			case SIGINT:
@@ -269,7 +230,6 @@ private:
 				break;            
         
 		}
-		Tools::Trace("pid %d. Fin Signal %d", getpid(), sig);
 	}
 #endif
 	void setAllSignalCatch() 

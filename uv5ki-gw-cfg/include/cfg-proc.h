@@ -67,7 +67,7 @@ public:
 	bool IdConfig(int &std, string &id, string &tim);
 	eStdLocalConfig GetStdLocalConfig()
 	{
-		CCSLock _lock(m_lock, "CfgProc");
+		CCSLock _lock(m_lock);
 		return _stdLocalConfig;
 	}
 	string Modo() {
@@ -96,8 +96,6 @@ protected:
 	static string hwName;
 	static string hwServer;
 	string _last_cfgr_time;
-protected:
-	static ParseResponse httpResp;
 };
 
 

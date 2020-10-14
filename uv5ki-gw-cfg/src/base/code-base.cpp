@@ -1,7 +1,6 @@
 #include "../../include/base/code-base.h"
-#include "../../include/tools/tools.h"
 #include "../../include/base/sistema.h"
-#include "../../include/base/thread.h"
+#include "../../include/tools/tools.h"
 
 /** MACROS */
 #define LOGCONF	ON_WORKING_DIR("plog.conf")
@@ -11,8 +10,6 @@ bool CodeBase::_plog_iniciado=false;
 plog::LogConfig CodeBase::cfg;
 plog::ConsoleAppender<plog::ConsoleFormatter> *CodeBase::p_consoleAppender;
 plog::NetUdpAppender<plog::Log4viewFormatter> *CodeBase::p_log4viewAppender;
-
-static SysMutex global_mutex;
 
 #if !defined(_PPC82xx_)
  /** Para pruebas... */
@@ -77,9 +74,7 @@ void CodeBase::_Log(plog::Severity level, const char *from, int line, const char
 		return;
 	}
 
-	//util::MutexLock lock(plog_mutex);
-	//Tools::Trace("PID %d. Locking Log Mutex...", Tools::Pid());
-	SysMutexLock global_lock(global_mutex);
+	util::MutexLock lock(plog_mutex);
 
 	static char textString[1024] = {'\0'};
 	memset(textString, '\0', sizeof(textString));
@@ -98,8 +93,6 @@ void CodeBase::_Log(plog::Severity level, const char *from, int line, const char
 		plog_queue.push(evento);
 	else
 		Tools::fatalerror(string("Cola de Log llena... Tamaño Maximo: ") + Tools::itoa(mcola));
-
-	//Tools::Trace("PID %d. unlocking Log Mutex. &event=%08X...", Tools::Pid(), (unsigned int)(&evento));
 }
 
 /** */
@@ -125,18 +118,13 @@ std::queue<PLogEvent > CodeBase::plog_queue;
 util::Mutex CodeBase::plog_mutex;
 bool CodeBase::plog_queue_event_get(PLogEvent *p_evento) 
 {
-	//util::MutexLock lock(plog_mutex);
-	//Tools::Trace("PID %d. Locking Log Mutex (1) ...", Tools::Pid());
-	SysMutexLock global_lock(global_mutex);
+	util::MutexLock lock(plog_mutex);
 	if (!plog_queue.empty())
 	{
 		*p_evento = plog_queue.front();
 		plog_queue.pop();
-		//Tools::Trace("PID %d. Unlocking Log Mutex (1)...", Tools::Pid());
-		//Tools::Trace("PID %d. GetEvent ... &event=%08X...", Tools::Pid(), (unsigned int)&(*p_evento));
 		return true;
 	}
-	//Tools::Trace("PID %d. Unlocking Log Mutex (2)...", Tools::Pid());
 	return false;
 }
 

@@ -7,8 +7,6 @@ BiteControl *BiteControl::This = NULL;
 /** */
 restHandler Uv5kiGwCfgWebApp::_handlers_list;
 web_config  Uv5kiGwCfgWebApp::_web_config;
-ParseResponse Uv5kiGwCfgWebApp::httpResponse;
-
 webData_VersionNucleoNew Uv5kiGwCfgWebApp::_versiones;
 
 /** */
@@ -536,20 +534,12 @@ void *Uv5kiGwCfgWebApp::ConfigSync(void* arg)
 		{
 			if (ipColateral != "") 
 			{
-#ifdef _POINTER_TO_RESPONSE_
-				ParseResponse httpResponse = HttpClient(ipColateral, Tools::atoi(_web_config.web_port)).SendHttpCmd("PUT",
+				ParseResponse resp = HttpClient(ipColateral, Tools::atoi(_web_config.web_port)).SendHttpCmd("PUT", 
 					string(CPU2CPU_MSG)+ "/" + string(CPU2CPU_MSG_CAMBIO_CONFIG), 
 					LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"),
 					P_WORKING_CONFIG->JConfig());
-#else
-				HttpClient(ipColateral, Tools::atoi(_web_config.web_port)).SendHttpCmd("PUT",
-					string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_CAMBIO_CONFIG),
-					&httpResponse,
-					LocalConfig().getint(strRuntime, strRuntimeItemLocalHttpTimeout, "5000"),
-					P_WORKING_CONFIG->JConfig());
-#endif
-				if (httpResponse.Status() != "200")
-					PLOG_ERROR("Uv5kiGwCfgWebApp::ConfigSync. HTTP-ERROR %s: <%s>", httpResponse.Status().c_str(), httpResponse.Body().c_str());
+				if (resp.Status() != "200")
+					PLOG_ERROR("Uv5kiGwCfgWebApp::ConfigSync. HTTP-ERROR %s: <%s>", resp.Status().c_str(), resp.Body().c_str());
 			}
 			else
 				PLOG_ERROR("Uv5kiGwCfgWebApp::ConfigSync. IP-COLATERAL NO VALIDA!!!");

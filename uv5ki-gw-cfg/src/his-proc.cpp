@@ -90,7 +90,7 @@ void HistClient::Run()
 void HistClient::SetEvent(int evento, string user, string rec, string p1, string val, string p2, string p3)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	char btemp[16];
 
@@ -132,7 +132,7 @@ void HistClient::SetEvent(int evento, string user, string rec, string p1, string
 void HistClient::SetBite(callback respuesta)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	stHistAviso aviso;
 	aviso.datos = string("C,T00");
@@ -145,7 +145,7 @@ void HistClient::SetBite(callback respuesta)
 void HistClient::SetReset()
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	stHistAviso aviso;
 	aviso.datos = string("C,T02");
@@ -158,7 +158,7 @@ void HistClient::SetReset()
 void HistClient::SetSincrState(string snmpStatus)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	// string snmpStatus = std==slcSincronizado ? "1" : std==slcConflicto ? "2" : "0";
 
@@ -173,7 +173,7 @@ void HistClient::SetSincrState(string snmpStatus)
 void HistClient::GetEstado(CIPAddress from, callback respuesta)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	stHistAviso aviso;
 	aviso.datos = string("C,C03");
@@ -186,7 +186,7 @@ void HistClient::GetEstado(CIPAddress from, callback respuesta)
 void HistClient::Signal(int toPort, callback rsp)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	stHistAviso aviso;
 	
@@ -200,7 +200,7 @@ void HistClient::Signal(int toPort, callback rsp)
 void HistClient::SetEstadoCpu(string local, string remoto)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 
 	stHistAviso aviso;
 	
@@ -251,6 +251,6 @@ void HistClient::PrepareSocket(CUDPSocket &sck, int port)
 bool HistClient::Get(stHistAviso &aviso)
 {
 	/** Lock */
-	CCSLock lock(_acceso, "HistClient");
+	CCSLock lock(_acceso);
 	return avisos.get(aviso);
 }

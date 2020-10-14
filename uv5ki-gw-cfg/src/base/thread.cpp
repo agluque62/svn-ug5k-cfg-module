@@ -13,18 +13,6 @@ void AssertEqual0(int val)
 {
 	assert(val==0);
 }
-
-CCSLock::CCSLock(CCritSec& cs, string id) : m_cs(cs), m_id(id)
-{
-	Tools::Trace("(%s Lock) <= Locking by %d", id.c_str(), Tools::Pid());
-	pthread_mutex_lock((pthread_mutex_t*)m_cs);
-}
-CCSLock::~CCSLock()
-{
-	pthread_mutex_unlock((pthread_mutex_t*)m_cs);
-	Tools::Trace("(%s Lock) => Unlocking by %d", m_id.c_str(), Tools::Pid());
-}
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
