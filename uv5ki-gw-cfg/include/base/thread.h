@@ -181,6 +181,8 @@ protected:
 		usleep(msec*1000);
 #endif
 	}
+	void StackInfo(const char *pname);
+	void PrioritySet(int level = 1);
 
 	pthread_t m_hThread;
 	static void *sRun(void *arg);

@@ -104,6 +104,42 @@ void CThread::Stop()
 	m_Dead.Stop();
 }
 
+void CThread::PrioritySet(int iPrio)
+{
+#ifdef _WIN32
+#else
+	struct sched_param sSchedDatos;
+	int iAux;
+
+	if (1 == iPrio || 2 == iPrio || 3 == iPrio)  //EDU 0000
+	{
+		// Me convierto en proceso de tiempo real con politica de planificacion SCHED_FIFO.
+		// Esto solo funciona si somos root.
+
+		sched_getparam(0, &sSchedDatos);
+
+		sSchedDatos.sched_priority = sched_get_priority_min(SCHED_FIFO);
+		sSchedDatos.sched_priority += iPrio - 1; //EDU 0000
+		if (0 != (iAux = sched_setscheduler(0, SCHED_FIFO, &sSchedDatos)))
+		{
+			PLOG_ERROR("Error %d on sched_setscheduler. pid=%d", iAux, pthread_self());
+			return;
+		}
+	}
+	else
+	{
+		// Proceso con prioridad normalita.
+		sched_getparam(0, &sSchedDatos);
+		sSchedDatos.sched_priority = sched_get_priority_min(SCHED_OTHER);
+		if (0 != (iAux = sched_setscheduler(0, SCHED_OTHER, &sSchedDatos)))
+		{
+			PLOG_ERROR("Error %d on sched_setscheduler. pid=%d", iAux, pthread_self());
+			return;
+		}
+	}
+#endif
+}
+
 //////////////////////////////////////////////////////////////////////
 //
 void *CThread::sRun(void *pParam)
@@ -132,6 +168,35 @@ void *CThread::sRun(void *pParam)
 bool CThread::IsLive()
 {
 	return m_bLive;
+}
+
+void CThread::StackInfo(const char* pname)
+{
+#ifdef _WIN32
+#else
+	int s;
+	pthread_attr_t gattr;
+	size_t v;
+	void* stkaddr;
+
+	/* pthread_getattr_np() is a non-standard GNU extension that
+	   retrieves the attributes of the thread specified in its
+	   first argument */
+
+	s = pthread_getattr_np(pthread_self(), &gattr);
+	if (s == 0) {
+		s = pthread_attr_getstack(&gattr, &stkaddr, &v);
+		if (s == 0) {
+			PLOG_INFO("%s. Stack Info: Stack [%p - 0x%x] SP=0x%x", pname, stkaddr, v, &s);
+		}
+		else {
+			PLOG_ERROR("%s. Error %d on pthread_getattr_np. pid=%d", pname, s, pthread_self());
+		}
+	}
+	else {
+		PLOG_ERROR("%s. Error %d on pthread_attr_getstack. pid=%d", pname, s, pthread_self());
+	}
+#endif
 }
 
 /** */

@@ -21,6 +21,7 @@
 	#include "../base/dirent.h"
 #else
 	#include <dirent.h>
+	#include <sys/timeb.h>
 #endif
 
 using namespace std;
@@ -87,6 +88,10 @@ public:
 	static void append2file(string name, string msg);
 
 	static void fatalerror(string msg);
+
+	static void Trace(const char* fmt, ...);
+	static bool SafeItoA(int val, char* strval);
+	static void SafeLogFromSignal(const char* msg, int p1 = 0, int p2 = 0, int p3 = 0);
 
 };
 

@@ -238,13 +238,19 @@ std::string Tools::StrFormat(const char *fmt, ...) {
 std::string Tools::Ahora() {
     struct tm * timeinfo;
     char buffer [80];
+	char buffer2[16];
+	timeb extTime;
 
-    std::time_t result = std::time(NULL);
-    timeinfo = localtime(&result);
+	ftime(&extTime);
+	
+    //std::time_t result = std::time(NULL);
+    //timeinfo = localtime(&result);
+	//strftime(buffer, 80, "%Y-%m-%dT%H:%M:%S.000Z", timeinfo);
+	timeinfo = localtime(&extTime.time);
+	strftime(buffer, 80, "%Y-%m-%dT%H:%M:%S", timeinfo);
+	sprintf(buffer2, ".%03dZ", extTime.millitm);
 
-    strftime(buffer, 80, "%Y-%m-%dT%H:%M:%S.000Z", timeinfo);
-
-    return std::string(buffer);
+    return std::string(buffer) + std::string(buffer2);
 }
 
 /** */
@@ -425,4 +431,104 @@ void Tools::fatalerror(string msg)
 
 	string name = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
 	Tools::append2file(onflash(name), Tools::Int2String(current_file_entry) + ", " + Tools::Ahora() + ": " + msg);
+}
+
+/** */
+void Tools::Trace(const char* fmt, ...) {
+	static int current_file_trace = 4, max_files_trace = 4;
+	static int current_file_trace_entry = 1024, max_file_trace_entries = 1024;
+	static util::Mutex mtx;
+
+	va_list args;
+	va_start(args, fmt);
+	char textString[256] = { '\0' };
+#ifdef _WIN32
+	vsnprintf_s(textString, sizeof(textString), fmt, args);
+#else
+	vsnprintf(textString, sizeof(textString), fmt, args);
+#endif
+	va_end(args);
+
+	util::MutexLock lock(mtx);
+	if (++current_file_trace_entry >= max_file_trace_entries) {
+		current_file_trace_entry = 0;
+		if (++current_file_trace >= max_files_trace) {
+			current_file_trace = 0;
+		}
+		/** Inicializar el fichero para la proxima escritura */
+		string name_prox = "trace_" + Tools::Int2String(current_file_trace) + ".log";
+		remove(onram(name_prox).c_str());
+	}
+
+	string name = "trace_" + Tools::Int2String(current_file_trace) + ".log";
+	Tools::append2file(onram(name), /*Tools::Int2String(current_file_trace_entry) + ", " + */Tools::Ahora() + ": " + textString);
+}
+
+bool Tools::SafeItoA(int val, char* strval) {
+	if (val < 0 || val > 65535)
+		return false;
+
+	strval[0] = ' ';
+	strval[1] = val / (10000) + '0';
+	strval[2] = ((val % 10000) / 1000) + '0';
+	strval[3] = (((val % 10000) % 1000) / 100) + '0';
+	strval[4] = ((((val % 10000) % 1000) % 100) / 10) + '0';
+	strval[5] = (val % 10) + '0';
+	strval[6] = 0;
+
+	return true;
+}
+
+void Tools::SafeLogFromSignal(const char* msg, int p1, int p2, int p3) {
+	static int current_file_sig = 4, max_files_sig = 4;
+	static int current_file_sig_entry = 1024, max_file_sig_entries = 1024;
+
+	char filename[40];
+	char fileorder[4];
+	bool remove = false;
+	char tmpData[8];
+	char formatted[128];
+
+	filename[0] = fileorder[0] = tmpData[0] = formatted[0] = 0;
+
+	if (++current_file_sig_entry >= max_file_sig_entries) {
+		current_file_sig_entry = 0;
+		if (++current_file_sig >= max_files_sig) {
+			current_file_sig = 0;
+		}
+		remove = true;
+	}
+	fileorder[0] = (char)('0' + current_file_sig);
+	fileorder[1] = 0;
+#if defined(_WIN32)
+	strcat(filename, "./fs-win/home/serv/signals_");
+#else
+	strcat(filename, "/home/serv/signals_");
+#endif
+	strcat(filename, fileorder);
+	strcat(filename, ".log");
+	if (remove == true) {
+		/** Inicializar el fichero para la proxima escritura */
+		unlink(filename);
+	}
+	if (Tools::SafeItoA(current_file_sig_entry, tmpData)) {
+		strcat(formatted, tmpData);
+		strcat(formatted, ": ");
+	}
+	strcat(formatted, msg);
+	if (Tools::SafeItoA(p1, tmpData)) {
+		strcat(formatted, tmpData);
+	}
+	if (Tools::SafeItoA(p2, tmpData)) {
+		strcat(formatted, tmpData);
+	}
+	if (Tools::SafeItoA(p3, tmpData)) {
+		strcat(formatted, tmpData);
+	}
+	strcat(formatted, "\n");
+	int filehandle = open(filename, O_CREAT | O_APPEND | O_RDWR);
+	if (filehandle >= 0) {
+		write(filehandle, formatted, strlen(formatted));
+		close(filehandle);
+	}
 }
