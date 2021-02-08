@@ -169,7 +169,7 @@ int WebAppServer::ProcessRequest(struct mg_connection * conn)
 	}
 	catch(Exception x) 
 	{
-		PLOG_EXCEP(x, "WebAppServer::ProcessRequest Exception.");		
+		PLOG_EXCEP(x, "WebAppServer::ProcessRequest Exception.");
 	}
 	return MG_FALSE;
 }
@@ -191,6 +191,10 @@ int WebAppServer::check_auth(struct mg_connection *conn)
 	char ssid[100];
 	//char calculated_ssid[100], name[100], expire[100];
 	//char str_profile[16];
+
+	// REDAN V2. Aceptar las Peticiones del Servidor.
+	if (IsServerRequest(conn) == true)
+		return MG_TRUE;
 
 	// Always authenticate requests
 	if (Check4SecureUri(conn->uri)==true)
@@ -439,6 +443,15 @@ bool WebAppServer::Check4SecureUri(string uri)
 	{
 		if (uri.find(*it) == 0)
 //		if (*it == uri)
+			return true;
+	}
+	return false;
+}
+/** */
+bool WebAppServer::IsServerRequest(struct mg_connection* conn) {
+	for (int i = 0; i < conn->num_headers; i++) {
+		mg_connection::mg_header header = conn->http_headers[i];
+		if (strcmp(header.name,"RedanClient")==0 && strcmp(header.value,"SERVER")==0)
 			return true;
 	}
 	return false;

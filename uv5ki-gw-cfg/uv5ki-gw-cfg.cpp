@@ -200,7 +200,9 @@ public:
 
 #ifdef _WIN32
 			/** Lazo de Windows */
-			while (std::cin.rdbuf()->in_avail() == 0)
+			//while (std::cin.rdbuf()->in_avail() == 0)
+			SHORT tecla;
+			while((tecla=GetKeyState('q'))>=0)
 #else
 			while (salida == 0)
 #endif

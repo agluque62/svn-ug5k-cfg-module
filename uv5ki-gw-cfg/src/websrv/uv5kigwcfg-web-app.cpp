@@ -212,62 +212,58 @@ void Uv5kiGwCfgWebApp::stCb_logout(struct mg_connection *conn, string user, web_
 /** */
 void Uv5kiGwCfgWebApp::stCb_config(struct mg_connection *conn, string user, web_response *resp)
 {
-	resp->actividad=true;
-	if (string(conn->request_method)=="GET")
-	{
-		// Leer la configuracion activa de RAM.
-		RETURN_OK200_RESP(resp, P_WORKING_CONFIG->JConfig());
-	}
-	else if (string(conn->request_method)=="POST") 
-	{
-		PLOG_INFO("Uv5kiGwCfgWebApp: Recibida Orden de Cambio de Configuracion. Usuario: %s", user.c_str());
-		// Activar la Configuracion...
-		string data_in = string(conn->content, conn->content_len );
-		CommConfig cfg(data_in);
-		if (cfg.test()==true) 
+	try {
+		resp->actividad = true;
+		if (string(conn->request_method) == "GET")
 		{
-			EventosHistoricos *ev = P_WORKING_CONFIG->set(cfg, true);
-			P_WORKING_CONFIG->TimeStamp();
-			P_WORKING_CONFIG->save_to(LAST_CFG);
-			P_HIS_PROC->SetEventosHistoricos(user, ev);				// Generar los historicos de cambios.
-
-			PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
-
-			// 20170630. Las condiciones estan mal seleccionadas. Se cambian
-			if (P_WORKING_CONFIG->DualCpu() && P_CFG_PROC->GetStdLocalConfig() == slcAislado) 
+			// Leer la configuracion activa de RAM.
+			RETURN_OK200_RESP(resp, P_WORKING_CONFIG->JConfig());
+		}
+		else if (string(conn->request_method) == "POST")
+		{
+			PLOG_INFO("Uv5kiGwCfgWebApp: Recibida Orden de Cambio de Configuracion. Usuario: %s", user.c_str());
+			// Activar la Configuracion...
+			string data_in = string(conn->content, conn->content_len);
+			CommConfig cfg(data_in);
+			if (cfg.test() == true)
 			{
-				PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
-				WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+				EventosHistoricos* ev = P_WORKING_CONFIG->set(cfg, true);
+				P_WORKING_CONFIG->TimeStamp();
+				P_WORKING_CONFIG->save_to(LAST_CFG);
+				P_HIS_PROC->SetEventosHistoricos(user, ev);				// Generar los historicos de cambios.
+
+				PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
+
+				// 20170630. Las condiciones estan mal seleccionadas. Se cambian
+				if (P_WORKING_CONFIG->DualCpu() && P_CFG_PROC->GetStdLocalConfig() == slcAislado)
+				{
+					PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
+					WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+				}
 			}
-			//	// Sincronizar Fichero....
-			//if (P_CFG_PROC->GetStdLocalConfig() != slcAislado && P_WORKING_CONFIG->DualCpu())
-			//{
-			//	WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
-			//}
-			//else 
-			//{
-			//	PLOG_ERROR("Uv5kiGwCfgWebApp: Error Sincronizando Cambio de Configuracion");
-			//}
-			/****************/
+			else {
+				PLOG_ERROR("Uv5kiGwCfgWebApp: Error procesando Orden de Cambio de Configuracion. Formato Incorrecto...");
+				RETURN_IERROR_RESP(resp, webData_line("Formato de Configuracion incorrecto").JSerialize());
+			}
+			RETURN_OK200_RESP(resp, webData_line("Configuracion Activada...").JSerialize());
 		}
-		else {
-			PLOG_ERROR("Uv5kiGwCfgWebApp: Error procesando Orden de Cambio de Configuracion. Formato Incorrecto...");
-			RETURN_IERROR_RESP(resp, webData_line("Formato de Configuracion incorrecto").JSerialize());
-		}		
-		RETURN_OK200_RESP(resp, webData_line("Configuracion Activada...").JSerialize());
-	}
-	else if (string(conn->request_method)=="PUT") 
-	{
-		// Mirar si esta aislado...	
-		if (P_CFG_PROC->IsIdle()){
-			RETURN_IERROR_RESP(resp, webData_line("Error de UPLOAD. La Unidad esta aislada.").JSerialize());
+		else if (string(conn->request_method) == "PUT")
+		{
+			// Mirar si esta aislado...	
+			if (P_CFG_PROC->IsIdle()) {
+				RETURN_IERROR_RESP(resp, webData_line("Error de UPLOAD. La Unidad esta aislada.").JSerialize());
+			}
+			// Dar aviso de carga de configuracion...
+			P_CFG_PROC->AvisaSubirConfiguracion();
+			PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Subir configuracion local. Usuario: %s", user.c_str());
+			RETURN_OK200_RESP(resp, webData_line("Peticion de Subida cursada...").JSerialize());
 		}
-		// Dar aviso de carga de configuracion...
-		P_CFG_PROC->AvisaSubirConfiguracion();
-		PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Subir configuracion local. Usuario: %s", user.c_str());
-		RETURN_OK200_RESP(resp, webData_line("Peticion de Subida cursada...").JSerialize());
+		RETURN_NOT_IMPLEMENTED_RESP(resp);
 	}
-	RETURN_NOT_IMPLEMENTED_RESP(resp);
+	catch (Exception x) {
+		PLOG_EXCEP(x, "Uv5kiGwCfgWebApp::stCb_config Exception.");
+		RETURN_IERROR_RESP(resp, webData_line("Formato de Configuracion incorrecto").JSerialize())
+	}
 }
 
 /** */

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="VERSION.TXT" />
+    <Text Include="Todo.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\base\code-base.h">

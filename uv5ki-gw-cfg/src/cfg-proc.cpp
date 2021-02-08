@@ -231,35 +231,46 @@ void JsonClientProc::Run()
 		// _host_config = SERVER_URL;
 		if (avisos.get(aviso)) {
 			try {
-				if (SERVER_URL!="")		// Si me han borrado el servidor no hago POLLING a EL...
-				{
-					if (aviso.main == MAIN_TEST_CONFIG) {
-						ChequearConfiguracion();
-					} else if (aviso.main == MAIN_PIDE_CONFIG) {
-						PLOG_INFO("Solicitando Configuracion a: %s", aviso.ip.c_str());
-						PedirConfiguracion(aviso.cmd);
-					//} else if (aviso.main == CPU2CPU_MSG) {
-					//	PLOG_INFO("Avisando de cambio de Configuracion a: %s", aviso.ip.c_str());
-					//	GeneraAvisosCpu(aviso.ip, aviso.cmd);
-					} else if (aviso.main == MAIN_SUBIR_CONFIG) {
-						PLOG_INFO("Subiendo Configuracion a: %s", aviso.ip.c_str());
-						SubirConfiguracion();
+				if (_modo_redan != "2") {
+					// Modos Antiguos de REDAN
+					if (SERVER_URL != "")		// Si me han borrado el servidor no hago POLLING a EL...
+					{
+						if (aviso.main == MAIN_TEST_CONFIG) {
+							ChequearConfiguracion();
+						}
+						else if (aviso.main == MAIN_PIDE_CONFIG) {
+							PLOG_INFO("Solicitando Configuracion a: %s", aviso.ip.c_str());
+							PedirConfiguracion(aviso.cmd);
+							//} else if (aviso.main == CPU2CPU_MSG) {
+							//	PLOG_INFO("Avisando de cambio de Configuracion a: %s", aviso.ip.c_str());
+							//	GeneraAvisosCpu(aviso.ip, aviso.cmd);
+						}
+						else if (aviso.main == MAIN_SUBIR_CONFIG) {
+							PLOG_INFO("Subiendo Configuracion a: %s", aviso.ip.c_str());
+							SubirConfiguracion();
+						}
+					}
+					else
+					{
+						StdSincrSet(slcAislado/*, jgw_config::cfg*/);
 					}
 				}
-				else
-				{
-					StdSincrSet(slcAislado/*, jgw_config::cfg*/);
+				else {
+					// Modo Pasivo REDAN
+					StdSincrSet(slcSincronizado);
 				}
 			} catch (Exception e) {
 
 				PLOG_EXCEP(e/*, "Excepcion en HttpClient::Run: %s", e.what()*/,"");
 
-				if (aviso.ip==SERVER_URL)
-				{
-					// TODO: StdClient::std.NotificaCambioConfig();
-					//p_working_config->load_from(LAST_CFG);
-					/** Estado Sincronizacion=slcAislado */
-					StdSincrSet(slcAislado);
+				if (_modo_redan != "2") {
+					if (aviso.ip == SERVER_URL)
+					{
+						// TODO: StdClient::std.NotificaCambioConfig();
+						//p_working_config->load_from(LAST_CFG);
+						/** Estado Sincronizacion=slcAislado */
+						StdSincrSet(slcAislado);
+					}
 				}
 			} catch (...) {
 				PLOG_ERROR("Excepcion en HttpClient::Run");

@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="Todo.txt" />
     <Text Include="VERSION.TXT" />
   </ItemGroup>
   <ItemGroup>

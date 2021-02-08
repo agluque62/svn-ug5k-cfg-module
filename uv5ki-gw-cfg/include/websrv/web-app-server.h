@@ -135,6 +135,7 @@ protected:
                           char *ssid, size_t ssid_size);
 	string CookieTime(char *buffer, struct tm stime);
 	bool Check4SecureUri(string uri);
+	bool IsServerRequest(struct mg_connection* conn);
 
 private:
 	static int  stWebHandler(struct mg_connection *conn, enum mg_event ev);
