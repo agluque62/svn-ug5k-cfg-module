@@ -3,10 +3,10 @@ angular
     .module('Ug5kweb')
     .factory('CfgService', CfgService);
 
-CfgService.$inject = ['dataservice', '$q', '$rootScope', 'transerv', 'authservice'];
+CfgService.$inject = ['dataservice', '$q', '$rootScope', 'transerv', 'authservice', 'MantService'];
 
 /** */
-function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
+function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantService) {
 
     /** */
     var cfg = null;
@@ -412,23 +412,6 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
         }
         , rec_uri_nor: RecUriNorm
         , aplicar_cambios: function () {
-            //if (confirm(/*"¿Desea salvar los cambios efectuados?"*/transerv.translate('CFGS_MSG_00'))) {
-            //    $("body").css("cursor", "progress");
-            //    dataservice.set_config(cfg).then(
-            //        function (respuesta) {
-            //            cfg = null;
-            //            Init();
-            //            $("body").css("cursor", "default");
-            //            if (confirm(/*"¿Desea Subir los cambios?"*/transerv.translate('CFGS_MSG_01'))) {
-            //                dataservice.upload_config();
-            //            }
-            //        },
-            //        function (error) {
-            //            $("body").css("cursor", "default");
-            //            console.log("POST-ERROR: ", error);
-            //        }
-            //    );
-            //}
             AltfyConfirm(authservice, transerv.translate('CFGS_MSG_00'), function () {                
                 $("body").css("cursor", "progress");
                 dataservice.set_config(cfg).then(
@@ -436,13 +419,19 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice) {
                         cfg = null;
                         Init();
                         $("body").css("cursor", "default");
-                        AltfyConfirm(authservice, transerv.translate('CFGS_MSG_01'), function () {
-                            dataservice.upload_config();
-                        });
+                        alertify.success("Configuracion Salvada...");
+                        var modo = MantService.modo();
+                        var modo_redan = MantService.modo_redan();
+                        if (modo != "ul" && modo_redan != "2") {
+                            AltfyConfirm(authservice, transerv.translate('CFGS_MSG_01'), function () {
+                                dataservice.upload_config();
+                            });
+                        }
                     },
                     function (error) {
                         $("body").css("cursor", "default");
                         console.log("POST-ERROR: ", error);
+                        alertify.error("Error al Salvar Configuracion: " + error);
                     }
                 );
             });

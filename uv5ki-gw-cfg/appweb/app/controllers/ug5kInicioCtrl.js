@@ -29,28 +29,6 @@ function ug5kInicioCtrl($scope, $route, CfgService, authservice, ValidateService
         }
     }
 
-    /* 
-    vm.show = function (index) {
-        if (vm.pagina == 0) {
-            if (index == 4) {
-                return vm.v_data[5].Value == "1";
-            }
-            return true;
-        }
-        switch (index) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                return vm.v_data[0].Value == 0;
-            case 5:
-            case 6:
-                return vm.v_data[0].Value == 1;
-        }
-        return true;
-    };
-    * /
-
     /* */
     vm.show_cpu2 = function () {
         return vm.pagina == 0 ? (vm.v_data[2].Value == 1) : (vm.j_data.dualidad == 1);
@@ -125,7 +103,12 @@ function ug5kInicioCtrl($scope, $route, CfgService, authservice, ValidateService
                         Enable: false, // authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE, ALM1_PROFILE]),
                         Input: 0,
                         Inputs: [],
-                        Show: function () { return true; },
+                        Show: function () {
+                            // En modo REDAN-2 No se utiliza la Direccion del Servidor.
+                            var modo = MantService.modo();
+                            var modo_redan = MantService.modo_redan();
+                            return modo == "ul" ? true : modo_redan == "2" ? false : true;
+                        },
                         Val: ValidateService.url_val
                     },
                     {

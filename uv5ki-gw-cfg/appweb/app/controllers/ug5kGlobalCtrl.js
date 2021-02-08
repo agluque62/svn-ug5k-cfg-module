@@ -178,7 +178,7 @@ function ug5kGlobalCtrl($scope, $rootScope, $interval, $translate, dataservice, 
     vm.gw_modo = function () {
         var modo = MantService.modo();
         var modo_redan = MantService.modo_redan();
-        var vmodo = modo == "ul" ? " ULISES" : modo_redan == "0" ? " REDAN config-WARNING" : " REDAN";
+        var vmodo = modo == "ul" ? " ULISES" : modo_redan == "0" ? " REDAN config-WARNING" : modo_redan == "1" ? " REDAN" : " REDAN-2";
         vmodo += (force_rdaudio_normal == 1 ? " 16R" : "");
         return "V: " + vm.version + vmodo;
     };
