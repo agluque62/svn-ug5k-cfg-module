@@ -51,6 +51,17 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             return "";
         return ValidateService.uri_val(uri);
     };
+    /**
+     * 
+     * @param {any} uri
+     */
+    vm.uri_or_ip_val = (uri) => {
+        var ipv = ValidateService.ip_val(uri);
+        var uriv = ValidateService.uri_val(uri);
+        if (ipv == "" || uriv == "")
+            return "";
+        return uriv == "" ? ipv : uriv;
+    };
 
     /* Validador cbm en A/D */
     vm.cbmad_val = function (value) {
@@ -1036,7 +1047,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Input: jamp_no_sip == 1 ? 3 : 0,
                         Inputs: [],
                         Show: () => { return Page5OtherParameterShow(vm.vdata[0].Value); },
-                        Val: vm.uri_val
+                        Val: vm.uri_or_ip_val
                     },
                     {
                         // 5-4
@@ -1046,7 +1057,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                             return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
                         },
                         Input: 1,
-                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"User"*/transerv.translate('Usuario'), /*"Domain"*/transerv.translate('Dominio')],
                         Show: () => { return Page5OtherParameterShow(vm.vdata[0].Value); },
                         Val: function () { return ""; }
                     },
@@ -1072,7 +1083,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Input: jamp_no_sip == 1 ? 3 : 0,
                         Inputs: [],
                         Show: () => { return Page5AdditionalUriAndDataShow(vm.vdata[0].Value); },
-                        Val: vm.uri_val
+                        Val: vm.uri_or_ip_val
                     },
                     {
                         // 5-7
@@ -1082,7 +1093,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                             return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
                         },
                         Input: 1,
-                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"User"*/transerv.translate('Usuario'), /*"Domain"*/transerv.translate('Dominio')],
                         Show: () => { return Page5AdditionalUriAndDataShow(vm.vdata[0].Value); },
                         Val: function () { return ""; }
                     },
@@ -1157,8 +1168,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
 
                 break;
             case 3:
+                vm.tdata.telefonia.ats_rangos_org = lista2ats(vm.vdata[4].Value);
                 if ((vm.tdata.telefonia.tipo == 3 || vm.tdata.telefonia.tipo == 4 || vm.tdata.telefonia.tipo == 6)) {
-                    vm.tdata.telefonia.ats_rangos_org = lista2ats(vm.vdata[4].Value);
+                    //vm.tdata.telefonia.ats_rangos_org = lista2ats(vm.vdata[4].Value);
                     vm.tdata.telefonia.ats_rangos_dst = lista2ats(vm.vdata[6].Value);
                     console.log("Salvo ATS");
                 }
