@@ -5,7 +5,7 @@
 		[x] Arranque de Nuevos Procesos...
 		[x] Habilitacion del REST nuevo de Servidor.
 
-[] En Página WEB
+[x] En Página WEB
 	[x] En el control de edición de SIP-URI's Permitir introducir una URI de dominio (sin usuario).
 	[x] isuperv_options1 / isuperv_options2 tiene 3 valores: NO_SPV (0), SPV_URI (1) y SPV_DOMINIO (2).
 	[x] A los recursos LCEN, BC, BL y AB se les ha añadido poder configurar rangos origen. 
