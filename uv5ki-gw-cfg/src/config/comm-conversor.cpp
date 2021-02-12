@@ -744,6 +744,7 @@ void CommConversor::RecursoTelefoniaR2N5(CommResConfig *p_rec, struct cfgConfigI
 	memcpy(mr2n5->ntest_remoto, p_rec->telefonia.no_test_remoto.c_str(),LONG_AB_ATS);
 
 	/** 20160830. Periodo de Interrupt Warning... */
+	/** 20210212. El Byte Bajo es Periodo. El Byte alto es el 'P6-P22' Modo Normal o Transito */
 	SetInt((int *)&mr2n5->iT_Int_Warning, p_rec->telefonia.iT_Int_Warning, INCI_MPSW, "PERIODO INTERRUPT WARNING");
 
 #ifndef V110

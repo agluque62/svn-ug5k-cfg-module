@@ -283,9 +283,11 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                     return false;
                 return (vm.vdata[0].Value == 3 || vm.vdata[0].Value == 4 || vm.vdata[0].Value == 5);
 
-            case 4: // Lado.        N5/R2
+            case 4:  // Lado.        N5/R2
             case 12: // Periodo Interrupt Warning
                 return (vm.vdata[0].Value == 3 || vm.vdata[0].Value == 4);
+            case 25: // Time out respuesta llamada
+                return (vm.vdata[0].Value == 3);
 
             case 5: // Test Remoto.
             case 6: // Test Local.
@@ -727,7 +729,8 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                     {
                         // 2 - 12
                         Name: /*'Periodo Interrupt Warning'*/transerv.translate('TCTRL_P02_IWP'),
-                        Value: vm.tdata.telefonia.iT_Int_Warning,
+                            /** 20210212. El Byte Bajo es Periodo. El Byte alto es el 'P6-P22' Modo Normal o Transito */
+                        Value: vm.tdata.telefonia.iT_Int_Warning & 0xFF,
                         Enable: function () {
                             return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
                         },
@@ -879,6 +882,19 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
                         Show: function () { return vm.vdata[0].Value === "2"; },    // Solo en Lineas AB
                         Val: function () { return ""; }
+                    },
+                    {
+                        // 2 - 25
+                        Name: /*'Periodo Interrupt Warning'*/transerv.translate('Time out respuesta llamada'),
+                            /* 20210212. El Byte Bajo es Periodo. El Byte alto es el 'P6-P22' Modo Normal o Transito */
+                        Value: (vm.tdata.telefonia.iT_Int_Warning & 0xFF00) == 0 ? "0" : "1",
+                        Enable: function () {
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
+                        },
+                        Input: 1,
+                        Inputs: [transerv.translate('Normal'), transerv.translate('Siempre Transito')],
+                        Show: vm.p2_tel_show,
+                        Val: vm.validate_iwp
                     }
                 ];
                 break;
@@ -1151,7 +1167,8 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 vm.tdata.telefonia.detect_vox = parseInt(vm.vdata[9].Value);    // VOX en BL ???
                 vm.tdata.telefonia.umbral_vox = vm.vdata[10].Value;             // Umbral VOX en BL
                 vm.tdata.telefonia.tm_inactividad = vm.vdata[11].Value;         // Cola VOX
-                vm.tdata.telefonia.iT_Int_Warning = vm.vdata[12].Value;         // Periodo Interrupt Warning.
+                    /** 20210212. El Byte Bajo es Periodo Interrupt Warning. El Byte alto es el 'P6-P22' Modo Normal o Transito */
+                vm.tdata.telefonia.iT_Int_Warning = (vm.vdata[12].Value & 0xff) | (vm.vdata[25].Value=="0" ? 0x0000 : 0x0100);
                 vm.tdata.telefonia.idRed = vm.vdata[13].Value;                  // Ulises-idRed.
                 vm.tdata.telefonia.idTroncal = vm.vdata[14].Value;              // Ulises-idTroncal.
 
