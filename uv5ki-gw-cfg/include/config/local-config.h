@@ -77,6 +77,7 @@ using namespace std;
  #define strItemWindowsTestSyncFtp				((const char *)"SINCR-FTP")
  #define strItemWindowsTestSnmpStd				((const char *)"SNMPSTD")
  #define strItemWindowsTestServidor				((const char *)"SINCR-SERV")
+ #define strItemWindowsWebPort					((const char *)"WEBPORT")
 #endif
 
 #define ON_SWREP(p)						(LocalConfig::onswrep(p).c_str())

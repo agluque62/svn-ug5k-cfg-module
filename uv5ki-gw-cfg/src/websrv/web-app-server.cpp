@@ -1,4 +1,5 @@
 #include "../../include/websrv/web-app-server.h"
+#include "../../include/config/local-config.h"
 #include "../../include/tools/tools.h"
 
 #define _UPLOAD_				0
@@ -23,15 +24,19 @@ WebAppServer::~WebAppServer(void)
 void WebAppServer::Start()
 {
 	const char *ret;
-	
+#ifdef _WIN32
+	string wport = LocalConfig::p_cfg->get(strWindowsTest, strItemWindowsWebPort, "8080");
+#else
+	string wport = config()->web_port;
+#endif
 	PLOG_INFO("WebAppServer. Starting (%s) (%s) (%s)...",
-		config()->web_port.c_str(),
+		/*config()->web_port*/wport.c_str(),
 		config()->document_root.c_str(),
 		config()->default_page.c_str());
 
 	if ((server = mg_create_server(this, stWebHandler))==NULL)
 		throw Exception("Error al Crear Servidor HTTP");
-	if ((ret=mg_set_option(server, "listening_port", config()->web_port.c_str()))!=NULL)
+	if ((ret=mg_set_option(server, "listening_port", /*config()->web_port*/wport.c_str()))!=NULL)
 		throw Exception("Error en mg_set_option: listening_port");
 	if ((ret = mg_set_option(server, "document_root", config()->document_root.c_str()))!=NULL)
 		throw Exception("Error en mg_set_option: document_root");
