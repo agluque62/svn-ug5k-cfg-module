@@ -84,6 +84,7 @@ protected:
 protected:
 	static void *DelayedReset(void* arg);
 	static void *ConfigSync(void* arg);
+	static void SynchronizeConfigIfApplicable();
 
 protected:
 	static vector<string> parse_uri(string uri)

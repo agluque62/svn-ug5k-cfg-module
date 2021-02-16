@@ -234,12 +234,12 @@ void Uv5kiGwCfgWebApp::stCb_config(struct mg_connection *conn, string user, web_
 
 				PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
 
-				// 20170630. Las condiciones estan mal seleccionadas. Se cambian
-				if (P_WORKING_CONFIG->DualCpu() && P_CFG_PROC->GetStdLocalConfig() == slcAislado)
-				{
-					PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
-					WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
-				}
+				SynchronizeConfigIfApplicable();
+				//if (P_WORKING_CONFIG->DualCpu() && P_CFG_PROC->GetStdLocalConfig() == slcAislado)
+				//{
+				//	PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
+				//	WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+				//}
 			}
 			else {
 				PLOG_ERROR("Uv5kiGwCfgWebApp: Error procesando Orden de Cambio de Configuracion. Formato Incorrecto...");
@@ -324,10 +324,11 @@ void Uv5kiGwCfgWebApp::stCb_preconfig(struct mg_connection *conn, string user, w
 			P_WORKING_CONFIG->set(cfg, true);	// Historicos de cambios ???
 			P_WORKING_CONFIG->save_to(LAST_CFG);
 												// Sincronizar Fichero....
-			if (P_CFG_PROC->GetStdLocalConfig() != slcAislado && P_WORKING_CONFIG->DualCpu())
-			{
-				WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
-			}
+			SynchronizeConfigIfApplicable();
+			//if (P_CFG_PROC->GetStdLocalConfig() != slcAislado && P_WORKING_CONFIG->DualCpu())
+			//{
+			//	WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+			//}
 		}
 		else if (string(conn->request_method)=="DELETE")		// Borra preconfiguracion.
 		{
@@ -519,7 +520,23 @@ void *Uv5kiGwCfgWebApp::DelayedReset(void* arg)
 #endif
 	return NULL;
 }
-
+/** */
+void Uv5kiGwCfgWebApp::SynchronizeConfigIfApplicable() {
+	// 20170630. Las condiciones estan mal seleccionadas. Se cambian
+	// 20210216. Modo 2 Redan. Siempre se sincroniza.
+	if (P_WORKING_CONFIG->DualCpu()) {
+		string mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoGlobal, "0");
+		string redan_mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoRedan, "0");
+		bool redan_mode2 = mode == "0" && redan_mode == "2";
+		if (redan_mode2 || P_CFG_PROC->GetStdLocalConfig() == slcAislado) {
+			PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
+			WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+		}
+		else {
+			PLOG_INFO("Uv5kiGwCfgWebApp: Ignorando Sincronizacion CFG. Modo %s, Submodo %s, Estado %d", mode, redan_mode, (int)P_CFG_PROC->GetStdLocalConfig());
+		}
+	}
+}
 /** */
 void *Uv5kiGwCfgWebApp::ConfigSync(void* arg)
 {
