@@ -22,11 +22,13 @@ using namespace rapidxml;
 
 typedef string (*remoteGetXdataFunc)(string proc, string p1, string p2, string p3);
 enum TI_ {
+	TI_None=-1,
 	TI_Radio=0, TI_LCEN=1, TI_BC=2, TI_BL=3, TI_AB=4, TI_ATS_R2=5, TI_ATS_N5=6, TI_ATS_QSIG=7, TI_ISDN_2BD=8, TI_ISDN_30BD=9, TI_I_O=10, TI_DATOS=11,
 	TI_EM_PP=13, TI_EM_MARC=14
 };
 
 enum THOST_ {
+	THOST_None=-1,
 	THOST_TOP = 0, THOST_TIFX = 1, THOST_EXTRADIO = 2, THOST_EXTTELEFONIA = 3, THOST_EXTSISTEMA = 4
 };
 
@@ -39,7 +41,7 @@ public:
 public:
 	void XDeserialize(string xml_string, string rootNodeStr)
 	{
-		xml_document<> doc;
+		static xml_document<> doc;
 		xml_node<> * root_node;
 
 		doc.parse<0>((char *)xml_string.c_str());
@@ -69,8 +71,7 @@ protected:
 			str_val=="TI_ATS_R2" ? TI_ATS_R2 :
 			str_val=="TI_ATS_N5" ? TI_ATS_N5 :
 			str_val=="TI_EM_PP" ? TI_EM_PP:
-			str_val=="TI_EM_MARC" ? TI_EM_MARC :
-			-1);
+			str_val=="TI_EM_MARC" ? TI_EM_MARC : TI_None);
 	}
 	void read_key(xml_node<> * xnode, const char *indice, THOST_ &val) {
 		string str_val = RAPID_XML_NODE_VALUE(xnode, indice);
@@ -79,8 +80,7 @@ protected:
 			str_val=="TEH_TIFX" ? THOST_TIFX :
 			str_val=="TEH_EXTERNO_RADIO" ? THOST_EXTRADIO :
 			str_val=="TEH_EXTERNO_TELEFONIA" ? THOST_EXTTELEFONIA :
-			str_val=="TEH_EXTERNO_SISTEMA" ? THOST_EXTSISTEMA :
-			-1);
+			str_val=="TEH_EXTERNO_SISTEMA" ? THOST_EXTSISTEMA : THOST_None);
 	}
 	void read_key(xml_node<> * xnode, const char *indice, string &val) {
 		val = RAPID_XML_NODE_VALUE(xnode, indice);
@@ -159,7 +159,17 @@ public:
 class soap_ParametrosGeneralesSistema : public xml_data
 {
 public:
-	soap_ParametrosGeneralesSistema() {}
+	soap_ParametrosGeneralesSistema() 
+	{
+		TiempoMaximoPTT = 0;
+		TiempoSinJack1 = 0;
+		TiempoSinJack2 = 0;
+		TamLiteralEnlExt = 0;
+		TamLiteralEnlDA = 0;
+		TamLiteralEnlIA = 0;
+		TamLiteralEnlAG = 0;
+		TamLiteralEmplazamiento = 0;
+	}
 	~soap_ParametrosGeneralesSistema() {}
 
 public:
@@ -189,7 +199,11 @@ public:
 class soap_ParametrosMulticast : public xml_data
 {
 public:
-	soap_ParametrosMulticast(){}
+	soap_ParametrosMulticast()
+	{
+		GrupoMulticastConfiguracion = "";
+		PuertoMulticastConfiguracion = 0;
+	}
 	~soap_ParametrosMulticast(){}
 
 public:
@@ -241,7 +255,14 @@ public:
 class soap_DireccionamientoIP : public xml_data
 {
 public:
-	soap_DireccionamientoIP(){}
+	soap_DireccionamientoIP()
+	{
+		TipoHost = THOST_TOP;
+		Interno = false;
+		Min = 0;
+		Max = 0;
+		EsCentralIP = false;
+	}
 	~soap_DireccionamientoIP(){}
 
 public:
@@ -316,7 +337,10 @@ public:
 	class soap_PlanRecursos : public xml_data
 	{
 	public:
-		soap_PlanRecursos(){}
+		soap_PlanRecursos()
+		{
+			Tipo = TI_Radio;
+		}
 		~soap_PlanRecursos(){}
 	public:
 		void xread(xml_node<> * xnode) {	
@@ -351,7 +375,10 @@ public:
 	class soap_PlanRecursos : public xml_data
 	{
 	public:
-		soap_PlanRecursos(){}
+		soap_PlanRecursos()
+		{
+			Tipo = TI_Radio;
+		}
 		~soap_PlanRecursos(){}
 	public:
 		void xread(xml_node<> * xnode) {	
@@ -386,7 +413,10 @@ public:
 	class soap_RangosSCV : public xml_data
 	{
 	public:
-		soap_RangosSCV(){}
+		soap_RangosSCV()
+		{
+			Tipo = 0;
+		}
 		~soap_RangosSCV(){}
 	public:
 		void xread(xml_node<> * xnode) {	
@@ -424,7 +454,11 @@ public:
 	};
 
 public:
-	soap_NumeracionATS(){}
+	soap_NumeracionATS()
+	{
+		CentralPropia = false;
+		Throwswitching = false;
+	}
 	~soap_NumeracionATS(){}
 
 public:
@@ -450,6 +484,15 @@ class soap_ResourceInfo : public xml_data
 {
 public:
 	soap_ResourceInfo()	{
+
+		GananciaAGCTX = 0;
+		GananciaAGCRX = 0;
+		SupresionSilencio = false;
+		TamRTP = 0;
+		Codec = 0;
+		GrabacionEd137 = false;
+		TipoDestino = 0;
+
 		radio.UmbralTonoSQ = -30;
 		/** 20180320. Nuevos Parámetros en interfaces analogicas */
 		telef.iTmLlamEntrante = 30;
@@ -564,9 +607,9 @@ public:
 	bool GrabacionEd137;
 	int TipoDestino;					// TODO: No se asigna.
 	string IdDestino;
-	struct {
+	struct Telef {
 		/** Telefonia */
-		vector<string> ListaEnlacesInternos;	
+		vector<string> ListaEnlacesInternos;
 		int IdPrefijo;					// TODO: No se asigna.
 		/** LC */
 		int RefrescoEstados;			// TODO: No se asigna.
@@ -593,9 +636,12 @@ public:
 		int iPeriodoSpvRing;
 		int iFiltroSpvRing;
 		int iDetDtmf;
-
+		Telef () : IdPrefijo(0), RefrescoEstados(0), Timeout(0), LongRafagas(0), Lado(0), iTmLlamEntrante(0), iTmDetFinLlamada(0),
+			superv_options(0), tm_superv_options(0), TReleaseBL(0), iDetCallerId(0), iTmCallerId(0), iDetInversionPol(0),
+			iPeriodoSpvRing(0), iFiltroSpvRing(0), iDetDtmf(0)
+		{}
 	} telef;
-	struct {
+	struct Radio {
 		bool EM;						// TODO: No se asigna.
 		string SQ;
 		string PTT;
@@ -632,6 +678,12 @@ public:
 		bool EnableEventPttSq;
 		bool GrabacionEd137;
 		vector<int> ValuesTablaBss;
+
+		Radio() : EM(false), FrqTonoE(0), UmbralTonoE(0), FrqTonoM(0), UmbralTonoM(0), BSS(false), NTZ(false), TipoNTZ(0), Cifrado(false),
+			SupervPortadoraTx(false), SupervModuladoraTx(false), ModoConfPTT(0), RepSQyBSS(0), DesactivacionSQ(0), TimeoutPTT(0),
+			UmbralVAD(0), TiempoPTT(0), NumFlujosAudio(0), KeepAlivePeriod(0), KeepAliveMultiplier(0), Tipo(0), FrqTonoSQ(0),
+			UmbralTonoSQ(0), FrqTonoPTT(0), UmbralTonoPTT(0), MetodoBSS(0), GrsDelay(0), EnableEventPttSq(false), GrabacionEd137(false)
+		{}
 	} radio;
 };
 
@@ -639,7 +691,19 @@ public:
 class soap_RecursosSCV : public xml_data
 {
 public:
-	soap_RecursosSCV(){}
+	soap_RecursosSCV()
+	{
+		IdRecurso = "";
+		Tipo = 0;
+		Interface = TI_Radio;
+		SlotPasarela = 0;
+		NumDispositivoSlot = 0;
+		ServidorSIP="";
+		Diffserv = false;
+		IdSistema = "";
+		TipoRecurso = 0;
+		IdTifX = "";
+	}
 	~soap_RecursosSCV(){}
 public:
 	void xread(xml_node<> * xnode) {	
@@ -710,7 +774,19 @@ public:
 class soap_CfgPasarela : public xml_data
 {
 public:
-	soap_CfgPasarela(){}
+	soap_CfgPasarela()
+	{
+		NumRecursos = 0;
+		ModoSincronizacion = 0;
+		PuertoLocalSNMP = 0;
+		PuertoRemotoSNMP = 0;
+		PuertoRemotoTrapsSNMP = 0;
+		PuertoLocalSIP = 0;
+		PeriodoSupervisionSIP = 0;
+		SupervisionLanGW = 0;
+		TmMaxSupervLanGW = 0;
+		dvrrp = 0;
+	}
 	~soap_CfgPasarela(){}
 public:
 	void xread(xml_node<> * xnode) {	
@@ -769,7 +845,7 @@ public:
 
 public:
 	void xread(xml_node<> * xnode) {
-		xml_document<> doc;
+		static xml_document<> doc;
 
 		IdConfig = xnode->value();
 		read_key(xdata_ParametrosGeneralesSistema, "ParametrosGeneralesSistema", ParametrosGeneralesSistema);

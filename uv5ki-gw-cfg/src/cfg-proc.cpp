@@ -562,10 +562,18 @@ void SoapClientProc::ChequearConfiguracion()
 {
 	try 
 	{
+#ifdef NOPOINTERS
 		xml_document<> doc;
-		string xml_data = getXml("GetVersionConfiguracion","id_sistema=departamento");
-		doc.parse<0>((char *)xml_data.c_str());
+		string xml_data = getXml("GetVersionConfiguracion", "id_sistema=departamento");
+		doc.parse<0>((char*)xml_data.c_str());
 		string version = doc.first_node("string")->value();
+#else
+		static xml_document<> doc;
+		string xml_data = getXml("GetVersionConfiguracion", "id_sistema=departamento");
+		doc.parse<0>((char*)xml_data.c_str());
+		string version = doc.first_node("string")->value();
+#endif // NOPOINTERS
+
 
 		switch (_stdLocalConfig) 
 		{
