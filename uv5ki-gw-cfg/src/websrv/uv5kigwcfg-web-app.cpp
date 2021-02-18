@@ -533,7 +533,7 @@ void Uv5kiGwCfgWebApp::SynchronizeConfigIfApplicable() {
 			WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
 		}
 		else {
-			PLOG_INFO("Uv5kiGwCfgWebApp: Ignorando Sincronizacion CFG. Modo %s, Submodo %s, Estado %d", mode, redan_mode, (int)P_CFG_PROC->GetStdLocalConfig());
+			PLOG_INFO("Uv5kiGwCfgWebApp: Ignorando Sincronizacion CFG. Modo %s, Submodo %s, Estado %d", mode.c_str(), redan_mode.c_str(), (int)P_CFG_PROC->GetStdLocalConfig());
 		}
 	}
 }
