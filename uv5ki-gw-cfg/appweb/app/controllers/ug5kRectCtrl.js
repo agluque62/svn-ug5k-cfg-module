@@ -695,7 +695,9 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Name: /*'Deteccion Vox ?:'*/transerv.translate('TCTRL_P02_VOX'),
                         Value: vm.tdata.telefonia.detect_vox.toString(),
                         Enable: function () {
-                            return false;          // 20161213. No se puede editar. authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]),
+                            //return false;          // 20161213. No se puede editar. authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]),
+                            //20210301. Para REDAN se habilita la edición, y se deshabilita la opción para ULISES.
+                            return authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]);
                         },
                         Input: 1,
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],

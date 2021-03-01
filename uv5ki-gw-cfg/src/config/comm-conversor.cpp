@@ -842,8 +842,15 @@ void CommConversor::RecursoTelefoniaAnalogica(CommResConfig *p_rec, struct cfgCo
 	// mtlf->iDetectVox = 1;
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 20170215. El valor depende si estamos en ULISES (tipo==1) o en REDAN (tipo==0)
-	mtlf->iDetectVox = p_cfg_in->tipo==0 ? 1 : 0;
-	//////////////////////////////////////////////////////////////////////////////////////////////
+	// mtlf->iDetectVox = p_cfg_in->tipo==0 ? 1 : 0;
+	// 20210301. Para REDAN se habilita la edición, y se deshabilita la opción para ULISES.
+	if (p_cfg_in->tipo == 0) {
+		SetInt((int*)(&mtlf->iDetectVox), p_rec->telefonia.detect_vox, INCI_MPSW, "DETECCION VOX");
+	}
+	else {
+		mtlf->iDetectVox = 0;
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	SetInt((int *)(&mtlf->iUmbralVox), p_rec->telefonia.umbral_vox, INCI_MPSW, "UMBRAL VOX");
 	SetInt((int *)(&mtlf->iTmInactividad), p_rec->telefonia.tm_inactividad, INCI_MPSW, "TIEMPO INACTIVIDAD");
