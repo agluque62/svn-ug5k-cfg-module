@@ -89,6 +89,8 @@ using namespace std;
 #define LAST_JSON_REC(n)				(string("last_json_rec_")+string(n)+string(".json"))
 #define LAST_SOAP_REC(n)				(string("last_soap_rec_")+string(n)+string(".soap"))
 
+extern int _lastcfg;
+
 ///** */
 //typedef map<string,string> MapString;
 //

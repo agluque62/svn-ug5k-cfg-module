@@ -10,29 +10,21 @@ Release
 *.o
 *.map
 *.cxx
+*.suo
+*.log*
 nbproject
 /uv5ki-gw-cfg/plog.csv
-/uv5k-tools-vs2010.suo
 /uv5ki-gw-cfg/logs
 /uv5ki-gw-cfg/uvki-gwser
 /uv5ki-gw-cfg/*.xml
+/uv5ki-gw-cfg/last*
 /uv5ki-gw-cfg/fs-win/home/serv/*.xml
-/uv5ki-gw-cfg/fs-lnx/home/serv/*.xml
-/uv5ki-gw-cfg/last_gw_config_0.json
-/uv5ki-gw-cfg/last_gw_config_1.json
-/*.suo
-/uv5ki-gw-cfg/last_gw_config_2.json
-/uv5ki-gw-cfg/fs-win/home/serv/last_gw_config_0.json
-/uv5ki-gw-cfg/fs-win/home/serv/last_gw_config_1.json
-/uv5ki-gw-cfg/temp.txt
-/uv5ki-gw-cfg/include/config/cfgpasa - copia.hpp
-*.log*
-*.suo
-/uv5ki-gw-cfg/Entregas
-/uv5ki-gw-cfg/fs-win/home/serv/comm-config.json.000
-/uv5ki-gw-cfg/fs-win/home/serv/comm-config.json.001
+/uv5ki-gw-cfg/fs-win/home/serv/last*
 /uv5ki-gw-cfg/fs-win/home/serv/*.soap
 /uv5ki-gw-cfg/fs-win/home/serv/*.json
+/uv5ki-gw-cfg/temp.txt
+/uv5ki-gw-cfg/include/config/cfgpasa - copia.hpp
+/uv5ki-gw-cfg/Entregas
 *copia*
 /uv5ki-gw-cfg/fs-win/home/serv/*.old
 /uv5ki-gw-cfg/fs-lnx/home/serv/*.old

@@ -13,6 +13,9 @@
 /** */
 WebAppServer::WebAppServer(void) 
 {
+#ifdef _WIN32
+#else
+#endif
 }
 
 /** */
@@ -25,18 +28,21 @@ void WebAppServer::Start()
 {
 	const char *ret;
 #ifdef _WIN32
+	// Solo escucha en la IP de Windows...
 	string wport = LocalConfig::p_cfg->get(strWindowsTest, strItemWindowsWebPort, "8080");
+	string wip = LocalConfig::p_cfg->get(strWindowsTest, strItemWindowsTestIp, "127.0.0.1");
+	string AddToBind = wip + ":" + wport;
 #else
-	string wport = config()->web_port;
+	string AddToBind = config()->web_port;
 #endif
 	PLOG_INFO("WebAppServer. Starting (%s) (%s) (%s)...",
-		/*config()->web_port*/wport.c_str(),
+		/*config()->web_port*/AddToBind.c_str(),
 		config()->document_root.c_str(),
 		config()->default_page.c_str());
 
 	if ((server = mg_create_server(this, stWebHandler))==NULL)
 		throw Exception("Error al Crear Servidor HTTP");
-	if ((ret=mg_set_option(server, "listening_port", /*config()->web_port*/wport.c_str()))!=NULL)
+	if ((ret=mg_set_option(server, "listening_port", /*config()->web_port*/AddToBind.c_str()))!=NULL)
 		throw Exception("Error en mg_set_option: listening_port");
 	if ((ret = mg_set_option(server, "document_root", config()->document_root.c_str()))!=NULL)
 		throw Exception("Error en mg_set_option: document_root");

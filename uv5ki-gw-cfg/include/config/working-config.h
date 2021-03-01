@@ -45,6 +45,8 @@ public:
 	void save_to(string file);
 	void set_to_default();
 
+	void FromExternalSet(bool isServer, string user, CommConfig& redanConfig, bool actualiza_ini);
+
 public:
 	void TimeStamp();
 	void TimeStamp(RedanTestComm &remota);

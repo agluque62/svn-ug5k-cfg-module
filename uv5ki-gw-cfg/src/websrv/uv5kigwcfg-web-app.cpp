@@ -227,19 +227,21 @@ void Uv5kiGwCfgWebApp::stCb_config(struct mg_connection *conn, string user, web_
 			CommConfig cfg(data_in);
 			if (cfg.test() == true)
 			{
-				EventosHistoricos* ev = P_WORKING_CONFIG->set(cfg, true);
-				P_WORKING_CONFIG->TimeStamp();
-				P_WORKING_CONFIG->save_to(LAST_CFG);
-				P_HIS_PROC->SetEventosHistoricos(user, ev);				// Generar los historicos de cambios.
+				bool isServerRequest = IsServerRequest(conn);
+				P_WORKING_CONFIG->FromExternalSet(isServerRequest==false, user, cfg, true);
 
-				PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
-
-				SynchronizeConfigIfApplicable();
-				//if (P_WORKING_CONFIG->DualCpu() && P_CFG_PROC->GetStdLocalConfig() == slcAislado)
-				//{
-				//	PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
-				//	WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+				//EventosHistoricos* ev = P_WORKING_CONFIG->set(cfg, true);
+				//// REDAN V2. Solo se Marca la CFG si la orden no procede del servidor...
+				//if (!isServerRequest) {
+				//	P_WORKING_CONFIG->TimeStamp();
 				//}
+				//P_WORKING_CONFIG->save_to(LAST_CFG);
+				//// REDAN V2. Solo generar los eventos si la orden no procede del servidor...
+				//if (!isServerRequest) {
+				//	P_HIS_PROC->SetEventosHistoricos(user, ev);				// Generar los historicos de cambios.
+				//}
+				SynchronizeConfigIfApplicable();
+				PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
 			}
 			else {
 				PLOG_ERROR("Uv5kiGwCfgWebApp: Error procesando Orden de Cambio de Configuracion. Formato Incorrecto...");
@@ -437,12 +439,23 @@ void Uv5kiGwCfgWebApp::stCb_mtto(struct mg_connection *conn, string user, web_re
 void Uv5kiGwCfgWebApp::stCb_internos(struct mg_connection *conn, string user, web_response *resp)
 {
 	resp->actividad=false;
-	if (string(conn->request_method)=="PUT") 
-	{
-		vector<string> levels = parse_uri(string(conn->uri));
-		if (levels.size() != 3) {
-			RETURN_IERROR_RESP(resp, webData_line("Error en Peticion interna.").JSerialize());
+	vector<string> levels = parse_uri(string(conn->uri));
+	if (levels.size() != 3) {
+		RETURN_IERROR_RESP(resp, webData_line("Error en Peticion interna.").JSerialize());
+	}
+	else if (string(conn->request_method) == "GET") {
+		if (levels[2] == CPU2CPU_MSG_CHECK_CFG) {
+			// REDAN V2. Chequeo de la configuracion.
+			RedanTestComm test(P_WORKING_CONFIG->config); // Leer de la configuracion activa de RAM.
+			RETURN_OK200_RESP(resp, test.JSerialize());
 		}
+		else if (levels[2] == CPU2CPU_MSG_GET_CFG) {
+			// REDAN V2. Pide la configuracion.
+			RETURN_OK200_RESP(resp, P_WORKING_CONFIG->JConfig()); // Leer de la configuracion activa de RAM.
+		}
+	}
+	else if (string(conn->request_method)=="PUT")
+	{
 		string data_in = string(conn->content, conn->content_len );
 		if (levels[2]==CPU2CPU_MSG_CAMBIO_CONFIG)				// Han cambiado la Configuracion...
 		{
@@ -529,8 +542,8 @@ void Uv5kiGwCfgWebApp::SynchronizeConfigIfApplicable() {
 		string redan_mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoRedan, "0");
 		bool redan_mode2 = mode == "0" && redan_mode == "2";
 		if (redan_mode2 || P_CFG_PROC->GetStdLocalConfig() == slcAislado) {
-			PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
 			WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
+			PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
 		}
 		else {
 			PLOG_INFO("Uv5kiGwCfgWebApp: Ignorando Sincronizacion CFG. Modo %s, Submodo %s, Estado %d", mode.c_str(), redan_mode.c_str(), (int)P_CFG_PROC->GetStdLocalConfig());

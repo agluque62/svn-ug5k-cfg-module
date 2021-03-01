@@ -20,6 +20,8 @@
 #define CPU2CPU_MSG_CAMBIO_CONFIG				((const char *)"1")
 #define CPU2CPU_MSG_REMOTE_LOCK					((const char *)"2")
 #define CPU2CPU_MSG_REMOTE_UNLOCK				((const char *)"3")
+#define CPU2CPU_MSG_CHECK_CFG					((const char *)"checkcfg")
+#define CPU2CPU_MSG_GET_CFG						((const char *)"getcfg")
 
 /** */
 class BiteControl : public CodeBase

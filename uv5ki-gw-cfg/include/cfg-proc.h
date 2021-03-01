@@ -21,7 +21,6 @@ using namespace std;
 #define MAIN_SUBIR_CONFIG			((const char *)"subirconfig")
 #define LAST_CONFIG_ONLINE			((const char *)"Ultima Configuracion online")
 
-
 /** Estado de la Configuracion respecto a la Base de Datos */
 enum eStdLocalConfig
 {
@@ -86,7 +85,7 @@ protected:
 	ColaAventos<stAviso> avisos;
 	string _ip_propia;
 	eStdLocalConfig _stdLocalConfig;
-	int _lastcfg;
+	//int _lastcfg;
 	int _cntticks;
 	int _maxticks;
 	bool _bconflicto;
@@ -119,6 +118,9 @@ protected:
 	void ChequearConfiguracion();
 	void PedirConfiguracion(string cfg);
 	void SubirConfiguracion();
+
+	// REDAN V2. Para mantener sincronizadas las CFG's
+	void ConfigurationSync();
 
 private:
 	// CommConfig cfg_redan;

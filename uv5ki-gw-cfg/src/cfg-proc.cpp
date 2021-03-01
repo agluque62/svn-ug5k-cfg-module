@@ -67,7 +67,6 @@ void CfgProc::AvisaSubirConfiguracion()
 	avisos.set(aviso);
 }
 
-
 /** */
 void CfgProc::AvisaPideConfiguracion(string cfg) 
 {
@@ -257,6 +256,7 @@ void JsonClientProc::Run()
 				}
 				else {
 					// Modo Pasivo REDAN
+					ConfigurationSync();
 					StdSincrSet(slcSincronizado);
 				}
 			} catch (Exception e) {
@@ -412,6 +412,56 @@ void JsonClientProc::SupervisaProcesoConfiguracion()
 		P_WORKING_CONFIG->config.general.ips = SERVER_URL;		
 		AvisaChequearConfiguracion();
 		_cntticks = 0;
+	}
+}
+
+/** REDAN V2 */
+void JsonClientProc::ConfigurationSync() {
+	bool isDual = p_working_config->DualCpu();
+	if (isDual) {
+		string IpColateral = "";
+		if (p_working_config->IpColateral(IpColateral) == true) {
+			// Chequear la Configuracion en el colateral.
+			string httpHost = IpColateral + ":" + LocalConfig::p_cfg->get(strSection, strItemWebPort)/*.PuertoEscucha()*/;
+			PLOG_INFO("Chequeando Configuracion (%s) en %s.", p_working_config->TimConfig().c_str(), httpHost.c_str());
+			string request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_CHECK_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
+			ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+			if (response.Status() == "200") {
+				RedanTestComm cfgColateral(response.Body());
+				if (cfgColateral.isNewer(P_WORKING_CONFIG->config) == true) {
+					// La configuracion del colateral es mas moderna. Intento actualizarme con ella.
+					request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_GET_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
+					response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+					if (response.Status() == "200") {
+						/** Salva los datos recibidos */
+						sistema::DataSaveAs(response.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
+						/** Lee la configuracion recibida */
+						CommConfig cfg_redan(response.Body());
+						p_working_config->FromExternalSet(false, "", cfg_redan, true);
+						// Configuracion Sincronizada...
+						PLOG_INFO("Configuracion (%s) Actualizada desde el colateral.", p_working_config->TimConfig().c_str());
+					}
+					else {
+						// Error al obtener la configuracion.
+						PLOG_ERROR("ConfigurationSync: Error %s al obtener la configuracion del colateral.", response.Status().c_str());
+					}
+				}
+				else {
+					PLOG_INFO("Configuraciones Sincronizadas Local (%s), Colateral (%s).", p_working_config->TimConfig().c_str(), cfgColateral.fechaHora.c_str());
+				}
+			}
+			else {
+				// Error en el Polling...
+				PLOG_ERROR("ConfigurationSync: Error %s al pedir Infor de la configuracion del colateral.", response.Status().c_str());
+			}
+		}
+		else {
+			// Es dual pero no hay ipcolateral...
+			PLOG_ERROR("ConfigurationSync: No se puede obtener la IP del colateral.");
+		}
+	}
+	else {
+		PLOG_ERROR("Chequeando Configuracion en Pasarela No DUAL.");
 	}
 }
 

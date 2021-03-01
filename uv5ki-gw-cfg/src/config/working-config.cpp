@@ -240,5 +240,27 @@ void *WorkingConfig::DelayedSignal(void *arg)
 	return NULL;
 }
 
+/** */
+void WorkingConfig::FromExternalSet(bool isFromWebPage, string user, CommConfig& cfg, bool ActualizaIni) {
+
+	/** Salva ultima configuracion */
+	save_to(LAST_SAVE(Tools::Int2String(_lastcfg++ & 3)));
+
+	/** Activa la configuracion recibida */
+	cfg.tipo = 0; // TODO ???
+	EventosHistoricos* ev = set(cfg, true);
+	// REDAN V2. Solo se Marca la CFG si la orden no procede del servidor...
+	if (isFromWebPage) {
+		TimeStamp();
+	}
+	// REDAN V2. Solo generar los eventos si la orden no procede del servidor...
+	if (isFromWebPage) {
+		// Generar los historicos de cambios.
+		P_HIS_PROC->SetEventosHistoricos(user, ev);
+	}
+	// Actualiza la configuracion recibida... */
+	save_to(LAST_CFG);
+}
+
 
 

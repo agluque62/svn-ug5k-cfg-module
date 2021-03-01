@@ -36,7 +36,7 @@ public:
 	CommConfig(string jstring) {
 											// Configuracion desde REDAN
 		JDeserialize(jstring);
-		tipo = 0;							
+		tipo = 0;
 	}
 	CommConfig(ifstream &f) {               // Configuracion desde fichero JSON
 		string data,linea;
@@ -134,6 +134,11 @@ public:
 	RedanTestComm(string jstr) {
 		JDeserialize(jstr);
 		tipo = 0;
+	}
+	RedanTestComm(CommConfig &cfg) {
+		tipo = 0;
+		idConf = cfg.idConf;
+		fechaHora = cfg.fechaHora;
 	}
 public:
 	bool isEqual(CommConfig &otra) {
