@@ -139,6 +139,7 @@ public:
 		tipo = 0;
 		idConf = cfg.idConf;
 		fechaHora = cfg.fechaHora;
+		localtime = Tools::Ahora_Servidor();
 	}
 public:
 	bool isEqual(CommConfig &otra) {
@@ -148,31 +149,48 @@ public:
 		return (fechaHora == otra.fechaHora) ? true : false;
 	}
 	bool isNewer(CommConfig &otra) {
-		struct tm time_l,time_o;
-		time_t loctime,othtime;
+		//struct tm time_l,time_o;
+		//time_t loctime,othtime;
 
-		Tools::DateString2time(fechaHora, time_l);
-		Tools::DateString2time(otra.fechaHora, time_o);
+		//Tools::DateString2time(fechaHora, time_l);
+		//Tools::DateString2time(otra.fechaHora, time_o);
 
-		loctime = mktime(&time_l);
-		othtime = mktime(&time_o);
+		//loctime = mktime(&time_l);
+		//othtime = mktime(&time_o);
+		time_t loctime = ToTimet(fechaHora);
+		time_t othtime = ToTimet(otra.fechaHora);
 
 		return loctime > othtime;	
+	}
+	bool isSync(int margin) {
+		time_t cfgloctime = ToTimet(localtime);
+		time_t loctime = ToTimet(Tools::Ahora_Servidor());
+
+		return abs(cfgloctime - loctime) <= margin;
+	}
+protected:
+	time_t ToTimet(string date) {
+		struct tm stm;
+		Tools::DateString2time(date, stm);
+		return mktime(&stm);
 	}
 
 public:
 	virtual void jwrite(Writer<StringBuffer> &writer) {
 		write_key(writer, "idConf", idConf);
 		write_key(writer, "fechaHora", fechaHora);
+		write_key(writer, "localtime", localtime);
 	}
 	virtual void jread(Value &base) {
 		read_key(base, "idConf", idConf);
 		read_key(base, "fechaHora", fechaHora);
+		read_key(base, "localtime", localtime);
 	}
 public:
 	int tipo;
 	string idConf;
 	string fechaHora;
+	string localtime;
 };
 
 #endif

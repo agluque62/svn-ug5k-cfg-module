@@ -417,51 +417,71 @@ void JsonClientProc::SupervisaProcesoConfiguracion()
 
 /** REDAN V2 */
 void JsonClientProc::ConfigurationSync() {
-	bool isDual = p_working_config->DualCpu();
-	if (isDual) {
-		string IpColateral = "";
-		if (p_working_config->IpColateral(IpColateral) == true) {
-			// Chequear la Configuracion en el colateral.
-			string httpHost = IpColateral + ":" + LocalConfig::p_cfg->get(strSection, strItemWebPort)/*.PuertoEscucha()*/;
-			PLOG_INFO("Chequeando Configuracion (%s) en %s.", p_working_config->TimConfig().c_str(), httpHost.c_str());
-			string request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_CHECK_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
-			ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
-			if (response.Status() == "200") {
-				RedanTestComm cfgColateral(response.Body());
-				if (cfgColateral.isNewer(P_WORKING_CONFIG->config) == true) {
-					// La configuracion del colateral es mas moderna. Intento actualizarme con ella.
-					request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_GET_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
-					response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
-					if (response.Status() == "200") {
-						/** Salva los datos recibidos */
-						sistema::DataSaveAs(response.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
-						/** Lee la configuracion recibida */
-						CommConfig cfg_redan(response.Body());
-						p_working_config->FromExternalSet(false, "", cfg_redan, true);
-						// Configuracion Sincronizada...
-						PLOG_INFO("Configuracion (%s) Actualizada desde el colateral.", p_working_config->TimConfig().c_str());
+	try {
+		bool isDual = p_working_config->DualCpu();
+		if (isDual) {
+			string IpColateral = "";
+			if (p_working_config->IpColateral(IpColateral) == true) {
+				int SyncMarging = LocalConfig::p_cfg->getint(strRuntime, strRuntimeItemNtpSyncMargin, "10");
+				// Chequear la Configuracion en el colateral.
+				string httpHost = IpColateral + ":" + LocalConfig::p_cfg->get(strSection, strItemWebPort)/*.PuertoEscucha()*/;
+				PLOG_INFO("ConfigurationSync: Chequeando Configuracion (%s) en %s.", p_working_config->TimConfig().c_str(), httpHost.c_str());
+				string request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_CHECK_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
+				ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+				if (response.Status() == "200") {
+					RedanTestComm cfgColateral(response.Body());
+					if (cfgColateral.isNewer(P_WORKING_CONFIG->config) == true) {
+						// La configuracion del colateral es mas moderna. 
+						if (cfgColateral.isSync(SyncMarging) == true) {
+							// Ambos relojes estan en sintonia. Intento actualizarme con ella.
+							request = "GET /" + string(CPU2CPU_MSG) + "/" + string(CPU2CPU_MSG_GET_CFG) + " HTTP/1.1\r\n" + "Host: " + httpHost + "\r\n\r\n";
+							response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
+							if (response.Status() == "200") {
+								/** Salva los datos recibidos */
+								sistema::DataSaveAs(response.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
+								/** Lee la configuracion recibida */
+								CommConfig cfg_redan(response.Body());
+								p_working_config->FromExternalSet(false, "", cfg_redan, true);
+								// Configuracion Sincronizada...
+								PLOG_INFO("ConfigurationSync: Configuracion (%s) Actualizada desde el colateral.", p_working_config->TimConfig().c_str());
+							}
+							else {
+								// Error al obtener la configuracion.
+								PLOG_ERROR("ConfigurationSync: Error %s al obtener la configuracion del colateral.", response.Status().c_str());
+							}
+						}
+						else {
+							// TODO. Los relojes estan desplazados. No me actualizo y marco el error.
+							PLOG_ERROR("ConfigurationSync: NTP Sync ERROR1. Local Time (%s), Colateral Time (%s).", Tools::Ahora_Servidor().c_str(), cfgColateral.localtime.c_str());
+						}
 					}
 					else {
-						// Error al obtener la configuracion.
-						PLOG_ERROR("ConfigurationSync: Error %s al obtener la configuracion del colateral.", response.Status().c_str());
+						// La configuracion del colateral es mas antigua.
+						if (cfgColateral.isSync(SyncMarging) == false) {
+							// TODO. Los relojes estan desplazados. No me actualizo y marco el error.
+							PLOG_ERROR("ConfigurationSync: NTP Sync ERROR2. Local Time (%s), Colateral Time (%s).", Tools::Ahora_Servidor().c_str(), cfgColateral.localtime.c_str());
+						}
+						else {
+							PLOG_INFO("ConfigurationSync: Configuraciones Local (%s), Colateral (%s).", p_working_config->TimConfig().c_str(), cfgColateral.fechaHora.c_str());
+						}
 					}
 				}
 				else {
-					PLOG_INFO("Configuraciones Sincronizadas Local (%s), Colateral (%s).", p_working_config->TimConfig().c_str(), cfgColateral.fechaHora.c_str());
+					// Error en el Polling...
+					PLOG_ERROR("ConfigurationSync: Error %s al pedir Info de la configuracion del colateral.", response.Status().c_str());
 				}
 			}
 			else {
-				// Error en el Polling...
-				PLOG_ERROR("ConfigurationSync: Error %s al pedir Infor de la configuracion del colateral.", response.Status().c_str());
+				// Es dual pero no hay ipcolateral...
+				PLOG_ERROR("ConfigurationSync: No se puede obtener la IP del colateral.");
 			}
 		}
 		else {
-			// Es dual pero no hay ipcolateral...
-			PLOG_ERROR("ConfigurationSync: No se puede obtener la IP del colateral.");
+			PLOG_ERROR("ConfigurationSync: Chequeando Configuracion en Pasarela No DUAL.");
 		}
 	}
-	else {
-		PLOG_ERROR("Chequeando Configuracion en Pasarela No DUAL.");
+	catch (Exception x) {
+		PLOG_EXCEP(x, "ConfigurationSync: ");
 	}
 }
 
