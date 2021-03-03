@@ -256,8 +256,8 @@ void JsonClientProc::Run()
 				}
 				else {
 					// Modo Pasivo REDAN
-					ConfigurationSync();
-					StdSincrSet(slcSincronizado);
+					eStdLocalConfig estado = ConfigurationSync();
+					StdSincrSet(estado);
 				}
 			} catch (Exception e) {
 
@@ -416,7 +416,8 @@ void JsonClientProc::SupervisaProcesoConfiguracion()
 }
 
 /** REDAN V2 */
-void JsonClientProc::ConfigurationSync() {
+eStdLocalConfig JsonClientProc::ConfigurationSync() {
+	eStdLocalConfig retorno = slcSincronizado;
 	try {
 		bool isDual = p_working_config->DualCpu();
 		if (isDual) {
@@ -447,18 +448,21 @@ void JsonClientProc::ConfigurationSync() {
 							}
 							else {
 								// Error al obtener la configuracion.
+								retorno = slcAislado;
 								PLOG_ERROR("ConfigurationSync: Error %s al obtener la configuracion del colateral.", response.Status().c_str());
 							}
 						}
 						else {
-							// TODO. Los relojes estan desplazados. No me actualizo y marco el error.
+							// Los relojes estan desplazados. No me actualizo y marco el error en SNMP.
+							retorno = slcConflicto;
 							PLOG_ERROR("ConfigurationSync: NTP Sync ERROR1. Local Time (%s), Colateral Time (%s).", Tools::Ahora_Servidor().c_str(), cfgColateral.localtime.c_str());
 						}
 					}
 					else {
 						// La configuracion del colateral es mas antigua.
 						if (cfgColateral.isSync(SyncMarging) == false) {
-							// TODO. Los relojes estan desplazados. No me actualizo y marco el error.
+							// Los relojes estan desplazados. No me actualizo y marco el error en SNMP.
+							retorno = slcConflicto;
 							PLOG_ERROR("ConfigurationSync: NTP Sync ERROR2. Local Time (%s), Colateral Time (%s).", Tools::Ahora_Servidor().c_str(), cfgColateral.localtime.c_str());
 						}
 						else {
@@ -468,21 +472,26 @@ void JsonClientProc::ConfigurationSync() {
 				}
 				else {
 					// Error en el Polling...
+					retorno = slcAislado;
 					PLOG_ERROR("ConfigurationSync: Error %s al pedir Info de la configuracion del colateral.", response.Status().c_str());
 				}
 			}
 			else {
 				// Es dual pero no hay ipcolateral...
+				retorno = slcAislado;
 				PLOG_ERROR("ConfigurationSync: No se puede obtener la IP del colateral.");
 			}
 		}
 		else {
+			retorno = slcAislado;
 			PLOG_ERROR("ConfigurationSync: Chequeando Configuracion en Pasarela No DUAL.");
 		}
 	}
 	catch (Exception x) {
+		retorno = slcAislado;
 		PLOG_EXCEP(x, "ConfigurationSync: ");
 	}
+	return retorno;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

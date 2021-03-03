@@ -120,7 +120,7 @@ protected:
 	void SubirConfiguracion();
 
 	// REDAN V2. Para mantener sincronizadas las CFG's
-	void ConfigurationSync();
+	eStdLocalConfig ConfigurationSync();
 
 private:
 	// CommConfig cfg_redan;
