@@ -80,7 +80,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
     vm.fid_val = function (value) {
         if (MantService.modo() == "ul")
             return "";
-        return ValidateService.fid_val(value);
+        return value == "" ? "" : ValidateService.fid_val(value);
         //if (value != "" && value.match(regx_fid) == null)
         //    return transerv.translate("Formato de Frecuencia incorrecto");
         //return "";
@@ -717,7 +717,8 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                             /*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1')
                         ] : [
                             /*"RSSI"*/transerv.translate('RCTRL_P02_BSSR'),
-                            /*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1')
+                            /*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1'),
+                            /*"Ninguno"*/transerv.translate('RCTRL_P02_BSSN'),
                             ],
                         Show: vm.p2_rad_show,
                         Val: vm.dval

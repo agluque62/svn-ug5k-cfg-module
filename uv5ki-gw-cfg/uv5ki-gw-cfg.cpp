@@ -250,10 +250,12 @@ public:
 		catch(Exception x)
 		{
 			PLOG_EXCEP(x, "Main AppException");
+			CThread::sleep(1000);
 		}
 		catch(...)
 		{
 			PLOG_EXCEP(NULL, "Main Unknow Exception");
+			CThread::sleep(1000);
 		}
 	}
 

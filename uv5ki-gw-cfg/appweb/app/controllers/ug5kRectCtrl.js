@@ -396,7 +396,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
     function Page5SupervisionTimeShow(LineType, Sp1, Sp2) {
         if (MantService.hide_on_ulises() == false)
             return false;
-        return LineType==7 ? Sp1==1 : Sp1==1 || Sp2==1;
+        return LineType == 7 ? Sp1 == 1 : Sp1 != 0 || Sp2 != 0;
     }
 
     function Page5AutomaticRspShow(LineType) {
