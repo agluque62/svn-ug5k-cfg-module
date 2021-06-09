@@ -593,7 +593,7 @@ void SoapClientProc::Dispose()
 /** */
 string SoapClientProc::getXml(string proc, string p1, string p2, string p3)
 {
-	string path = LocalConfig().get(strRuntime, strRuntimeItemSoapServicePath, "/NucleoDF/U5kCfg/InterfazSOAPConfiguracion/InterfazSOAPConfiguracion.asmx/") + proc;
+	string path = LocalConfig().get(strRuntime, strRuntimeItemSoapServicePath, "/UlisesV5000/U5kCfg/InterfazSOAPConfiguracion/InterfazSOAPConfiguracion.asmx/") + proc;
 	string data = "";		// "id_sistema=departamento";
 	if (p1 != "") {
 		data += ("&"+p1);
