@@ -39,3 +39,6 @@ nbproject
 /packages
 /uv5k-tools-vs2010.sln
 *.old
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/uv5ki-gw-cfg/fs-win/home/serv/comm-config.json.org

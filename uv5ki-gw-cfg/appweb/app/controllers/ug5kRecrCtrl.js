@@ -411,12 +411,22 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
     /* */
     vm.tbQidx = function (radio) {
         var str_qidx = "";
-        var index = 0;
-        radio.tabla_indices_calidad.forEach(function (val) {
-            if (index < 6)
-                str_qidx += ((index * 10).toString() + ": " + val.toString() + ", ");
-            index++;
-        });
+
+        //var index = 0;
+        //radio.tabla_indices_calidad.forEach(function (val) {
+        //    if (index < 6)
+        //        str_qidx += ((index * 10).toString() + ": " + val.toString() + ", ");
+        //    index++;
+        //});
+
+        /** 20210609 RM4849. Cuando no hay tabla de calidad, los valores deben estar a '0' en vez de a 15, y se debe presentar exista o no tabla */
+        for (index = 0; index < 6; index++) {
+            var val = 0;
+            if (index < radio.tabla_indices_calidad.length) {
+                val = radio.tabla_indices_calidad[index];
+            } 
+           str_qidx += ((index * 10).toString() + ": " + val.toString() + ", ");
+        }
         return str_qidx;
     };
 

@@ -608,7 +608,8 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 			mrad->qidxNdf2Rssi[icad] = (char )p_rec->radio.tabla_indices_calidad[icad];
 		}
 		else  {
-			mrad->qidxNdf2Rssi[icad] = (char )0x0F;
+			/** 20210609 RM4849. Cuando no hay tabla de calidad, los valores deben estar a '0' en vez de a 15 */
+			mrad->qidxNdf2Rssi[icad] = (char )0x00;
 		}
 	}
 
