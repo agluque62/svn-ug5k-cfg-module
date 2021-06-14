@@ -445,7 +445,7 @@ void Tools::fatalerror(string msg) {
 		ss << strdate << ": " << msg << "\n";
 
 		std::ofstream of;
-		of.open(onflash("fatalerrors.log"), std::ios_base::app | std::ios::out);
+		of.open(onflash("fatalerrors.log").c_str(), std::ios_base::app | std::ios::out);
 		of << ss.rdbuf();
 	}
 	catch(...){
