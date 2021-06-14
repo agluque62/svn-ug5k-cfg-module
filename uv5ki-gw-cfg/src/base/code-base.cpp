@@ -89,10 +89,13 @@ void CodeBase::_Log(plog::Severity level, const char *from, int line, const char
 
 	/** 20170418. Control de la COLA de LOGS */
 	unsigned int mcola = 100;
-	if (plog_queue.size() < mcola)
+	unsigned int csize = plog_queue.size();
+	if ( csize < mcola)
 		plog_queue.push(evento);
-	else
-		Tools::fatalerror(string("Cola de Log llena... Tamaño Maximo: ") + Tools::itoa(mcola));
+	else {
+		if (csize==mcola)
+			Tools::fatalerror(string("Cola de Log llena... Tamaño Maximo: ") + Tools::itoa(mcola));
+	}
 }
 
 /** */

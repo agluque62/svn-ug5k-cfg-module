@@ -414,23 +414,43 @@ void Tools::append2file(string name, string msg)
 	}
 }
 
-/** */
-static int current_file_error = 4, max_files_error=4;
-static int current_file_entry = 250, max_file_entries=250;
-void Tools::fatalerror(string msg)
-{
-	if (++current_file_entry >= max_file_entries) {
-		current_file_entry = 0;
-		if (++current_file_error >= max_files_error) {
-			current_file_error = 0;
-		}
-		/** Inicializar el fichero para la proxima escritura */
-		string name_prox = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
-		remove( onflash(name_prox).c_str() );
-	}
+///** */
+//static int current_file_error = 4, max_files_error=4;
+//static int current_file_entry = 250, max_file_entries=250;
+//void Tools::fatalerror(string msg)
+//{
+//	if (++current_file_entry >= max_file_entries) {
+//		current_file_entry = 0;
+//		if (++current_file_error >= max_files_error) {
+//			current_file_error = 0;
+//		}
+//		/** Inicializar el fichero para la proxima escritura */
+//		string name_prox = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
+//		remove( onflash(name_prox).c_str() );
+//	}
+//
+//	string name = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
+//	Tools::append2file(onflash(name), Tools::Int2String(current_file_entry) + ", " + Tools::Ahora() + ": " + msg);
+//}
 
-	string name = "fatalerror_" + Tools::Int2String(current_file_error) + ".log";
-	Tools::append2file(onflash(name), Tools::Int2String(current_file_entry) + ", " + Tools::Ahora() + ": " + msg);
+void Tools::fatalerror(string msg) {
+	time_t cuT;
+	string strdate;
+	try {
+		time(&cuT);
+		struct tm* loT = localtime(&cuT);
+		Tools::tm2String(loT, "%d-%m-%Y, %H:%M:%S", strdate);
+
+		std::stringstream ss;
+		ss << strdate << ": " << msg << "\n";
+
+		std::ofstream of;
+		of.open(onflash("fatalerrors.log"), std::ios_base::app | std::ios::out);
+		of << ss.rdbuf();
+	}
+	catch(...){
+	
+	}
 }
 
 /** */

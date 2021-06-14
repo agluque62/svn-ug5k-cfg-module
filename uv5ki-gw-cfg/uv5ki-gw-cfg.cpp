@@ -201,6 +201,7 @@ public:
 #ifdef _WIN32
 			/** Lazo de Windows */
 			//while (std::cin.rdbuf()->in_avail() == 0)
+			Tools::fatalerror("Test de fatal error");
 			SHORT tecla;
 			while((tecla=GetKeyState('q'))>=0)
 #else
