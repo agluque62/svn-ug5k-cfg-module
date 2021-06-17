@@ -361,7 +361,7 @@ void sistema::fileattr(string path, int modo, string &date, string &size)
 				date = strFound.substr(4,2)+"/"+ MonthNameConv().translate(strFound.substr(0,3)) + "/" + strFound.substr(7,4);
 				break;
 			case 4:		// 'grep 201 <file>'.		Buscar DD-MM-YYYY
-				strFound = ResultExecuteCommand((char *)("grep 201 " + path).c_str(), "05-01-2017, 15:39 <291328>");
+				strFound = ResultExecuteCommand((char *)("grep 202 " + path).c_str(), "05-01-2017, 15:39 <291328>");
 				pos = strFound.find(", ");
 				strFound = strFound.substr(0,pos);
 				date = strFound.substr(0,2)+"/"+strFound.substr(3,2) + "/" + strFound.substr(6,4);
