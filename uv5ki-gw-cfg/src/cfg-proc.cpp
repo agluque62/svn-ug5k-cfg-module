@@ -112,11 +112,14 @@ void CfgProc::StdSincrSet(eStdLocalConfig nstd)
 {
 	if (_stdLocalConfig != nstd)
 	{
-		/** Genera el Historico */
-		if (nstd == slcConflicto)
-		{
-			HistClient::p_hist->SetEvent(INCI_CONFLICTO, "-", "GW", _ip_propia);
-		}
+		// 20210622. Para evitar conflictos con NTP. Se elimina el histórico.
+		///** Genera el Historico */
+		//if (nstd == slcConflicto)
+		//{
+		//	if (_modo_redan != "2") {
+		//		HistClient::p_hist->SetEvent(INCI_CONFLICTO, "-", "GW", _ip_propia);
+		//	}
+		//}
 
 		/** Marca el Valor en la Configuracion */
 		_stdLocalConfig = nstd;
