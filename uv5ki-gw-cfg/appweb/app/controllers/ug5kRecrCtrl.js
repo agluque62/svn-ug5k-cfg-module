@@ -349,7 +349,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
         });
     };
 
-    /* Mostrar Pestaña Colaterales */
+    /* Mostrar Pestaï¿½a Colaterales */
     vm.pcol_show = function () {
         if (vm.rdata != undefined && vm.vdata.length > 0) {
             switch (vm.pagina) {
@@ -365,7 +365,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
         return true;
     };
 
-    /* Mostrar Pestañas Listas Blancas y Negras */
+    /* Mostrar Pestaï¿½as Listas Blancas y Negras */
     vm.pbn_show = function () {
         if (MantService.hide_on_ulises() == false)
             return false;
@@ -466,7 +466,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             vm.lcol = vm.rdata.radio.colateral.emplazamientos.length;
             if (vm.lcol != 3)
                 /*alert*/alertify.error(transerv.translate('RCTRL_MSG_01')/*"El recurso " */ + vm.rdata.IdRecurso + transerv.translate('RCTRL_MSG_02')/*" viene con "*/ +
-                    vm.lcol + transerv.translate('RCTRL_MSG_03')/*" emplazamientos!.\nDebería venir con 3..."*/);
+                    vm.lcol + transerv.translate('RCTRL_MSG_03')/*" emplazamientos!.\nDeberï¿½a venir con 3..."*/);
             j2vdata();
             /* Campos nuevos */
             /* 20160830 */
@@ -652,7 +652,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                     {
                         Name: /*'Precision Audio:'*/transerv.translate('RCTRL_P01_AUDP'),
                         Value: vm.rdata.radio.iPrecisionAudio.toString(),
-                        Enable: false /*authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE])*/,
+                        Enable: authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]),
                         Input: 1,
                         Inputs: [/*"Estricto"*/transerv.translate('RCTRL_P01_AUDPS'), /*"Normal"*/transerv.translate('RCTRL_P01_AUDPN')],
                         Show: vm.p1_rad_show,
@@ -716,15 +716,15 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Val: vm.dval
                     },
                     {   // 5
-                        Name: isLocal() ? /*'Metodos BSS Disponibles:'*/transerv.translate('RCTRL_P02_BSSD') : /*'Método BSS Preferido:'*/transerv.translate('RCTRL_P02_BSSP'),
+                        Name: isLocal() ? /*'Metodos BSS Disponibles:'*/transerv.translate('RCTRL_P02_BSSD') : /*'Mï¿½todo BSS Preferido:'*/transerv.translate('RCTRL_P02_BSSP'),
                         Value: vm.rdata.radio.metodoBss.toString(),
                         Enable: authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]),
                         Input: 1,
                         Inputs: isLocal() ? [
                             /*"Ninguno"*/transerv.translate('RCTRL_P02_BSSN'),
                             /*"RSSI"*/transerv.translate('RCTRL_P02_BSSR'),
-                            /*"RSSI y NUCLEO"*/transerv.translate('RCTRL_P02_BSSC'),
-                            /*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1')
+                            /*"RSSI y NUCLEO"*/transerv.translate('RCTRL_P02_BSSC')
+                            //,/*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1')
                         ] : [
                             /*"RSSI"*/transerv.translate('RCTRL_P02_BSSR'),
                             /*"NUCLEO"*/transerv.translate('RCTRL_P02_BSSC1'),
