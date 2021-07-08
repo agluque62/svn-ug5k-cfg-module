@@ -615,7 +615,7 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         },
                         Input: 1,
                         Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
-                        Show: /*vm.p2_tel_show*/() => { return false; },
+                        Show: vm.p2_tel_show/*() => { return false; }*/,
                         Val: vm.dval
                     },
                     {
