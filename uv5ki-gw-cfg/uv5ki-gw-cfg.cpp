@@ -5,6 +5,7 @@
 #include "./include/man-proc.h"
 #include "./include/his-proc.h"
 #include "./include/file-supervisor.h"
+#include "./base/task-queue.h"
 
 #define VRS_ID_SOFTWARE			"UV5KI-GW CFG-SERVER"
 #define VRS_VERSION_MAYOR		2
@@ -38,6 +39,10 @@ char *acStrVersion()
 		acBuildString );
 #endif
 	return buffer;
+}
+
+void RutinaDePrueba() {
+
 }
 
 /** */
@@ -150,6 +155,7 @@ public:
 		{
 			plogInit();
 			LocalConfig::p_cfg = new LocalConfig();
+			TaskQueue::Tasks.Start();
 			
 			/** 20170418. Timeout de procesos 'colgados' */
 			hangup_timeout_min = LocalConfig::p_cfg->getint(strRuntime, strRuntimeItemThreadActiveTimeout, "180");
@@ -203,13 +209,17 @@ public:
 			//while (std::cin.rdbuf()->in_avail() == 0)
 			Tools::fatalerror("Test de fatal error");
 			SHORT tecla;
-			while((tecla=GetKeyState('q'))>=0)
+			while((tecla=GetKeyState('Q'))>=0)
 #else
 			while (salida == 0)
 #endif
 			{
+#ifdef _WIN32
+				CThread::sleep(1000);
+				TaskQueue::Tasks.Enqueue("Rutina de Prueba", RutinaDePrueba);
+#else
 				CThread::sleep(100);
-
+#endif
 				if ((MainLoopLogInfoCount % 20) == 0) {
 					if (iDescPerro != -1) {
 
@@ -243,9 +253,10 @@ public:
 
 			delete LocalConfig::p_cfg;
 
+			TaskQueue::Tasks.Stop();
+
 			PLOG_INFO("UG5k-APPSERVER Finalizado.");
 			CThread::sleep(1000);
-
 			plogDispose();
 		}
 		catch(Exception x)

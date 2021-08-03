@@ -99,6 +99,7 @@
     <ClInclude Include="include\base\sistema.h" />
     <ClInclude Include="include\base\socket.h" />
     <ClInclude Include="include\base\sqlite3.h" />
+    <ClInclude Include="include\base\task-queue.h" />
     <ClInclude Include="include\base\thread.h" />
     <ClInclude Include="include\cfg-proc.h" />
     <ClInclude Include="include\config\cfgpasa.hpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\base\sistema.cpp" />
     <ClCompile Include="src\base\socket.cpp" />
     <ClCompile Include="src\base\sqlite3.c" />
+    <ClCompile Include="src\base\task-queue.cpp" />
     <ClCompile Include="src\base\thread.cpp" />
     <ClCompile Include="src\cfg-proc.cpp" />
     <ClCompile Include="src\config\comm-config.cpp" />

@@ -12,7 +12,7 @@ ERROR_COLOR = \x1b[31;01m
 ################################################################
 
 OBJ01 = obj/uv5ki-gw-cfg.o
-OBJ02 = obj/code-base.o obj/exception.o obj/sistema.o obj/socket.o obj/thread.o obj/sqlite3.o obj/sqlite3++.o obj/md5.o
+OBJ02 = obj/code-base.o obj/exception.o obj/sistema.o obj/socket.o obj/thread.o obj/sqlite3.o obj/sqlite3++.o obj/md5.o obj/task-queue.o
 OBJ03 = obj/mongoose.o obj/web-app-server.o obj/uv5kigwcfg-web-app.o obj/uv5kigwcfg-web-app-data.o 
 OBJ04 = obj/stlini.o obj/base64.o obj/tools.o obj/parse.o obj/ftp-client.o obj/http-client.o
 OBJ05 = obj/local-config.o obj/working-config.o obj/comm-config.o obj/comm-conversor.o obj/comm-preconf.o obj/soap-config.o
