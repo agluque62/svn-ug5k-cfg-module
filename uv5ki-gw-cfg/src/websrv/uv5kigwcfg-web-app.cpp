@@ -323,8 +323,9 @@ void Uv5kiGwCfgWebApp::stCb_preconfig(struct mg_connection *conn, string user, w
 			cfg.idConf = pcfg_name;
 			/************************************/
 
-			P_WORKING_CONFIG->set(cfg, true);	// Historicos de cambios ???
-			P_WORKING_CONFIG->save_to(LAST_CFG);
+			// Actualiza y salva la configuracion...
+			P_WORKING_CONFIG->set(cfg, true, true);	// Historicos de cambios ???
+			//P_WORKING_CONFIG->save_to(LAST_CFG);
 												// Sincronizar Fichero....
 			SynchronizeConfigIfApplicable();
 			//if (P_CFG_PROC->GetStdLocalConfig() != slcAislado && P_WORKING_CONFIG->DualCpu())
@@ -417,7 +418,7 @@ void Uv5kiGwCfgWebApp::stCb_mtto(struct mg_connection *conn, string user, web_re
 	}
 	else if (string(conn->request_method)=="POST") {
 		if (levels[2]=="reset") {
-			WorkingThread(Uv5kiGwCfgWebApp::DelayedReset, NULL).Do();
+			RealWorkingThread(Uv5kiGwCfgWebApp::DelayedReset, NULL).Do();
 			P_HIS_PROC->SetEvent(INCI_RESET, user, "");
 			PLOG_INFO("Uv5kiGwCfgWebApp: RESET de Unidad por Usuario: %s", user.c_str());
 			RETURN_OK200_RESP(resp, webData_line("En construccion").JSerialize());
@@ -462,9 +463,10 @@ void Uv5kiGwCfgWebApp::stCb_internos(struct mg_connection *conn, string user, we
 			PLOG_INFO("Recibido Aviso Cambio de Configuracion Local");
 			string data_in = string(conn->content, conn->content_len );
 			CommConfig cfg(data_in);
-			P_WORKING_CONFIG->set(cfg, true);						// No Genero historicos.
+			// Actualiza y salva la configuracion
+			P_WORKING_CONFIG->set(cfg, true, true);						// No Genero historicos.
 			// P_WORKING_CONFIG->TimeStamp();						// Ni cambio la hora..
-			P_WORKING_CONFIG->save_to(LAST_CFG);
+			//P_WORKING_CONFIG->save_to(LAST_CFG);
 			RETURN_OK200_RESP(resp, webData_line("Configuracion Activada...").JSerialize());
 		}
 		else if (levels[2]==CPU2CPU_MSG_REMOTE_LOCK)			// LOCK Fichero para cambiarlo

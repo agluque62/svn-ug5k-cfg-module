@@ -203,7 +203,7 @@ public:
 			//while (std::cin.rdbuf()->in_avail() == 0)
 			Tools::fatalerror("Test de fatal error");
 			SHORT tecla;
-			while((tecla=GetKeyState('q'))>=0)
+			while((tecla=GetKeyState('Q'))>=0)
 #else
 			while (salida == 0)
 #endif
@@ -307,9 +307,13 @@ public:
 			// y hay que obtener la configuracion del Servidor...
 			// Como la Configuracion actual no sirve para nada... se poden a DEFAULT...
 			if (p_wcfg->ippropia() != ipPropia) {
-				p_wcfg->set_to_default();
-				p_wcfg->ResetTimeStamp();				// Pone Fecha 01/01/1970, para que sea actualizado.
-				p_wcfg->save_to(LAST_CFG);
+				CommConfig cfg = p_wcfg->get_default();
+				cfg.fechaHora = "01/01/1970 00:00:00 UTC";				// Pone Fecha 01/01/1970, para que sea actualizado.
+				p_wcfg->set(cfg, false, true);
+				//p_wcfg->set_to_default();
+				//p_wcfg->ResetTimeStamp();				// Pone Fecha 01/01/1970, para que sea actualizado.
+				//p_wcfg->save_to(LAST_CFG);
+
 				PLOG_INFO("Detectado Cambio de IP-LOCAL. Nueva IP: %s", ipPropia.c_str());
 			}
 		}
@@ -320,10 +324,14 @@ public:
 			// y hay que obtener la configuracion del Servidor...
 			// Como la Configuracion actual no sirve para nada... se ponen a DEFAULT...
 			if (mode == true && p_wcfg->config.general.name != hwName) {
-				p_wcfg->set_to_default();
-				p_wcfg->config.general.name = hwName;
-				p_wcfg->ResetTimeStamp();
-				p_wcfg->save_to(LAST_CFG);
+				CommConfig cfg = p_wcfg->get_default();
+				cfg.general.name = hwName;
+				cfg.fechaHora = "01/01/1970 00:00:00 UTC";
+				p_wcfg->set(cfg, false, true);
+				//p_wcfg->set_to_default(true);
+				//p_wcfg->config.general.name = hwName;
+				//p_wcfg->ResetTimeStamp();
+				//p_wcfg->save_to(LAST_CFG);
 				PLOG_INFO("Detectado Cambio de ID. Nuevo ID: %s", hwName.c_str());
 			}
 		}

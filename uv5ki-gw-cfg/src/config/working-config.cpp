@@ -74,7 +74,7 @@ void WorkingConfig::_recResponse(bool res, int len, void *data)
 		PLOG_ERROR("_recResponse....");
 	}
 }
-EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini) 
+EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini, bool bsave) 
 {
 	EventosHistoricos *his = NULL;
 	config = redanCfg;
@@ -85,8 +85,9 @@ EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini)
 		p_mem_config_sem->release();
 	}
 
-	/** Mandar el SIGNAL USR2 */
-	WorkingThread(WorkingConfig::DelayedSignal, this).Do();
+	if (bsave == true) {
+		save_to(LAST_CFG);
+	}
 
 	/** Mandar las señales a los procesos colaterales */
 	if (actualiza_ini==true)
@@ -98,6 +99,9 @@ EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini)
 		HistClient::p_hist->Signal(recconfig.getint("SERVICIO","PORT_IN_SERVICIO","65001"), _recResponse);
 	}
 
+	/** Mandar el SIGNAL USR2 */
+	RealWorkingThread(WorkingConfig::DelayedSignal, this).Do();
+
 	return his;
 }
 
@@ -106,12 +110,12 @@ void WorkingConfig::set(soap_config &sConfig)
 {
 	/** Parse */
 	CommConfig newConfig(sConfig);
-	set(newConfig, true);
+	set(newConfig, true, true);
 }
 
 /** */
 void WorkingConfig::set() {
-	set(config, false);
+	set(config, false, false);
 }
 
 /** */
@@ -123,13 +127,15 @@ void WorkingConfig::load_from(string file)
 		{
 			ifstream f(file.c_str(), ios_base::in);
 			CommConfig cfg(f);
-			set(cfg, false);
+			set(cfg, false, false);
 		}
 		catch(Exception x)
 		{
 			PLOG_EXCEP(x, "Error cargando fichero de configuracion: %s", file.c_str());
 			// Poner configuracion por defecto.
-			set_to_default();
+			CommConfig def = get_default();
+			set(def, false, false);
+			//set_to_default(false);
 			//CommConfig cfg;
 			//PLOG_DEBUG("Generada CFG Por Defecto,");
 			//set(cfg, false);
@@ -149,20 +155,27 @@ void WorkingConfig::save_to(string file)
 	{
 		string data = config.JSerialize();
 		ff.write(data.c_str(), data.length());
+#ifdef _WIN32
+#endif
 		return;
 	}
 	throw Exception("Modo de Configuracion no implementado escribiendo fichero...");
 }
 
-/** */
-void WorkingConfig::set_to_default()
-{
-	// Poner configuracion por defecto.
+CommConfig WorkingConfig::get_default() {
 	CommConfig cfg;
-	PLOG_DEBUG("Generada CFG Por Defecto,");
-	set(cfg, false);
-	PLOG_DEBUG("Activada CFG Por Defecto");
+	return cfg;
 }
+
+///** */
+//void WorkingConfig::set_to_default(bool bsave)
+//{
+//	// Poner configuracion por defecto.
+//	CommConfig cfg;
+//	PLOG_DEBUG("Generada CFG Por Defecto,");
+//	set(cfg, false, bsave);
+//	PLOG_DEBUG("Activada CFG Por Defecto");
+//}
 
 /** */
 void WorkingConfig::TimeStamp()
@@ -248,18 +261,19 @@ void WorkingConfig::FromExternalSet(bool isFromWebPage, string user, CommConfig&
 
 	/** Activa la configuracion recibida */
 	cfg.tipo = 0; // TODO ???
-	EventosHistoricos* ev = set(cfg, true);
 	// REDAN V2. Solo se Marca la CFG si la orden no procede del servidor...
 	if (isFromWebPage) {
-		TimeStamp();
+		cfg.fechaHora = Tools::Ahora_Servidor();
 	}
+	// Activa y actualiza la configuracion recibida.
+	EventosHistoricos* ev = set(cfg, true, true);
 	// REDAN V2. Solo generar los eventos si la orden no procede del servidor...
 	if (isFromWebPage) {
 		// Generar los historicos de cambios.
 		P_HIS_PROC->SetEventosHistoricos(user, ev);
 	}
 	// Actualiza la configuracion recibida... */
-	save_to(LAST_CFG);
+	// save_to(LAST_CFG);
 }
 
 

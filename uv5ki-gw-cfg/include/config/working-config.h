@@ -38,12 +38,13 @@ public:
 	~WorkingConfig();
 
 public:
-	EventosHistoricos *set(CommConfig &redanConfig, bool actualiza_ini);
+	EventosHistoricos *set(CommConfig &redanConfig, bool actualiza_ini, bool bsave);
 	void set(soap_config &sConfig);
 	void set();
 	void load_from(string file);
 	void save_to(string file);
-	void set_to_default();
+	//void set_to_default(bool bsave);
+	CommConfig get_default();
 
 	void FromExternalSet(bool isServer, string user, CommConfig& redanConfig, bool actualiza_ini);
 

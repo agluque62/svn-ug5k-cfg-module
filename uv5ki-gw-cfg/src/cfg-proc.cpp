@@ -314,11 +314,12 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 	CommConfig cfg_redan(response.Body());
 	p_working_config->config.tipo = 0;
 	
-	/** Activa la configuracion recibida */
- 	p_working_config->set(cfg_redan, true);
+	/** Activa y salva la configuracion recibida */
+	//p_working_config->set(cfg_redan, true);
+	p_working_config->set(cfg_redan, true, true);
 
-	/** Actualiza la configuracion recibida... */
-	p_working_config->save_to(LAST_CFG);
+	///** Actualiza la configuracion recibida... */
+	//p_working_config->save_to(LAST_CFG);
 
 	/** EstadoSicronizacion=slcSincronizado */
 	StdSincrSet(slcSincronizado);
@@ -712,11 +713,11 @@ void SoapClientProc::PedirConfiguracion(string cfg)
 		/** Salva ultima configuracion */
 		p_working_config->save_to(LAST_SAVE(Tools::Int2String(_lastcfg++ & 3)));
 
-		/** Activa la configuracion recibida */
+		/** Activa y actualiza la configuracion recibida */
  		p_working_config->set(sConfig);
 
-		/** Actualiza la configuracion recibida... */
-		p_working_config->save_to(LAST_CFG);
+		///** Actualiza la configuracion recibida... */
+		//p_working_config->save_to(LAST_CFG);
 
 		/** Abre si procede el puerto de Escucha MCAST */
 		McastActivateOrDeactivate(true);
