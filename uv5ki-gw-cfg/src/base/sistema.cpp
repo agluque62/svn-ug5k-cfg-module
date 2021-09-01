@@ -415,7 +415,7 @@ time_t sistema::time()
 #if defined(_PPC82xx_)
 	return (time_t)((TickCount() * 10) / 1000);
 #else
-	return ::time(NULL);
+	return (time_t)TickCount();	// ::time(NULL);
 #endif
 }
 
@@ -426,6 +426,26 @@ time_t sistema::time_max()
 #else
 	return INT_MAX;
 #endif
+}
+
+/** 20210827. Revision de la gestión JIFFIES */
+unsigned int sistema::jiffies() {
+#if defined(_PPC82xx_)
+
+	int iFdEsd = -1;
+	if ((iFdEsd = open(ESD_DEV, O_RDWR)) < 0)
+	{
+		PLOG_ERROR("sistema::Jiffies. Error en Apertura de Driver ED !!!");
+		return 0;
+	}
+	int ticks = ioctl(iFdEsd, ESDI_DIME_JIFFIES, 0);
+	close(iFdEsd);
+
+	return (unsigned int)ticks;
+#else
+	return (unsigned int)(JIFFIES_PER_SECOND * ::time(NULL));
+#endif
+
 }
 
 /** 20180322. Semaforo Global */

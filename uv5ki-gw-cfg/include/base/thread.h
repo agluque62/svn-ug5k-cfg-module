@@ -33,8 +33,9 @@ class TimeMeasure
 public:
 	TimeMeasure() {
 		_last = sistema::time();
+		_diff = 0;
 	}
-	bool elapsed(time_t _timeout) {
+	bool elapsed_old(time_t _timeout) {
 		time_t now = sistema::time();
 		
 		_diff = now >= _last ? now - _last : 
@@ -46,12 +47,31 @@ public:
 		}
 		return false;
 	}
+	bool elapsed(time_t timeout_seg) {
+		unsigned int jtimeout = timeout_seg * JIFFIES_PER_SECOND;
+		unsigned int jlast = (unsigned int)(_last * JIFFIES_PER_SECOND);
+		unsigned int jnow = sistema::jiffies();
+		if (jnow >= jlast) {
+			unsigned jdif = jnow - jlast;
+			_diff = jdif / JIFFIES_PER_SECOND;
+			if (jdif >= jtimeout) {
+				_last = jnow / JIFFIES_PER_SECOND;
+				return true;
+			}
+		}
+		else {
+			_diff = 0;
+			_last = jnow / JIFFIES_PER_SECOND;
+		}
+		return false;
+	}
 	/** */
 	time_t lastdiff() {return _diff;}
 
 private:
 	time_t _last;
 	time_t _diff;
+
 };
 
 /**

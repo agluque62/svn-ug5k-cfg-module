@@ -99,6 +99,9 @@ public:
 	static int TickCount();
 	static time_t time();
 	static time_t time_max();
+
+	/** 20210827. Revision de la gestión JIFFIES */
+	static unsigned int jiffies();
 	
 };
 
@@ -109,6 +112,9 @@ public:
 #define _TIMER_EXPIRED( val )		((val) && _TIMER_DELTA(val)<=0)
 #define _TIMER_CLR( val ) 			(val) = 0
 #define _TIMER_IS_RUNNING( val )	(val)
+
+/** */
+#define JIFFIES_PER_SECOND			100
 
 /** 20180322. Semaforo Global */
 #ifndef _WIN32
