@@ -96,7 +96,7 @@ EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini, 
 		LocalConfig recconfig(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.snmpModule()*/));
 		
 		HistClient::p_hist->Signal(snmpconfig.getint("SERVICIO","UDP_PORT_IN_AGSNMP","65000"));
-		HistClient::p_hist->Signal(recconfig.getint("SERVICIO","PORT_IN_SERVICIO","65001"), _recResponse);
+		HistClient::p_hist->Signal(recconfig.getint("SERVICIO","PORT_IN_SERVICIO","65003"), _recResponse);
 	}
 
 	/** Mandar el SIGNAL USR2 */
