@@ -23,7 +23,7 @@ function authservice(MantService, $q, $location, $rootScope) {
                 return false;
 
             // En Redan Modo 2 siempre se puede editar.
-            if (MantService.modo() == "rd" || MantService.modo_redan() == "2")
+            if (MantService.modo() == "rd" && MantService.modo_redan() == "2")
                 return true;
 
             if (MantService.modo() == "ul" || MantService.modo_redan() == "1") {
