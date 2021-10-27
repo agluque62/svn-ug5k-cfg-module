@@ -285,9 +285,8 @@ function ug5kRectCtrl($scope, $routeParams, $route, authservice, CfgService, Val
 
             case 4:  // Lado.        N5/R2
             case 12: // Periodo Interrupt Warning
-                return (vm.vdata[0].Value == 3 || vm.vdata[0].Value == 4);
             case 25: // Time out respuesta llamada
-                return (vm.vdata[0].Value == 3);
+                return (vm.vdata[0].Value == 3 || vm.vdata[0].Value == 4);
 
             case 5: // Test Remoto.
             case 6: // Test Local.
