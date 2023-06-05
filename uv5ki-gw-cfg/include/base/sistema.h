@@ -93,7 +93,7 @@ public:
 	static void fileattr(string path, int modo, string &date, string &size);
 
 	/* indica que tiene dual viva */
-	static int sistema::DualAlive();
+	static int DualAlive();
 
 	/** 20171031. Obtener el colateral */
 	static string ipColateral();

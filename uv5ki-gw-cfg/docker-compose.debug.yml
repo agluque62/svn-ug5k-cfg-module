@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  uv5kigwcfg:
+    image: uv5kigwcfg
+    build:
+      context: .
+      dockerfile: ./Dockerfile
