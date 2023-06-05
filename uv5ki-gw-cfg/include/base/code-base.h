@@ -153,7 +153,7 @@ public:
 		return filename;
 #else
 		// return "./fs-lnx" + filename;
-		return "./fs-win" + filename;
+		return filename;
 #endif
 	}
 	static string onram(string filename) {
