@@ -46,11 +46,12 @@ public:
 	}
 public:
 	bool active(){return _set;}
-	void active(string ssid, string name, int profile)
+	void active(string ssid, string name, int profile, string lang)
 	{
 		_ssid = ssid;
 		_name = name;
 		_profile = profile;
+		_lang = lang;
 		_start = _last = time(NULL);
 		_set = true;
 	}
@@ -58,7 +59,7 @@ public:
 		return ssid == _ssid;
 	}
 	bool isroot() {
-		return _name=="root" && _profile==ROOT_PROFILE;
+		return _profile==ROOT_PROFILE;
 	}
 	void reset()
 	{
@@ -82,12 +83,18 @@ public:
 		return (_last-_start);
 	}
 
+	string language()
+	{
+		return (_lang);
+	}
+
 private:
 	bool _set;
 	time_t _start;
 	time_t _last;
 	string _ssid;
 	string _name;
+	string _lang;
 	int _profile;
 };
 
@@ -104,7 +111,7 @@ typedef struct
 	bool				enable_login;
 	bool				enable_ssession;		
 	vector<string>		sec_uris;			// Lista de URIS que no se ven afectadas por la seguridad. Dependen de la aplicacion.
-	webAccessRoutine	access_control;		// Rutina que permite el acceso o no en función de los usuarios.
+	webAccessRoutine	access_control;		// Rutina que permite el acceso o no en funciï¿½n de los usuarios.
 	SessionControl		session_control;
 	int					tick;				// Para el control de presencia del Servior
 } web_config;

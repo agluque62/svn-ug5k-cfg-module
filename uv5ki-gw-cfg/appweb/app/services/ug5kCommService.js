@@ -18,6 +18,7 @@ function dataservice($http) {
             return remoteGet(rest_url_config);
         }
         , set_config: function (cfg) {
+         	cfg.origenCfg = "CFGL";
             return remotePost(rest_url_config, cfg);
         }
         , upload_config: function () {

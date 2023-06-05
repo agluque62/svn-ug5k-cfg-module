@@ -331,7 +331,7 @@ int WebAppServer::check_login_form_submission_old(struct mg_connection *conn)
 				ssid, expire);
 
 #endif // _NO_EXPIRE_
-			config()->session_control.active(ssid, name, profile);
+			config()->session_control.active(ssid, name, profile, "es");
 			return MG_TRUE;
 		}
 		else
@@ -352,13 +352,16 @@ int WebAppServer::check_login_form_submission_old(struct mg_connection *conn)
 int WebAppServer::check_login_form_submission(struct mg_connection *conn)
 {
 	char name[100], password[100], ssid[100], expire_epoch[100];
+	char lang[32];
 	int profile=64;
 
 	/** Datos */
 	mg_get_var(conn, "name", name, sizeof(name));
 	mg_get_var(conn, "password", password, sizeof(password));
+	mg_get_var(conn, "lang", lang, sizeof(lang));
 	bool acceso = config()->enable_login==true ? config()->access_control(name, password, &profile) : true;
 
+	PLOG_INFO("login lang: %s n=%s pf=%x acc=%i", lang, name, profile, acceso? 1:0);
 #ifdef _WIN32
 	_snprintf_s(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long)0);
 #else
@@ -370,20 +373,22 @@ int WebAppServer::check_login_form_submission(struct mg_connection *conn)
 		{
 			if (config()->session_control.isroot()==false)
 			{
-				generate_ssid(name, PERF_ADMIN, expire_epoch, ssid, sizeof(ssid));
+				generate_ssid(name, profile, expire_epoch, ssid, sizeof(ssid));
 				mg_printf(conn,
 						"HTTP/1.1 302 Found\r\n"
 						"Set-Cookie: ssid=%s \r\n"
 						"Location: /\r\n\r\n\r\n",
 						ssid);
-				config()->session_control.active(ssid, "root", PERF_ADMIN);
+				config()->session_control.active(ssid,  name, profile, lang);
 				return MG_TRUE;		
 			}
 		}
 		if (config()->enable_login == true)
+		{
 			mg_printf(conn, "HTTP/1.1 302 Found\r\nLocation: %s?flg=%d\r\n\r\n\r\n", 
 				config()->closed_session_uri.c_str(),
-				string(name)=="root" && acceso==true ? 1 : 0);
+				string(name)=="root" && profile == ROOT_PROFILE && acceso==true ? 1 : 0);
+		}
 	}
 	else
 	{
@@ -395,13 +400,15 @@ int WebAppServer::check_login_form_submission(struct mg_connection *conn)
 				"Set-Cookie: ssid=%s \r\n"
 				"Location: /\r\n\r\n\r\n",
 				ssid);
-			config()->session_control.active(ssid, name, profile);
+			config()->session_control.active(ssid, name, profile, lang);
 			return MG_TRUE;		
 		}
 		else 
 		{
 			if (config()->enable_login==true)
+			{
 				mg_printf(conn, "HTTP/1.1 302 Found\r\nLocation: %s\r\n\r\n\r\n", config()->bad_user_uri.c_str());
+			}
 		}
 	}
 	return MG_FALSE;

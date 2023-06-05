@@ -47,36 +47,42 @@ public:
 		h2h4 = 0;
 		ladoeym = 0;
 		modo = 0;
-		no_test_local = no_test_remoto = "";
+		no_test_local = "309999";
+		no_test_remoto = "399999";
 		it_release = 5;
 		detect_vox = 0;
 		umbral_vox = -10;
 		tm_inactividad = 2;
 		colateral_scv = 0;
 		iT_Int_Warning = 5;
+		RespuestaSIP_ATSR2 = 0;
+		TmTonoBloqueo = 1;
+		TmBloqueoLib = 100;
 
 		idRed = "";
 		idTroncal = "";
-		/** 20180320. Nuevos Parámetros en interfaces analogicas */
+		/** 20180320. Nuevos Parï¿½metros en interfaces analogicas */
 		iTmLlamEntrante = 30;
 		iTmDetFinLlamada = 6;
 		/** 20181016. U2510. SP#01-15*/
 		TReleaseBL = 3;
-		iDetCallerId = 1;
+		iDetCallerId = 0;
 		iTmCallerId = 3000;
 		iDetInversionPol = 1;
 		iPeriodoSpvRing = 200;
 		iFiltroSpvRing = 2;
 		iDetDtmf = 0;
-		/** 20200703. Nuevos parámetros de líneas Telefónicas */
+		iControlTmLlam = 0;
+		iTmMaxConversacion = 0;
+		/** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
 		iDetLineaAB = 0;
 		iEnableNoED137 = 0;
 		/** 20200703. Nueva Estructura de Colateral Remoto */
-		r_automatica = 1;				// Elementos Existentes.
+		r_automatica = 1;
 		tm_superv_options = 5;
 		uri_remota = "";
 		superv_options = 1;
-		itiporespuesta = 0;	// Elementos Añadidos
+		itiporespuesta = 0;
 
 		additional_uri_remota = "";
 		additional_superv_options = 0;
@@ -106,6 +112,9 @@ public:
 		write_key(writer, "ats_rangos_dst", ats_rangos_dst);
 		write_key(writer, "ats_rangos_org", ats_rangos_org);
 		write_key(writer, "iT_Int_Warning", iT_Int_Warning);
+		write_key(writer, "RespuestaSIP_ATSR2", RespuestaSIP_ATSR2);
+		write_key(writer, "TmTonoBloqueo", TmTonoBloqueo);
+		write_key(writer, "TmBloqueoLib", TmBloqueoLib);
 
 		write_key(writer, "idRed", idRed);
 		write_key(writer, "idTroncal", idTroncal);
@@ -115,7 +124,7 @@ public:
 		write_key(writer, "ats_rangos_privilegiados", ats_rangos_privilegiados);
 		write_key(writer, "ats_rangos_directos_ope", ats_rangos_directos_ope);
 		write_key(writer, "ats_rangos_directos_pri", ats_rangos_directos_pri);
-		/** 20180320. Nuevos Parámetros en interfaces analogicas */
+		/** 20180320. Nuevos Parï¿½metros en interfaces analogicas */
 		write_key(writer, "iTmLlamEntrante", iTmLlamEntrante);
 		write_key(writer, "iTmDetFinLlamada", iTmDetFinLlamada);
 		/** 20181016. U2510. SP#01-15*/
@@ -126,7 +135,9 @@ public:
 		write_key(writer, "iPeriodoSpvRing", iPeriodoSpvRing);
 		write_key(writer, "iFiltroSpvRing", iFiltroSpvRing);
 		write_key(writer, "iDetDtmf", iDetDtmf);
-		/** 20200703. Nuevos parámetros de líneas Telefónicas */
+		write_key(writer, "iControlTmLlam", iControlTmLlam);
+		write_key(writer, "iTmMaxConversacion", iTmMaxConversacion);
+		/** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
 		write_key(writer, "iDetLineaAB", iDetLineaAB);
 		write_key(writer, "iEnableNoED137", iEnableNoED137);
 		/** 20200703. Nueva Estructura de Colateral Remoto */
@@ -135,7 +146,7 @@ public:
 
 		write_key(writer, "uri_remota", uri_remota);
 		write_key(writer, "superv_options", superv_options);
-		write_key(writer, "itiporespuesta", itiporespuesta);	// Elementos Añadidos
+		write_key(writer, "itiporespuesta", itiporespuesta);	// Elementos Aï¿½adidos
 
 		write_key(writer, "additional_uri_remota",  additional_uri_remota);
 		write_key(writer, "additional_superv_options", additional_superv_options);
@@ -160,6 +171,9 @@ public:
 		read_key(base, "ats_rangos_dst", ats_rangos_dst);
 		read_key(base, "ats_rangos_org", ats_rangos_org);
 		read_key(base, "iT_Int_Warning", iT_Int_Warning);
+		read_key(base, "RespuestaSIP_ATSR2", RespuestaSIP_ATSR2);
+		read_key(base, "TmTonoBloqueo", TmTonoBloqueo);
+		read_key(base, "TmBloqueoLib", TmBloqueoLib);
 
 		read_key(base, "idRed", idRed);
 		read_key(base, "idTroncal", idTroncal);
@@ -169,7 +183,7 @@ public:
 		read_key(base, "ats_rangos_privilegiados", ats_rangos_privilegiados);
 		read_key(base, "ats_rangos_directos_ope", ats_rangos_directos_ope);
 		read_key(base, "ats_rangos_directos_pri", ats_rangos_directos_pri);
-		/** 20180320. Nuevos Parámetros en interfaces analogicas */
+		/** 20180320. Nuevos Parï¿½metros en interfaces analogicas */
 		read_key(base, "iTmLlamEntrante", iTmLlamEntrante, 30);
 		read_key(base, "iTmDetFinLlamada", iTmDetFinLlamada, 6);
 		/** 20181016. U2510. SP#01-15*/
@@ -180,7 +194,9 @@ public:
 		read_key(base, "iPeriodoSpvRing", iPeriodoSpvRing, 200);
 		read_key(base, "iFiltroSpvRing", iFiltroSpvRing, 2);
 		read_key(base, "iDetDtmf", iDetDtmf, 0);
-		/** 20200703. Nuevos parámetros de líneas Telefónicas */
+		read_key(base, "iControlTmLlam", iControlTmLlam, 0);
+		read_key(base, "iTmMaxConversacion", iTmMaxConversacion, 0);
+		/** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
 		read_key(base, "iDetLineaAB", iDetLineaAB);
 		read_key(base, "iEnableNoED137", iEnableNoED137);
 		/** 20200703. Nueva Estructura de Colateral Remoto */
@@ -189,7 +205,7 @@ public:
 
 		read_key(base, "uri_remota", uri_remota);
 		read_key(base, "superv_options", superv_options);
-		read_key(base, "itiporespuesta", itiporespuesta);	// Elementos Añadidos
+		read_key(base, "itiporespuesta", itiporespuesta);	// Elementos Aï¿½adidos
 
 		read_key(base, "additional_uri_remota", additional_uri_remota);
 		read_key(base, "additional_superv_options", additional_superv_options);
@@ -212,7 +228,10 @@ public:
 	int tm_inactividad;
 	int colateral_scv;
 	int iT_Int_Warning;
-	/** 20180320. Nuevos Parámetros en interfaces analogicas */
+	int RespuestaSIP_ATSR2;
+	int TmTonoBloqueo;
+	int TmBloqueoLib;
+	/** 20180320. Nuevos Parï¿½metros en interfaces analogicas */
 	int iTmLlamEntrante;
 	int iTmDetFinLlamada;
 
@@ -224,15 +243,18 @@ public:
 	int iPeriodoSpvRing;
 	int iFiltroSpvRing;
 	int iDetDtmf;
-	/** 20200703. Nuevos parámetros de líneas Telefónicas */
+	int iControlTmLlam;
+	int iTmMaxConversacion;
+	/** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
 	int iDetLineaAB;
 	int iEnableNoED137;
 	/** 20200703. Nueva Estructura de Colateral Remoto */
 	int r_automatica;			// Elementos Existentes
+
 	int tm_superv_options;
 	string uri_remota;
 	int superv_options;
-	int itiporespuesta;	// Elementos Añadidos
+	int itiporespuesta;	// Elementos Aï¿½adidos
 
 	string additional_uri_remota;
 	int additional_superv_options;

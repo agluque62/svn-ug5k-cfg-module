@@ -168,9 +168,9 @@ void Uv5kiGwCfgWebApp::stCb_tses(struct mg_connection *conn, string user, web_re
 	if (string(conn->request_method)=="GET") 
 	{	// Enlazar con los datos reales en el constructor...
 		int std;
-		string cfg_name, cfg_time;
-		P_CFG_PROC->IdConfig(std, cfg_name, cfg_time);
-		webData_tses data(std, cfg_name, cfg_time, P_CFG_PROC->Modo(), _versiones.Version);
+		string cfg_name, cfg_time, cfg_origen;
+		P_CFG_PROC->IdConfig(std, cfg_name, cfg_time, cfg_origen);
+		webData_tses data(std, cfg_name, cfg_time, P_CFG_PROC->Modo(), _versiones.Version, cfg_origen);
 		RETURN_OK200_RESP(resp, data.JSerialize());
 	}
 #if LOCAL_TEST
@@ -243,7 +243,8 @@ void Uv5kiGwCfgWebApp::stCb_config(struct mg_connection *conn, string user, web_
 				SynchronizeConfigIfApplicable();
 				PLOG_INFO("Uv5kiGwCfgWebApp: Orden de Cambio de Configuracion ejecutada...");
 			}
-			else {
+			else
+			{
 				PLOG_ERROR("Uv5kiGwCfgWebApp: Error procesando Orden de Cambio de Configuracion. Formato Incorrecto...");
 				RETURN_IERROR_RESP(resp, webData_line("Formato de Configuracion incorrecto").JSerialize());
 			}
@@ -302,8 +303,16 @@ void Uv5kiGwCfgWebApp::stCb_preconfig(struct mg_connection *conn, string user, w
 		else if (string(conn->request_method)=="PUT") // Activar Configuracion.
 		{
 					// Comprobar estado AISLADO...
-			if (P_CFG_PROC->IsIdle()==false) {
-				RETURN_IERROR_RESP(resp, webData_line("Preconfiguracion No Activada. Pasarela NO AISLADA.").JSerialize());
+			//if (P_CFG_PROC->IsIdle()==false) {
+				//RETURN_IERROR_RESP(resp, webData_line("Preconfiguracion No Activada. Pasarela NO AISLADA.").JSerialize());
+			//}
+			if (P_WORKING_CONFIG->DualCpu()) {
+				string mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoGlobal, "0");
+				string redan_mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoRedan, "0");
+				bool redan_mode2 = mode == "0" && redan_mode == "2";
+				if (!redan_mode2 && P_CFG_PROC->IsIdle()==false) {
+					RETURN_IERROR_RESP(resp, webData_line("Preconfiguracion No Activada. Pasarela NO AISLADA.").JSerialize());
+				}
 			}
 			CommPreconf activa;
 			if (preconfs.get(pcfg_name, activa)==false) {
@@ -319,8 +328,16 @@ void Uv5kiGwCfgWebApp::stCb_preconfig(struct mg_connection *conn, string user, w
 
 					// Activar la configuracion...
 			CommConfig cfg(activa.data);
-			/** 20170503. El nombre de ka CFG es el de la PRECFG de la base de datos */
+			if (cfg.test() == false)
+			{
+				PLOG_INFO("Uv5kiGwCfgWebApp: Error al Activar Preconfiguracion: %s. Formato de Configuraicon incorrecto", pcfg_name.c_str());
+				RETURN_IERROR_RESP(resp, webData_line("Error al Activar Preconfiguracion: " + pcfg_name + ". Formato de Configuraicon incorrecto").JSerialize());
+			}
+
+			/** 20170503. El nombre de ka CFG es el de la PRECFG de la base de datos *///TRAZA 01
 			cfg.idConf = pcfg_name;
+			//indico que la configuracion estamodificada localmente, porque estaba en la base de datos.
+			cfg.origenCfg = "CFGL";
 			/************************************/
 
 			// Actualiza y salva la configuracion...
@@ -407,7 +424,12 @@ void Uv5kiGwCfgWebApp::stCb_mtto(struct mg_connection *conn, string user, web_re
 			RETURN_OK200_RESP(resp, _versiones.isLoaded()==true ? _versiones.JSerialize() : "");
 		}
 		else if (levels[2]=="bite") {
+			PLOG_INFO("Uv5kiGwCfgWebApp: -----------@@@ set lenguage");
+			P_HIS_PROC->SetLanguage(_web_config.session_control.language());
+
 			P_HIS_PROC->SetEvent(INCI_BITE, user, "");
+			PLOG_INFO("Uv5kiGwCfgWebApp: -----------@@@ BITE");
+
 			string jBite = BiteControl().get();
 			RETURN_OK200_RESP(resp, jBite);
 		}
@@ -445,6 +467,9 @@ void Uv5kiGwCfgWebApp::stCb_internos(struct mg_connection *conn, string user, we
 		RETURN_IERROR_RESP(resp, webData_line("Error en Peticion interna.").JSerialize());
 	}
 	else if (string(conn->request_method) == "GET") {
+		if (P_WORKING_CONFIG->IsCfgDefecto()) {
+			sistema::DualAlive();
+		}
 		if (levels[2] == CPU2CPU_MSG_CHECK_CFG) {
 			// REDAN V2. Chequeo de la configuracion.
 			RedanTestComm test(P_WORKING_CONFIG->config); // Leer de la configuracion activa de RAM.
@@ -463,11 +488,18 @@ void Uv5kiGwCfgWebApp::stCb_internos(struct mg_connection *conn, string user, we
 			PLOG_INFO("Recibido Aviso Cambio de Configuracion Local");
 			string data_in = string(conn->content, conn->content_len );
 			CommConfig cfg(data_in);
-			// Actualiza y salva la configuracion
-			P_WORKING_CONFIG->set(cfg, true, true);						// No Genero historicos.
-			// P_WORKING_CONFIG->TimeStamp();						// Ni cambio la hora..
-			//P_WORKING_CONFIG->save_to(LAST_CFG);
-			RETURN_OK200_RESP(resp, webData_line("Configuracion Activada...").JSerialize());
+			if (cfg.test() == false)
+			{
+				PLOG_ERROR("Configuracion recibida erronea. Formato incorrecto");
+			}
+			else
+			{
+				// Actualiza y salva la configuracion
+				P_WORKING_CONFIG->set(cfg, true, true);						// No Genero historicos.
+				// P_WORKING_CONFIG->TimeStamp();						// Ni cambio la hora..
+				//P_WORKING_CONFIG->save_to(LAST_CFG);
+				RETURN_OK200_RESP(resp, webData_line("Configuracion Activada...").JSerialize());
+			}
 		}
 		else if (levels[2]==CPU2CPU_MSG_REMOTE_LOCK)			// LOCK Fichero para cambiarlo
 		{
@@ -515,7 +547,7 @@ void Uv5kiGwCfgWebApp::stCb_dev(struct mg_connection *conn, string user, web_res
 					);
 				RETURN_OK200_RESP(resp, "");
 			}
-		RETURN_IERROR_RESP(resp, webData_line("Error en Formato de trama. Pocos parámetros.").JSerialize());
+		RETURN_IERROR_RESP(resp, webData_line("Error en Formato de trama. Pocos parï¿½metros.").JSerialize());
 		}
 	}
 	RETURN_NOT_IMPLEMENTED_RESP(resp);
@@ -543,7 +575,11 @@ void Uv5kiGwCfgWebApp::SynchronizeConfigIfApplicable() {
 		string mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoGlobal, "0");
 		string redan_mode = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoRedan, "0");
 		bool redan_mode2 = mode == "0" && redan_mode == "2";
-		if (redan_mode2 || P_CFG_PROC->GetStdLocalConfig() == slcAislado) {
+		//if (redan_mode2 || P_CFG_PROC->GetStdLocalConfig() == slcAislado) {
+		//si redan_mode2, me sincronizo si no estoy aislada (aislada significa que no esta la  CPU  dual
+		//si no es mode2, me sincronizo si estÃ¡ aislada (aislada significa que no tengo comunicacion con centralizada)
+		if ( ((redan_mode2) && (P_CFG_PROC->GetStdLocalConfig() != slcAislado) )
+				|| ( (!redan_mode2) && (P_CFG_PROC->GetStdLocalConfig() == slcAislado) ) ) {
 			WorkingThread(Uv5kiGwCfgWebApp::ConfigSync, NULL).Do();
 			PLOG_INFO("Uv5kiGwCfgWebApp: Sincronizando Cambio de Configuracion...");
 		}

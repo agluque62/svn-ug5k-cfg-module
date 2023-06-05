@@ -77,6 +77,21 @@ function MantService(dataservice, transerv) {
         { 'color': 'black', 'background-color': 'white' }
     ];
     //var txtItfTipos = ["Radio", "LCE", "BC", "BL", "AB", "R2", "N5", "QSIG","Tunneling","No Configurado","Sin Informacion"];
+//    var txtItfTipos = [
+//        transerv.translate('MANS_ITF_RD'),
+//        transerv.translate('MANS_ITF_LC'),
+//        transerv.translate('MANS_ITF_BC'),
+//        transerv.translate('MANS_ITF_BL'),
+//        transerv.translate('MANS_ITF_AB'),
+//        transerv.translate('MANS_ITF_R2'),
+//        transerv.translate('MANS_ITF_N5'),
+//        transerv.translate('MANS_ITF_QS'),
+//        transerv.translate('MANS_ITF_TN'),
+//        transerv.translate('MANS_ITF_NC'),
+//        transerv.translate('MANS_ITF_NI')];
+
+    //var txtItfTipos = ["Radio", "LCE", "BC", "BL", "AB", "R2", "N5", "QSIG", "RDSI_2BD", "RDSI_30BD", 
+    //						"IO", "DATOS", "RRC", "EYM_PP", "EYM_MARC", "Tunnel-loc", "Tunnel-rem", "TUNN-2H","No Configurado","Sin Informacion"];
     var txtItfTipos = [
         transerv.translate('MANS_ITF_RD'),
         transerv.translate('MANS_ITF_LC'),
@@ -86,9 +101,19 @@ function MantService(dataservice, transerv) {
         transerv.translate('MANS_ITF_R2'),
         transerv.translate('MANS_ITF_N5'),
         transerv.translate('MANS_ITF_QS'),
-        transerv.translate('MANS_ITF_TN'),
+        transerv.translate('MANS_ITF_RDSI_2BD'),
+        transerv.translate('MANS_ITF_NC'), 		/*transerv.translate('MANS_ITF_RDSI_30BD'), en ulises el recurso rdsi-30bd coincide con el campo no configurado (9)*/
+        transerv.translate('MANS_ITF_NI'), 		/*transerv.translate('MANS_ITF_IO'), en ulises el recurso io coincide con el campo no informacion (10) */
+        transerv.translate('MANS_ITF_DATOS'),
+        transerv.translate('MANS_ITF_RRC'),
+        transerv.translate('MANS_ITF_EYMPP'),
+        transerv.translate('MANS_ITF_EYMMARC'),
+        transerv.translate('MANS_ITF_TNL'),
+        transerv.translate('MANS_ITF_TNR'),
+        transerv.translate('MANS_ITF_TN2H'),
         transerv.translate('MANS_ITF_NC'),
         transerv.translate('MANS_ITF_NI')];
+
     //var txtModos = ["Normal", "Mantenimiento"];
     var txtModos = [
          transerv.translate('MANS_MOD_NORMAL'),
@@ -156,7 +181,7 @@ function MantService(dataservice, transerv) {
     /** */
     function normalizeEstadoItf() {
         std.itf.forEach(function (itf) {
-            if (itf.tp < 0 || itf.tp >= 9) {
+            if (itf.tp < 0 || itf.tp >= 19) {
                 itf.id = "";
                 itf.st = 0;
                 itf.md = -1;
@@ -189,7 +214,7 @@ function MantService(dataservice, transerv) {
                 cpu == 2 ? { 'color': 'blue', 'background-color': 'white' } : { 'color': 'white', 'background-color': 'tomato' };
         }
         , textoTipoItf: function (tp) {
-            return (tp >= 0 && tp < 10) ? transerv.translate(txtItfTipos[tp]) : /*"Desconocido"*/transerv.translate('MANS_MSG_UKNW');
+            return (tp >= 0 && tp < 20) ? transerv.translate(txtItfTipos[tp]) : /*"Desconocido"*/transerv.translate('MANS_MSG_UKNW');
         }
         , textoModoItf: function (tp) {
             return (tp >= 0 && tp < 2) ? transerv.translate(txtModos[tp]) : /*"Sin Informacion"*/transerv.translate('MANS_MSG_NINFO');
@@ -203,7 +228,7 @@ function MantService(dataservice, transerv) {
                 var emp = tp - 20;
                 return "RFE" + (emp+1);
             }
-            return /*"Sin Informacion"*/"SI";
+            return /*"Sin Informacion"*/"--";
         }
         , get_slot_itf: function (index) {
             var slot = Math.floor(index/4).toString();

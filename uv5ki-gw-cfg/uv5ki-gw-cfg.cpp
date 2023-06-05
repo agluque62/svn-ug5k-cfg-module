@@ -306,6 +306,7 @@ public:
 			// Comprobar que _ip_propia es igual a la configurada en LAST_CFG. Si es diferente implica que ha habido algún cambio HW
 			// y hay que obtener la configuracion del Servidor...
 			// Como la Configuracion actual no sirve para nada... se poden a DEFAULT...
+
 			if (p_wcfg->ippropia() != ipPropia) {
 				CommConfig cfg = p_wcfg->get_default();
 				cfg.fechaHora = "01/01/1970 00:00:00 UTC";				// Pone Fecha 01/01/1970, para que sea actualizado.

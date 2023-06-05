@@ -19,7 +19,9 @@ OBJ05 = obj/local-config.o obj/working-config.o obj/comm-config.o obj/comm-conve
 OBJ06 = obj/cfg-proc.o obj/man-proc.o obj/his-proc.o obj/file-supervisor.o
 
 OBJS  = $(OBJ01) $(OBJ02) $(OBJ03) $(OBJ04) $(OBJ05) $(OBJ06) obj/buildstring.o
+CROSS_COMPILE = ppc_82xx-
 CC    = $(CROSS_COMPILE)gcc
+
 ifeq ($(CROSS_COMPILE),ppc_82xx-)
 	CFLAGS	= -Wall -Wno-unknown-pragmas -ggdb -I. -D_PPC82xx_ 
 	STRIP = strip uvki-gwser
@@ -42,6 +44,7 @@ all: uvki-gwser
 
 obj/buildstring.o:
 	date '+char acBuildString[] = "NUCLEODF %F %H:%M:%S";' > ./buildstring.cxx
+##	date '+char acBuildString[] = "NUCLEODF 2022-09-21 17:30:33";' > ./buildstring.cxx
 	$(CC) -c $(CFLAGS) ./buildstring.cxx -o ./obj/buildstring.o
 
 obj/%.o: ./src/base/%.c
@@ -88,6 +91,7 @@ obj/%.o: ./src/%.cpp
 
 obj/%.o: ./%.cpp
 	# @echo --------------------------------------------------------------------------------
+	echo  -e "---CROSS_COMPILE---$(CROSS_COMPILE) "
 	echo  -e "$(WARN_COLOR)-- $(CROSS_COMPILE) Compiling $<$(NO_COLOR)"
 	# @echo --------------------------------------------------------------------------------
 	$(CC) -c $(CFLAGS) $< -o $@

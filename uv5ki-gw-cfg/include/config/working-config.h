@@ -69,6 +69,10 @@ public:
 	string TimConfig() {
 		return config.fechaHora;
 	}
+	string OrigenConfig() {
+		return config.origenCfg;
+	}
+
 	bool UserAccess(string user, string pwd, int *profile);
 	bool IpColateral(string &ipCol) {
 		return config.IpColateral(ipCol);
@@ -99,6 +103,14 @@ public:
 	string ippropia() {
 		return ipcpu(cpu1cpu2());
 	}
+
+	bool IsCfgDefecto() {
+		if (config.origenCfg == "CFGDEF")
+			return true;
+		else
+			return false;
+	}
+
 
 	/** Para ulises */
 	void UlisesParamsMulticast(string &ip, int &port) {

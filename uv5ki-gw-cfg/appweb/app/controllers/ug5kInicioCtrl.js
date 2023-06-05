@@ -135,16 +135,16 @@ function ug5kInicioCtrl($scope, $route, CfgService, authservice, ValidateService
                         Enable: authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE, ALM1_PROFILE]),
                         Input: 5,
                         Inputs: [
-                            { val: 2000, show: transerv.translate('2 Segundos') },
-                            { val: 4000, show: transerv.translate('4 Segundos') },
-                            { val: 6000, show: transerv.translate('6 Segundos') },
-                            { val: 8000, show: transerv.translate('8 Segundos') },
-                            { val: 10000, show: transerv.translate('10 Segundos') },
-                            { val: 12000, show: transerv.translate('12 Segundos') },
-                            { val: 14000, show: transerv.translate('14 Segundos') },
-                            { val: 16000, show: transerv.translate('16 Segundos') },
-                            { val: 18000, show: transerv.translate('18 Segundos') },
-                            { val: 20000, show: transerv.translate('20 Segundos') }
+                            { val: 2000, show: transerv.translate('2 s') },
+                            { val: 4000, show: transerv.translate('4 s') },
+                            { val: 6000, show: transerv.translate('6 s') },
+                            { val: 8000, show: transerv.translate('8 s') },
+                            { val: 10000, show: transerv.translate('10 s') },
+                            { val: 12000, show: transerv.translate('12 s') },
+                            { val: 14000, show: transerv.translate('14 s') },
+                            { val: 16000, show: transerv.translate('16 s') },
+                            { val: 18000, show: transerv.translate('18 s') },
+                            { val: 20000, show: transerv.translate('20 s') }
                         ],
                         Show: function () { return true; },
                         Val: function (val) { return true; }

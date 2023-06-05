@@ -1,13 +1,13 @@
 #include "../../include/config/comm-config.h"
-
 /** */
 CommConfig::CommConfig(soap_config &sConfig)
 {
-	/** Configuración de ULISES */
+	/** Configuraciï¿½n de ULISES */
 	this->tipo = 1;
 	this->idConf = "ULISES-CONF";
 	this->fechaHora = sConfig.IdConfig;
-	
+	this->origenCfg = "CFGR";
+
 	/** Parametros Generales */
 	this->general = CommGenConfig(sConfig);
 	
@@ -84,7 +84,9 @@ CommSerConfig::CommSerConfig(soap_config &sc)
 	this->sip.PuertoLocalSIP = sc.CfgPasarela.PuertoLocalSIP;
 	sc.firstRadioParams(this->sip.KeepAlivePeriod, this->sip.KeepAliveMultiplier, this->sip.SupresionSilencio);
 	this->sip.PeriodoSupervisionSIP = sc.CfgPasarela.PeriodoSupervisionSIP;	
-	
+	this->sip.SupervisionTlf = sc.CfgPasarela.SupervisionTlf;
+	this->sip.Refresher = sc.CfgPasarela.Refresher;
+
 	vector<string> sipserver;
 	sc.sip_servers(sipserver);
 
@@ -123,12 +125,15 @@ CommSerConfig::CommSerConfig(soap_config &sc)
 	this->snmp.traps.push_back("2," + sc.Server + "/162");
 
 	/** Grabador */
-	LocalConfig recini(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.recModule()*/));
+	//LocalConfig recini(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.recModule()*/));
 
+	this->grab.grabacionEd137 = sc.CfgPasarela.GrabacionEd137==false ? 0 : 1;
 	this->grab.rtsp_ip = sc.CfgPasarela.Grabador1;							// recini.get("RTSP","IP_REC_A");
 	this->grab.rtspb_ip = sc.CfgPasarela.Grabador2;
-	
-	this->grab.rtsp_port = atoi(recini.get("RTSP","PORT_RTSP").c_str());
+
+	//this->grab.rtsp_port = atoi(recini.get("RTSP","PORT_RTSP").c_str());	//rtsp_port viene del soap
+	this->grab.rtsp_port = sc.CfgPasarela.RtspPort;
+	this->grab.rtspb_port = sc.CfgPasarela.RtspPort1;
 
 	/** SINCR */
 	if (sc.CfgPasarela.MasterSincronizacion != "")
@@ -189,9 +194,11 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 		this->Buffer_jitter.min = 0;							// Dejar a 0. 
 
 		this->hardware.AD_AGC = sres.info.GananciaAGCTX;
-		this->hardware.AD_Gain= (int )(Tools::atof(sres.info.GananciaAGCTXdBm)*10);
+		this->hardware.AD_Gain= sres.info.GananciaAGCTX ? (int )(Tools::atof(sres.info.GananciaAGCTXdBm)) : (int )(Tools::atof(sres.info.GananciaAGCTXdBm)*10);
+		this->hardware.AD_Umbral= (int )(Tools::atof(sres.info.UmbralAGCTX));
 		this->hardware.DA_AGC = sres.info.GananciaAGCRX;
-		this->hardware.DA_Gain= (int )(Tools::atof(sres.info.GananciaAGCRXdBm)*10);
+		this->hardware.DA_Gain= sres.info.GananciaAGCRX ? (int )(Tools::atof(sres.info.GananciaAGCRXdBm)) : (int )(Tools::atof(sres.info.GananciaAGCRXdBm)*10);
+		this->hardware.DA_Umbral= (int )(Tools::atof(sres.info.UmbralAGCRX));
 
 		if (sres.TipoRecurso==0) 
 		{
@@ -214,16 +221,22 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 			this->radio.retrasoSqOff=0;										// Dejar a 0
 
 			/** 20170119. Este campo viene en UmbralTonoPTT. Valores mayores de 0 => evtPtt=1, */
-			//  20170316. En nueva config, viene con campo específico.
+			//  20170316. En nueva config, viene con campo especï¿½fico.
 			// this->radio.evtPTT=sres.info.radio.UmbralTonoPTT > 0 ? 1 : 0;
 			/***************************/
 
-			/** 20170316. Parámetros específicos para FD */
+			/** 20170316. Parï¿½metros especï¿½ficos para FD */
 			this->radio.tGRSid = sres.info.radio.GrsDelay;								// GRS Delay
-			/** 201806020. En Ulises vienen los codigos cambiados */
-			// this->radio.metodoBss = sres.info.radio.MetodoBSS;							// Metodo QIDX
-			this->radio.metodoBss = sres.info.radio.MetodoBSS==0 ? 1 : 0;
-
+			if (sres.info.radio.BSS==true)									//20211213 si el campo BSS es true se actualiza el metodo
+			{
+				/** 201806020. En Ulises vienen los codigos cambiados */
+				// this->radio.metodoBss = sres.info.radio.MetodoBSS;							// Metodo QIDX
+				this->radio.metodoBss = sres.info.radio.MetodoBSS==0 ? 1 : 0;
+			}
+			else
+			{
+				this->radio.metodoBss=2;									//20211213 si el campo BSS es false, metodoBss lo ponemos a Ninguno
+			}
 			sres.TablaBss(this->radio.tabla_indices_calidad);						//  
 			this->radio.iEnableGI=sres.info.radio.GrabacionEd137==false ? 0 : 1;		// 
 			this->radio.evtPTT=sres.info.radio.EnableEventPttSq  ? 1 : 0;
@@ -278,15 +291,20 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 			this->telefonia.iDetDtmf = sres.info.telef.iDetDtmf;
 			
 			this->telefonia.colateral_scv = 0;						 // Dejar a 0.
-			this->telefonia.iT_Int_Warning = 5;						 // Dejar a 5.
-			/** 20180320. Nuevos Parámetros en interfaces analogicas */
+			this->telefonia.iT_Int_Warning = 10;						 // Dejar a 10. en futuro configurable.
+			this->telefonia.RespuestaSIP_ATSR2 = 0; 	//modo ed137 en un futuro puede ser configutable este y los siguientes tn
+			this->telefonia.TmTonoBloqueo = 1;
+			this->telefonia.TmBloqueoLib = 100;
+			/** 20180320. Nuevos Parï¿½metros en interfaces analogicas */
 			this->telefonia.iTmLlamEntrante = sres.info.telef.iTmLlamEntrante;
 			this->telefonia.iTmDetFinLlamada = sres.info.telef.iTmDetFinLlamada;
+			this->telefonia.iControlTmLlam = sres.info.telef.iControlTmLlam;
+			this->telefonia.iTmMaxConversacion = sres.info.telef.iTmMaxConversacion;
 
 			this->telefonia.ats_rangos_dst.clear();					 // Dejar Vacio.
 			this->telefonia.ats_rangos_org.clear();					 // Dejar Vacio.
 
-			/** 20200703. Nuevos parámetros de líneas Telefónicas */
+			/** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
 			this->telefonia.iDetLineaAB = 0;
 			this->telefonia.iEnableNoED137 = 0;
 			/** 20200703. Nueva Estructura de Colateral Remoto */
@@ -295,7 +313,7 @@ CommResConfig::CommResConfig(soap_config &sc, int irec)
 			this->telefonia.tm_superv_options = sres.info.telef.tm_superv_options;
 			this->telefonia.uri_remota = "";							 // Dejar vacio.
 			this->telefonia.superv_options = sres.info.telef.superv_options;
-				// Elementos Añadidos.
+				// Elementos Aï¿½adidos.
 			this->telefonia.itiporespuesta = 0;
 
 			this->telefonia.additional_uri_remota = "";

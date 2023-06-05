@@ -376,6 +376,21 @@ void sistema::fileattr(string path, int modo, string &date, string &size)
 }
 
 /** */
+int sistema::DualAlive()
+{
+	string filepath = onfs("/mnt/ramfs/dualalive");
+	ofstream ff(filepath.c_str());
+
+	if (ff.good())
+	{
+		ff << "dual alive";
+		return 1;
+	}
+	return 0;
+}
+
+
+/** */
 string sistema::ipColateral() 
 {
 	string filepath = onfs(LocalConfig::p_cfg->get(strRuntime, strRuntimeItemColateralIpInfoPath, "/mnt/ramfs/cpupair"));
@@ -428,7 +443,7 @@ time_t sistema::time_max()
 #endif
 }
 
-/** 20210827. Revision de la gestión JIFFIES */
+/** 20210827. Revision de la gestiï¿½n JIFFIES */
 unsigned int sistema::jiffies() {
 #if defined(_PPC82xx_)
 

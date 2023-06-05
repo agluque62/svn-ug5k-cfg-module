@@ -47,7 +47,7 @@ void WorkingConfig::init()
 /** */
 void WorkingConfig::dispose()
 {
-	/** 20180411. Si se cae la apliacion con el semaforo cogido, no se podría limpiar la misma */
+	/** 20180411. Si se cae la apliacion con el semaforo cogido, no se podrï¿½a limpiar la misma */
 	//PLOG_DEBUG("WorkingConfig (global semaphore) disposing...");
 	//if (p_mem_config_sem->acquire()) {
 #ifdef _WIN32
@@ -77,11 +77,12 @@ void WorkingConfig::_recResponse(bool res, int len, void *data)
 EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini, bool bsave) 
 {
 	EventosHistoricos *his = NULL;
+	int actualiza_snmp, actualiza_rec;
 	config = redanCfg;
 
 	if (p_mem_config_sem->acquire()) {
 		/** Actualizar la memoria y los ficheros INI */
-		his = redanConv.convierte(config, p_mem_config, actualiza_ini);
+		his = redanConv.convierte(config, p_mem_config, actualiza_ini, &actualiza_snmp, &actualiza_rec);
 		p_mem_config_sem->release();
 	}
 
@@ -89,16 +90,17 @@ EventosHistoricos *WorkingConfig::set(CommConfig &redanCfg, bool actualiza_ini, 
 		save_to(LAST_CFG);
 	}
 
-	/** Mandar las señales a los procesos colaterales */
+	/** Mandar las seï¿½ales a los procesos colaterales */
 	if (actualiza_ini==true)
 	{
 		LocalConfig snmpconfig(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloSnmp)/*.snmpModule()*/));
-		LocalConfig recconfig(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.snmpModule()*/));
-		
 		HistClient::p_hist->Signal(snmpconfig.getint("SERVICIO","UDP_PORT_IN_AGSNMP","65000"));
-		HistClient::p_hist->Signal(recconfig.getint("SERVICIO","PORT_IN_SERVICIO","65003"), _recResponse);
+		if (actualiza_rec)
+		{
+			LocalConfig recconfig(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.snmpModule()*/));
+			HistClient::p_hist->Signal(recconfig.getint("SERVICIO","PORT_IN_SERVICIO","65003"), _recResponse);
+		}
 	}
-
 	/** Mandar el SIGNAL USR2 */
 	RealWorkingThread(WorkingConfig::DelayedSignal, this).Do();
 
@@ -127,17 +129,27 @@ void WorkingConfig::load_from(string file)
 		{
 			ifstream f(file.c_str(), ios_base::in);
 			CommConfig cfg(f);
-			set(cfg, false, false);
+			//
+			if (cfg.test() == false)
+			{
+				PLOG_ERROR("load_from: JSON-No Valido Indice Desconocido");
+				throw Exception("JSON-No Valido Indice Desconocido");
+			}
+			else //
+			{
+				set(cfg, false, false);
+			}
 		}
 		catch(Exception x)
 		{
 			PLOG_EXCEP(x, "Error cargando fichero de configuracion: %s", file.c_str());
 			// Poner configuracion por defecto.
 			CommConfig def = get_default();
+			def.fechaHora = "01/01/1970 00:00:00 UTC";				// Pone Fecha 01/01/1970, para que sea actualizado.
 			set(def, false, false);
 			//set_to_default(false);
 			//CommConfig cfg;
-			//PLOG_DEBUG("Generada CFG Por Defecto,");
+			PLOG_DEBUG("Generada CFG Por Defecto, %s", def.fechaHora.c_str());
 			//set(cfg, false);
 			//PLOG_DEBUG("Activada CFG Por Defecto");
 		}
@@ -150,6 +162,7 @@ void WorkingConfig::load_from(string file)
 /** */
 void WorkingConfig::save_to(string file)
 {
+	PLOG_INFO("save_to %s ", file.c_str());
 	ofstream ff(file.c_str());	
 	if (cfg_mode == cfgRedan || cfg_mode == cfgSoap) 
 	{
@@ -164,6 +177,7 @@ void WorkingConfig::save_to(string file)
 
 CommConfig WorkingConfig::get_default() {
 	CommConfig cfg;
+	PLOG_INFO("WorkingConfig::get_default");
 	return cfg;
 }
 

@@ -45,7 +45,9 @@ public:
 		KeepAlivePeriod=200;
 		KeepAliveMultiplier=10;
 		SupresionSilencio=0;
+		SupervisionTlf=0;
 		PeriodoSupervisionSIP=100;
+		Refresher=0;
 
 		proxys.push_back(CommSerServidor());
 		proxys.push_back(CommSerServidor());
@@ -66,16 +68,21 @@ public:
 		write_key(writer, "KeepAlivePeriod", KeepAlivePeriod);
 		write_key(writer, "KeepAliveMultiplier", KeepAliveMultiplier);
 		write_key(writer, "SupresionSilencio", SupresionSilencio);
+		write_key(writer, "SupervisionTlf", SupervisionTlf);
 		write_key(writer, "PeriodoSupervisionSIP", PeriodoSupervisionSIP);
+		write_key(writer, "Refresher", Refresher);
 		write_key(writer, "proxys", proxys);
 		write_key(writer, "registrars", registrars);
+
 	}
 	virtual void jread(Value &base) {
 		read_key(base, "PuertoLocalSIP", PuertoLocalSIP);
 		read_key(base, "KeepAlivePeriod", KeepAlivePeriod);
 		read_key(base, "KeepAliveMultiplier", KeepAliveMultiplier);
 		read_key(base, "SupresionSilencio", SupresionSilencio);
+		read_key(base, "SupervisionTlf", SupervisionTlf);
 		read_key(base, "PeriodoSupervisionSIP", PeriodoSupervisionSIP);
+		read_key(base, "Refresher", Refresher);
 		read_key(base, "proxys", proxys);
 		read_key(base, "registrars", registrars);
 	}
@@ -85,7 +92,10 @@ public:
 	int KeepAlivePeriod;
 	int KeepAliveMultiplier;
 	int SupresionSilencio;
+	int SupervisionTlf;
 	int PeriodoSupervisionSIP;
+	int Refresher;
+
 #if __POR_REFERENCIA__
 	vector<CommSerServidor> proxys;
 	vector<CommSerServidor> registrars;
@@ -126,8 +136,8 @@ public:
 		sport=65000;
 		snmpp=161;
 		agcomm = "public";
-		agcont = "NUCLEO-DF DT. MADRID. SPAIN";
-		agloc = "NUCLEO-DF LABS";
+		agcont = "AMPER SISTEMAS. MADRID. SPAIN";
+		agloc = "AMPER SISTEMAS";
 		agname = "ULISESG5000i";
 		agv2 = 1;
 	}
@@ -170,14 +180,17 @@ class CommSerGrab : public jData
 public:
 	CommSerGrab() {
 		sport = 65001;
+		grabacionEd137=0;
 		rtsp_ip = rtspb_ip = "127.0.0.1";
-		rtsp_port = 554;
+		rtsp_port = rtspb_port = 554;
 	}
 public:
 	virtual void jwrite(Writer<StringBuffer> &writer) {
+		write_key(writer, "grabacionEd137", grabacionEd137);
 		write_key(writer, "rtsp_ip", rtsp_ip);
 		write_key(writer, "rtspb_ip", rtspb_ip);
 		write_key(writer, "rtsp_port", rtsp_port);
+		write_key(writer, "rtspb_port", rtspb_port);
 
 		write_key(writer, "rtsp_uri", rtsp_uri);
 		write_key(writer, "sport", sport);
@@ -186,21 +199,34 @@ public:
 		write_key(writer, "rtp_sr", rtp_sr);
 	}
 	virtual void jread(Value &base) {
+		read_key(base, "grabacionEd137", grabacionEd137);
 		read_key(base, "rtsp_ip", rtsp_ip);
 		read_key(base, "rtspb_ip", rtspb_ip);
 		read_key(base, "rtsp_port", rtsp_port);
+		read_key(base, "rtspb_port", rtspb_port);
 
 		read_key(base, "rtsp_uri", rtsp_uri);
 		read_key(base, "sport", sport);
 		read_key(base, "rtsp_rtp", rtsp_rtp);
 		read_key(base, "rtp_pl", rtp_pl);
 		read_key(base, "rtp_sr", rtp_sr);
+		if (grabacionEd137 == -1)
+		{
+			if (rtsp_ip != "" && rtsp_port != -1)
+				grabacionEd137 = 1;
+			else
+				grabacionEd137 = 0;
+		}
+		if (rtspb_port == -1)
+			rtspb_port = rtsp_port;
 	}
 
-public:	
+public:
+	int grabacionEd137;
 	string rtsp_ip;
 	string rtspb_ip;
 	int rtsp_port;
+	int rtspb_port;
 
 	/** No se Utilizan */
 	string rtsp_uri;

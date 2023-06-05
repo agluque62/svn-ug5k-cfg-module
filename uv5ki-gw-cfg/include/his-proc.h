@@ -18,25 +18,25 @@ using namespace std;
 //#define _EVENTONPAIR_
 
 /** Codigos de Eventos */
-#define INCI_MPGP		150		// Modificación de Parámetros Generales de Pasarela.			/ USER:GW:PAR=VALOR /
-#define INCI_MRATS		151		// Modificación Rutas ATS.										*/
-#define INCI_MPHW		152		// Modificación de Parámetros de Recurso Hardware.				/ USER:RECURSO:PAR=VALOR /
-#define INCI_MPSW		153		// Modificación de Parámetros Lógico de Recurso Hardware.		/ USER:RECURSO:PAR=VALOR /
-#define INCI_GCFG		154		// Generación de Configuración por Defecto.						/ USER:CFG-NAME /
-#define INCI_ACFG		155		// Activación de Configuración por Defecto.						/ USER:CFG-NAME /
-#define INCI_DCFG		156		// Borrado de Configuración por Defecto.						/ USER:CFG-NAME /
+#define INCI_MPGP		150		// Modificaciï¿½n de Parï¿½metros Generales de Pasarela.			/ USER:GW:PAR=VALOR /
+#define INCI_MRATS		151		// Modificaciï¿½n Rutas ATS.										*/
+#define INCI_MPHW		152		// Modificaciï¿½n de Parï¿½metros de Recurso Hardware.				/ USER:RECURSO:PAR=VALOR /
+#define INCI_MPSW		153		// Modificaciï¿½n de Parï¿½metros Lï¿½gico de Recurso Hardware.		/ USER:RECURSO:PAR=VALOR /
+#define INCI_GCFG		154		// Generaciï¿½n de Configuraciï¿½n por Defecto.						/ USER:CFG-NAME /
+#define INCI_ACFG		155		// Activaciï¿½n de Configuraciï¿½n por Defecto.						/ USER:CFG-NAME /
+#define INCI_DCFG		156		// Borrado de Configuraciï¿½n por Defecto.						/ USER:CFG-NAME /
 #define INCI_ARCR		157		// Alta Recurso Radio											/ USER:RECURSO /
 #define INCI_BRCR		158		// Baja Recurso Radio											/ USER:RECURSO /
 #define INCI_ARCT		159		// Alta Recurso Telefonia										/ USER:RECURSO /
 #define INCI_BRCT		160		// Baja Recuso Telefonia										/ USER:RECURSO /
 #define INCI_CONFLICTO	161		// Conflicto de configuraciones.								/ IDGW:GW=IP /
 
-#define INCI_CGSW		180		// Carga de Versión Software.									*/ USER:VER=VERSION /
-#define INCI_ATSW		181		// Activación de Versión Software.								*/ USER:VER=VERSION /
+#define INCI_CGSW		180		// Carga de Versiï¿½n Software.									*/ USER:VER=VERSION /
+#define INCI_ATSW		181		// Activaciï¿½n de Versiï¿½n Software.								*/ USER:VER=VERSION /
 #define INCI_RESET		182		// RESET Remoto.												/ USER /
-#define INCI_BCLP		183		// Ejecución de Bucle de Prueba.								*/ USER:BLUCE=IDBUCLE:COL1:COL2:RESULTADO /
+#define INCI_BCLP		183		// Ejecuciï¿½n de Bucle de Prueba.								*/ USER:BLUCE=IDBUCLE:COL1:COL2:RESULTADO /
 #define INCI_BITE		184		// Ejecucion BITE desde Local.									/ USER /
-#define INCI_SELPR		2100	// SP-Radio	Selección Principal/Reserva							*/ USER:REC=RECURSO /
+#define INCI_SELPR		2100	// SP-Radio	Selecciï¿½n Principal/Reserva							*/ USER:REC=RECURSO /
 
 #define INCI_NONE		-1
 
@@ -118,6 +118,7 @@ public:
 	void SetBite(callback respuesta);
 	void GetEstado(CIPAddress from, callback respuesta);
 	void SetSincrState(string snmpStatus);
+	void SetLanguage(string lang);
 
 	void Signal(int toPort = 65000, callback rsp=NULL);
 	void SetEstadoCpu(string local, string remoto);

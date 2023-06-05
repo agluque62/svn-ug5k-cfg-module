@@ -33,11 +33,12 @@ CfgProc::~CfgProc(void) {
 }
 
 /** */
-bool CfgProc::IdConfig(int &std, string &id, string &tim)
+bool CfgProc::IdConfig(int &std, string &id, string &tim, string &origen)
 {
 	std = (int)GetStdLocalConfig();
 	id = p_working_config->IdConfig();
 	tim= p_working_config->TimConfig();
+	origen= p_working_config->OrigenConfig();
 	return true;
 }
 
@@ -313,7 +314,13 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 	/** Lee la configuracion recibida */
 	CommConfig cfg_redan(response.Body());
 	p_working_config->config.tipo = 0;
-	
+
+	if (cfg_redan.test() == false)
+	{
+		PLOG_ERROR("PedirConfiguracion: configuracion no valida. Formato incrrecto");
+	}
+	else
+	{
 	/** Activa y salva la configuracion recibida */
 	//p_working_config->set(cfg_redan, true);
 	p_working_config->set(cfg_redan, true, true);
@@ -323,6 +330,7 @@ void JsonClientProc::PedirConfiguracion(string cfg)
 
 	/** EstadoSicronizacion=slcSincronizado */
 	StdSincrSet(slcSincronizado);
+	}
 }
 
 /** */
@@ -435,6 +443,7 @@ eStdLocalConfig JsonClientProc::ConfigurationSync() {
 				ParseResponse response = HttpClient(httpHost).SendHttpCmd(request, LocalConfig().getint(strRuntime, strRuntimeItemRedanHttpGetTimeout, "5000"));
 				if (response.Status() == "200") {
 					RedanTestComm cfgColateral(response.Body());
+					//PLOG_INFO("ConfigurationSync: Configuraciones Local (%s), Colateral (%s).", p_working_config->TimConfig().c_str(), cfgColateral.fechaHora.c_str());
 					if (cfgColateral.isNewer(P_WORKING_CONFIG->config) == true) {
 						// La configuracion del colateral es mas moderna. 
 						if (cfgColateral.isSync(SyncMarging) == true) {
@@ -446,9 +455,16 @@ eStdLocalConfig JsonClientProc::ConfigurationSync() {
 								sistema::DataSaveAs(response.Body(), LAST_JSON_REC(Tools::Int2String(_lastcfg & 3)));
 								/** Lee la configuracion recibida */
 								CommConfig cfg_redan(response.Body());
-								p_working_config->FromExternalSet(false, "", cfg_redan, true);
-								// Configuracion Sincronizada...
-								PLOG_INFO("ConfigurationSync: Configuracion (%s) Actualizada desde el colateral.", p_working_config->TimConfig().c_str());
+								if (cfg_redan.test() == false)
+								{
+									PLOG_ERROR("ConfigurationSync: Configuracion no valida. Formato incorrecto");
+								}
+								else //
+								{
+									p_working_config->FromExternalSet(false, "", cfg_redan, true);
+									// Configuracion Sincronizada...
+									PLOG_INFO("ConfigurationSync: Configuracion (%s) Actualizada desde el colateral.", p_working_config->TimConfig().c_str());
+								}
 							}
 							else {
 								// Error al obtener la configuracion.
@@ -643,21 +659,34 @@ void SoapClientProc::SupervisaProcesoConfiguracion()
 /** */
 void SoapClientProc::ChequearConfiguracion()
 {
-	try 
+
+	//static xml_document<> doc;
+	xml_document<> * pt_doc;
+	string version = "";
+	try
 	{
-#ifdef NOPOINTERS
-		xml_document<> doc;
-		string xml_data = getXml("GetVersionConfiguracion", "id_sistema=departamento");
-		doc.parse<0>((char*)xml_data.c_str());
-		string version = doc.first_node("string")->value();
-#else
-		static xml_document<> doc;
-		string xml_data = getXml("GetVersionConfiguracion", "id_sistema=departamento");
-		doc.parse<0>((char*)xml_data.c_str());
-		string version = doc.first_node("string")->value();
-#endif // NOPOINTERS
+		pt_doc = new xml_document<>;
+	}
+	catch(...)
+	{
+		PLOG_ERROR("ChequearConfiguracion ERROR Excepcion xml_document");
+		return;
+	}
 
+	try
+	{
+		string xml_data = getXml("GetVersionConfiguracion", "id_sistema=departamento");
+		pt_doc->parse<0>((char*)xml_data.c_str());
+		version = pt_doc->first_node("string")->value();
+	}
+	catch(...)
+	{
+		PLOG_ERROR("ChequearConfiguracion ERROR Excepcion en parse xml_document");
+	}
+	delete (pt_doc);
 
+	try
+	{
 		switch (_stdLocalConfig) 
 		{
 		case slcNoInicializado:

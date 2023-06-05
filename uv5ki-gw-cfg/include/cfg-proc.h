@@ -63,7 +63,7 @@ public:
 	bool IsIdle() {
 		return (_stdLocalConfig==slcAislado || _stdLocalConfig==slcNoInicializado);
 	}
-	bool IdConfig(int &std, string &id, string &tim);
+	bool IdConfig(int &std, string &id, string &tim, string &origen);
 	eStdLocalConfig GetStdLocalConfig()
 	{
 		CCSLock _lock(m_lock);

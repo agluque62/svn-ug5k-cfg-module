@@ -17,6 +17,7 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
     vm.def_show = function () { return true; }
     vm.noshow = function () { return false; };
     vm.v2commshow = function () { return vm.data[3].Value == 1 ? true : false; }
+    vm.rtspipshow = function () { return vm.data[2].Value == 1 ? true : false; }
 
     CfgService.opcion(4);
 
@@ -95,13 +96,31 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Val: ValidateService.def_val
                     },
                     {
+                        Name: /*'Supervision tlf:'*/transerv.translate('SCTRL_P00_SPTLF'),
+                        Value: vm.jserv.sip.SupervisionTlf.toString(),
+                        Enable: authservice.global_enable([ADMIN_PROFILE]),
+						Input: 1,
+                        Inputs: [/*"No"*/transerv.translate('TCTRL_P00_NO'), /*"Si"*/transerv.translate('TCTRL_P00_SI')],
+                        Show: vm.def_show,
+                        Val: ValidateService.def_val
+                    },
+                    {
                         Name: /*'Periodo Supervision:'*/transerv.translate('SCTRL_P00_SPT'),
                         Value: vm.jserv.sip.PeriodoSupervisionSIP,
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 0,
                         Inputs: [],
-                        Show: vm.def_show,
+                        Show: function () { return (vm.data[3].Value === "1")},
                         Val: vm.validate_sup_sip
+                    },
+                    {
+                        Name: /*'Refresher:'*/transerv.translate('SCTRL_P00_RFRS'),
+                        Value: vm.jserv.sip.Refresher.toString(),
+                        Enable: authservice.global_enable([ADMIN_PROFILE]),
+						Input: 1,
+                        Inputs: [/*"No_refresher"*/transerv.translate('SCTRL_P00_NO_REFRES'), /*"uac"*/transerv.translate('SCTRL_P00_UAC_REFRES'), /*"uas"*/transerv.translate('SCTRL_P00_UAS_REFRES')],
+                        Show: function () { return (vm.data[3].Value === "1")},
+                        Val: ValidateService.def_val
                     },
                     {
                         Name: /*'Proxy:'*/transerv.translate('SCTRL_P00_PRX'),
@@ -109,7 +128,7 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 2,
                         Inputs: [],
-                        Show: vm.def_show,
+                        Show: vm.noshow,
                         Val: ValidateService.ip_val
                     },
                     {
@@ -118,7 +137,7 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 2,
                         Inputs: [],
-                        Show: vm.def_show,
+                        Show: vm.noshow,
                         Val: ValidateService.ip_val
                     }
                 ];
@@ -277,12 +296,23 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Val: ValidateService.def_val
                     },
                     {
+                        Name: /*'Grabacion ED137?:'*/transerv.translate('SCTRL_P04_GRB137'),
+                        Value: vm.jserv.grab.grabacionEd137.toString(),
+                        Enable: authservice.global_enable([ADMIN_PROFILE]),
+                        Input: 1,
+                        Inputs: [
+	                    	/*"No"*/transerv.translate('SCTRL_P00_NO'),
+	                        /*"Si"*/transerv.translate('SCTRL_P00_SI')],
+                        Show: vm.def_show,
+                        Val: ValidateService.def_val
+                    },
+                     {
                         Name: /*'RTSP-IP:'*/transerv.translate('SCTRL_P04_IP'),
                         Value: vm.jserv.grab.rtsp_ip,
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 0,
                         Inputs: [],
-                        Show: vm.def_show,
+                        Show: vm.rtspipshow,
                         Val: ValidateService.ip_val
                     },
                     {
@@ -291,7 +321,7 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 0,
                         Inputs: [],
-                        Show: vm.def_show/*MantService.is_ulises*/,
+                        Show: vm.rtspipshow/*MantService.is_ulises*/,
                         Val: ValidateService.ip_val
                     },
                     {
@@ -300,7 +330,16 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                         Enable: authservice.global_enable([ADMIN_PROFILE]),
                         Input: 0,
                         Inputs: [],
-                        Show: vm.def_show,
+                        Show: vm.rtspipshow,
+                        Val: ValidateService.def_val
+                    },
+                    {
+                        Name: /*'PUERTO RTSP_B:'*/transerv.translate('SCTRL_P04_RPORTB'),
+                        Value: vm.jserv.grab.rtspb_port,
+                        Enable: authservice.global_enable([ADMIN_PROFILE]),
+                        Input: 0,
+                        Inputs: [],
+                        Show: vm.rtspipshow,
                         Val: ValidateService.def_val
                     }
                     //{ Name: /*'TRAMAS RTP?:'*/transerv.translate('SCTRL_P04_RTP'), Value: vm.jserv.grab.rtsp_rtp, Enable: true, Input: 1, Inputs: ["No", "Si"], Show: vm.def_show, Val: ValidateService.def_val },
@@ -320,9 +359,11 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                 vm.jserv.sip.PuertoLocalSIP = vm.data[0].Value;
                 vm.jserv.sip.KeepAlivePeriod = vm.data[1].Value;
                 vm.jserv.sip.KeepAliveMultiplier = vm.data[2].Value;
-                vm.jserv.sip.PeriodoSupervisionSIP = vm.data[3].Value;
-                vm.jserv.sip.proxys = iplist2serv(vm.data[4].Value);
-                vm.jserv.sip.registrars = iplist2serv(vm.data[5].Value);
+                vm.jserv.sip.SupervisionTlf = vm.data[3].Value;
+                vm.jserv.sip.PeriodoSupervisionSIP = vm.data[4].Value;
+                vm.jserv.sip.Refresher = vm.data[5].Value;
+                vm.jserv.sip.proxys = iplist2serv(vm.data[6].Value);
+                vm.jserv.sip.registrars = iplist2serv(vm.data[7].Value);
                 break;
             case 1: // NTP...
                 vm.jserv.sincr.ntp = parseInt(vm.data[0].Value);
@@ -345,9 +386,11 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
             case 4: // Grabador
                 vm.jserv.grab.sport = vm.data[0].Value;
                 vm.jserv.grab.rtsp_uri = vm.data[1].Value;
-                vm.jserv.grab.rtsp_ip = vm.data[2].Value;
-                vm.jserv.grab.rtspb_ip = vm.data[3].Value;
-                vm.jserv.grab.rtsp_port = vm.data[4].Value;
+                vm.jserv.grab.grabacionEd137 = parseInt(vm.data[2].Value);
+                vm.jserv.grab.rtsp_ip = vm.data[3].Value;
+                vm.jserv.grab.rtspb_ip = vm.data[4].Value;
+                vm.jserv.grab.rtsp_port = vm.data[5].Value;
+                vm.jserv.grab.rtspb_port = vm.data[6].Value;
                 //vm.jserv.grab.rtsp_rtp = vm.data[4].Value;
                 //vm.jserv.grab.rtp_pl = vm.data[5].Value;
                 //vm.jserv.grab.rtp_sr = vm.data[6].Value;
@@ -362,13 +405,13 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
         var validate = true;
         switch (vm.index) {
             case 0:
-                if (vm.validate_sup_sip(vm.data[3].Value) != "") validate = false;
+                if (vm.validate_sup_sip(vm.data[4].Value) != "") validate = false;
                 /** PROXY */
-                $.each(vm.data[4].Value, function (index, value) {
+                $.each(vm.data[6].Value, function (index, value) {
                     if (ValidateService.ip_val(value) != "") validate = false;
                 });
                 /** REGISTRAR */
-                $.each(vm.data[5].Value, function (index, value) {
+                $.each(vm.data[7].Value, function (index, value) {
                     if (ValidateService.ip_val(value) != "") validate = false;
                 });
                 break;
@@ -384,7 +427,7 @@ function ug5kServCtrl($scope, $route, authservice, CfgService, ValidateService, 
                 });
                 break;
             case 4:
-                if (ValidateService.ip_val(vm.data[2].Value) != "") validate = false;
+                if (ValidateService.ip_val(vm.data[3].Value) != "") validate = false;
                 break;
         }
 

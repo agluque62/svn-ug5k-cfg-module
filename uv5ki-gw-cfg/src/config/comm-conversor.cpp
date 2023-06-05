@@ -8,6 +8,127 @@ int force_rdaudio_normal = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** */
+string EvtConversor::EvtLadoR2N5(int lado)
+{
+	return lado == 0 ? "A" : "B";
+}
+string EvtConversor::EvtNum2Sino(int num)
+{
+	return num == 0 ? "No": "Si";
+}
+string EvtConversor::EvtRespSipATS(int resp)
+{
+	return (resp == 0 ? "MODO ED137" : "MODO SDC91");
+}
+
+string EvtConversor::EvtPeriodWarn(int valor)
+{
+	char buffer[16];
+	string data;
+	valor = valor & 0xff;
+#ifdef _WIN32
+	data = _itoa(valor, buffer, 10);
+#else
+	sprintf(buffer, "%d", valor);
+#endif
+	data = string(buffer);
+	return data;
+}
+string EvtConversor::EvtTmoutRespStatus(int valor)
+{
+	valor = valor & 0xff00;
+	return valor == 0 ? "Normal" : "Siempre Transito";
+}
+
+string EvtConversor::EvtSpvColateral(int valor)
+{
+	return valor == 0 ? "No" : valor == 1 ? "Usuario" : "Dominio";
+}
+
+string EvtConversor::EvtTipoTelefonia(int iItf)
+{
+	string tbtipo[]={
+		"BL",
+		"BC",
+		"AB",
+		"R2",
+		"N5",
+		"LCEN",
+		"QSIG",
+		"TUNNEL-2H",
+		"TUN-LOCAL",
+		"TUN-REMOTO"
+	};
+
+	if (iItf < 10)
+		return tbtipo[iItf];
+	return "TLF";
+}
+
+string EvtConversor::EvtRefresher(int valor)
+{
+	return valor == 0 ? "No Refresher" : valor == 1 ? "refresher uac" : "refresher uas";
+}
+
+string EvtConversor::EvtTipoRadio(int tipo)
+{
+	string tbtipo[7]= {
+			"Local Simple",
+			"Local P/R",
+			"Local-FD-Simple",
+			"Local-FD-P/R",
+			"Remoto TxRx",
+			"Remoto Tx",
+			"Remoto Rx"
+	};
+	if (tipo < 7)
+		return tbtipo[tipo];
+	return "Radio";
+}
+
+string EvtConversor::EvtMetodoBss(int valor)
+{
+	return valor == 0 ? "Ninguno" : valor == 1 ? "RSSI" : "RSSI y NUCLEO";
+}
+string EvtConversor::EvtClimax(int valor)
+{
+	return valor == 0 ? "No" : valor == 1 ? "ASAP" : "Tiempo Fijo";
+}
+string EvtConversor::EvtPttPrio(int valor)
+{
+	return valor == 0 ? "PTT-Normal" : valor == 1 ? "PTT-Prioritario" : "PTT-Emergencia";
+}
+string EvtConversor::EvtSessionPrio(int valor)
+{
+	return valor == 0 ? "Normal" : "Emergencia";
+}
+string EvtConversor::EvtCalculoClimax(int valor)
+{
+	return valor == 0 ? "Relativo" : "Absoluto";
+}
+string EvtConversor::EvtPrecision(int valor)
+{
+	return valor == 0 ? "Estricta" : "Normal";
+}
+
+string EvtConversor::EvtAjusteCero(int valor)
+{
+	char buffer[16];
+	string data;
+
+#ifdef _WIN32
+	data = _itoa(inuevo, buffer, 10);
+#else
+	sprintf(buffer, "%d", valor/10);
+	data = string(buffer);
+#endif
+	return data;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** */
 int CfgConversor::TelefoniaJ2M(int iItf)
 {
 	int tbconv[]={
@@ -18,10 +139,11 @@ int CfgConversor::TelefoniaJ2M(int iItf)
 		CFG_IFREC_TIPO_N5,
 		CFG_IFREC_TIPO_LCEN,
 		CFG_IFREC_TIPO_QSIG,
+		CFG_IFREC_TIPO_TUNNEL_2H,
 		CFG_IFREC_TIPO_TUN_LOCAL,
 		CFG_IFREC_TIPO_TUN_REMOTO
 	};
-	if (iItf < 9)
+	if (iItf < 10)
 		return tbconv[iItf];
 	return iItf;
 }
@@ -41,28 +163,39 @@ int CfgConversor::RadioSessionPrioJ2M(int prio)
 }
 
 
+
 /** */
-void CfgConversor::SetInt(int *actual, int inuevo, int evento, string nombre, int (*Convierte)(int))
+void CfgConversor::SetInt(int *actual, int inuevo, int evento, string nombre, int (*Convierte)(int), string (*EvtConvierte)(int))
 {
+	int valorevt = inuevo;
 	inuevo = Convierte==NULL ? inuevo : Convierte(inuevo);
 
 	if (*actual != inuevo)
 	{
-		char buffer[16];
+		string data;
+		if (EvtConvierte == NULL)
+		{
+			char buffer[16];
 #ifdef _WIN32
-		string data = _itoa(inuevo, buffer, 10);
+			data = _itoa(inuevo, buffer, 10);
 #else
-		sprintf(buffer, "%d", inuevo);
-		string data = string(buffer);
+			sprintf(buffer, "%d", inuevo);
+			data = string(buffer);
 #endif
+		}
+		else
+		{
+			data = EvtConvierte(valorevt);
+		}
 		eventos.push_back(CommConvertEvent(evento, _srec, nombre, data));
 	}
 	*actual = inuevo;
 }
 
 /** */
-void CfgConversor::SetInt(LocalConfig &lcfg, string section, string key, int inuevo, int evento, string nombre)
+int CfgConversor::SetInt(LocalConfig &lcfg, string section, string key, int inuevo, int evento, string nombre)
 {
+	int modif=0;
 	int iactual = atoi(lcfg.get(section, key).c_str());
 	if (inuevo != iactual)
 	{
@@ -73,23 +206,41 @@ void CfgConversor::SetInt(LocalConfig &lcfg, string section, string key, int inu
 		sprintf(buffer, "%d", inuevo);
 		eventos.push_back(CommConvertEvent(evento, "", nombre, buffer));
 #endif
+		modif = 1;
 	}
 	lcfg.set(section, key, Tools::itoa(inuevo));
+return modif;
 }
 
 /** */
 void CfgConversor::SetString(char *actual, string snuevo, int evento, string nombre, int maxlen)
 {	
+	char eventparam[100];
+	char *ptchar;
+
 	if (snuevo != string(actual))
 	{
-		eventos.push_back(CommConvertEvent(evento, _srec, nombre, snuevo));
+		//si el string nuevo es una uri (sip:...) sustituyo los : por . para el parse del historico
+		strncpy(eventparam,snuevo.c_str(),100);
+		eventparam[99] = 0;
+		ptchar = strchr(eventparam, ':');
+		if (ptchar != NULL)
+		{
+			*ptchar = '.';
+			eventos.push_back(CommConvertEvent(evento, _srec, nombre, eventparam));
+		}
+		else
+		{
+			eventos.push_back(CommConvertEvent(evento, _srec, nombre, snuevo));
+		}
 	}
 	strncpy(actual,snuevo.c_str(),maxlen);
 }
 
 /** */
-void CfgConversor::SetString(LocalConfig &lcfg, string section, string key, string snuevo, int evento, string nombre, bool vacios)
+int CfgConversor::SetString(LocalConfig &lcfg, string section, string key, string snuevo, int evento, string nombre, bool vacios)
 {
+	int modif=0;
 	if (snuevo != "" || vacios == true)
 	{
 		string sactual = lcfg.get(section, key);
@@ -97,10 +248,12 @@ void CfgConversor::SetString(LocalConfig &lcfg, string section, string key, stri
 		{
 			eventos.push_back(CommConvertEvent(evento, "", nombre, snuevo));
 			lcfg.set(section, key, snuevo);
+			modif = 1;
 		}
 	}
 	else
 		PLOG_ERROR("Intento Escritura String Vacio en INI (%s-%s).", section.c_str(), key.c_str());
+return modif;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,12 +262,19 @@ void CommConversor::SetTipoRadioTelefonia(struct cfgConfigRecurso *mrec, int Rad
 {
 	if (Radio_o_Telefonia == 1)	// Tipo Radio
 	{
-		SetInt(&mrec->sGeneral.iTipo, tipoRadio, INCI_MPSW, "TIPO-GRAL-RADIO");
+		/* &mrec->sGeneral.iTipo se refiere a TIPO_AUDIO_RX, Audio_TX, AUDIO_RXTX,...
+		a esta funcion se le pasa tipoRadio (LOCAL, LOCAL P/R, REMOTO_TX, REMOTO_TXRX, REMOTO_TX...)
+		que es un valor que se asigna en mrec.uif.sRadio . Por tanto, anulamos la llamada SetInt .
+		Mas adelante, en RecursoRadio() el valor de mrec->sGeneral.iTipo (TIPO_AUDIO_xx) se asigna dependiendo del tipo de radio*/
+
+		//SetInt(&mrec->sGeneral.iTipo, tipoRadio, INCI_MPSW, "TIPO-GRAL-RADIO");
+
 		mrec->sGeneral.iTipoIf = CFG_IFREC_TIPO_RADIO;
 	}
 	else if (Radio_o_Telefonia==2)
 	{
-		SetInt(&mrec->sGeneral.iTipoIf, tipoTelefonia, INCI_MPSW, "TIPO-TELEFONIA", CommConversor::TelefoniaJ2M);		
+
+		SetInt(&mrec->sGeneral.iTipoIf, tipoTelefonia, INCI_MPSW, "TIPO-TELEFONIA", CommConversor::TelefoniaJ2M, CommConversor::EvtTipoTelefonia);
 		mrec->sGeneral.iTipo = CFG_REC_TIPO_AUDIO_TXRX;
 	}
 	else
@@ -143,13 +303,14 @@ void CommConversor::SetTipoSqh(char *actual, int nuevo)
 void CommConversor::SetTipoConmutacionRadio(char *actual, int nuevo)
 {
 	char ctipo = nuevo==0 ? 'M' : 'A';
-	if (ctipo != *actual)
-		eventos.push_back(CommConvertEvent(INCI_MPSW, _srec, "TIPO-CONMUTACION", nuevo==0 ? "M" : "A"));
+	//DE momento no generamos este historico
+	//if (ctipo != *actual)
+		//eventos.push_back(CommConvertEvent(INCI_MPSW, _srec, "TIPO-CONMUTACION", nuevo==0 ? "M" : "A"));
 	*actual = ctipo;
 }
 
 /** */
-vector<CommConvertEvent> *CommConversor::convierte(CommConfig &cfgIn, void *p_mcfg, bool actualiza_ini)
+vector<CommConvertEvent> *CommConversor::convierte(CommConfig &cfgIn, void *p_mcfg, bool actualiza_ini, int *actsnmp, int *actrec)
 {
 	/** 20200508 Inicializar opciones */
 	force_rdaudio_normal = LocalConfig::p_cfg->getint(strRuntime, strRuntimeItemForceRdAudioNormal, "0");
@@ -179,14 +340,14 @@ vector<CommConvertEvent> *CommConversor::convierte(CommConfig &cfgIn, void *p_mc
 		
 		/** El identificador global del recurso */
 		int igrec = mcfg->asLocRec[irec].iSlot*4 + mcfg->asLocRec[irec].iDispositivo;
-		Recurso(&p_cfg_in->recursos[irec], &mcfg->sRecurso[igrec]);
+		Recurso(&p_cfg_in->recursos[irec], &mcfg->sRecurso[igrec], p_cfg_in->tipo==1 ? 0 : 1);      //p_cfg_in->tipo==1 ? 0 : 1;	// 0: Ulises, 1: Redan.
 #else
 		mcfg->asLocRec[irec].iSlot = p_cfg_in->recursos[irec]->SlotPasarela;	
 		mcfg->asLocRec[irec].iDispositivo = p_cfg_in->recursos[irec]->NumDispositivoSlot;
 		
 		/** El identificador global del recurso */
 		int igrec = mcfg->asLocRec[irec].iSlot*4 + mcfg->asLocRec[irec].iDispositivo;
-		Recurso(p_cfg_in->recursos[irec], &mcfg->sRecurso[igrec]);
+		Recurso(p_cfg_in->recursos[irec], &mcfg->sRecurso[igrec], p_cfg_in->tipo==1 ? 0 : 1);
 #endif
 		/** Modo de Pasarela en Recursos */
 		mcfg->sRecurso[igrec].sGeneral.iCfgModoSistema = p_cfg_in->tipo==1 ? 0 : 1;						// 0: Ulises, 1: Redan.
@@ -195,10 +356,12 @@ vector<CommConvertEvent> *CommConversor::convierte(CommConfig &cfgIn, void *p_mc
 	/** ULISES */
 	TablasUlises(&p_cfg_in->ulises);
 
+	ParametrosmodoSDC91();
+
 	/** Actualizar datos en INI's */
 	if (actualiza_ini) 
 	{
-		ActualizaRecordIni();
+		*actrec = ActualizaRecordIni();
 		ActualizaSnmpIni();
 		/** 20190308. Ya no hace falta actualizar el ficheros INI */
 		//ActualizaWebIni();
@@ -222,7 +385,9 @@ void CommConversor::ParametrosGlobales()
 	SetInt(&mcfg->iPuertoConsola, p_cfg_in->general.puertoconsola, INCI_MPGP, "PUERTO-CONSOLA");
 	SetInt(&mcfg->iNivelIncidencias, p_cfg_in->general.nivelIncidencias, INCI_MPGP, "NIVEL-INCIDENCIAS");
 	SetInt(&mcfg->iDual, p_cfg_in->general.dualidad, INCI_MPGP, "DUALIDAD");
-	strcpy(mcfg->acIdConfig,"");
+	//strcpy(mcfg->acIdConfig,"");
+	SetString(mcfg->acIdConfig, p_cfg_in->idConf, INCI_MPGP, "ID-CONFIG",CFG_MAX_LONG_ID_CONFIG);
+	SetString(mcfg->acIdOrigenCfg, p_cfg_in->origenCfg, INCI_MPGP, "ORIGEN",CFG_MAX_LONG_ID_ORIGEN);
 
 	// TODO: De momento se queda asi...
 	mcfg->iModoSincronizacion = 2;
@@ -254,6 +419,8 @@ void CommConversor::ParametrosGlobales()
 
 	SetInt(&mcfg->iSipPuertoLocal, p_cfg_in->servicios.sip.PuertoLocalSIP, INCI_MPGP, "PUERTO-SIP");
 	SetInt(&mcfg->iSipPeriodoSuperv, p_cfg_in->servicios.sip.PeriodoSupervisionSIP, INCI_MPGP, "SUPERVISION-SIP");
+	SetInt(&mcfg->SupervisionTlf, p_cfg_in->servicios.sip.SupervisionTlf, INCI_MPGP, "SUPERVISION-SIP-TLF", NULL, CommConversor::EvtNum2Sino);
+	SetInt(&mcfg->Refresher, p_cfg_in->servicios.sip.Refresher, INCI_MPGP, "SUPERVISION-SIP-REFRESHER", NULL, CommConversor::EvtRefresher);
 
 	SetInt(&mcfg->iSnmpPuertoRemoto, p_cfg_in->servicios.snmp.sport, INCI_MPGP, "Puerto Servicio SNMP");
 	SetInt(&mcfg->iRecPuertoRemoto, p_cfg_in->servicios.grab.sport, INCI_MPGP, "Puerto Servicio Grabador");
@@ -266,8 +433,8 @@ void CommConversor::ParametrosGlobales()
 	mcfg->iCfgModoSistema = p_cfg_in->tipo==1 ? 0 : 1;						// 0: Ulises, 1: Redan.
 
 	/** 20181016. U2510. SP#01-15*/
-	mcfg->iSupervLanGW = p_cfg_in->general.SupervisionLanGW;
-	mcfg->itmmaxSupervLanGW = p_cfg_in->general.TmMaxSupervLanGW;
+	SetInt(&mcfg->iSupervLanGW, p_cfg_in->general.SupervisionLanGW, INCI_MPGP, "SUPERVISION PUERTA DE ENLACE", NULL, CommConversor::EvtNum2Sino);
+	SetInt(&mcfg->itmmaxSupervLanGW, p_cfg_in->general.TmMaxSupervLanGW, INCI_MPGP, "TIEMPO SUPERVISION PUERTA DE ENLACE");
 
 	/** 20190221. REDAN107*/
 	mcfg->idelayIniciaVrrp = p_cfg_in->general.dvrrp;
@@ -319,14 +486,17 @@ void CommConversor::Servidores()
 }
 
 /** */
-void CommConversor::Recurso(CommResConfig *p_rec, struct cfgConfigRecurso *mrec, bool add)
+void CommConversor::Recurso(CommResConfig *p_rec, struct cfgConfigRecurso *mrec, bool modosistema)
 {
+	//actualizo primero _srec con el nombre del nuevo recurso.
+	_srec=p_rec->IdRecurso;
+
 	SetString(mrec->sGeneral.szNombre, p_rec->IdRecurso, INCI_MPSW, "ID-RECURSO",CFG_MAX_LONG_NOMBRE_RECURSO);
-	_srec = string(mrec->sGeneral.szNombre);
+	//_srec = string(mrec->sGeneral.szNombre);
 
 	SetTipoRadioTelefonia(mrec, p_rec->Radio_o_Telefonia, p_rec->radio.tipo, p_rec->telefonia.tipo);
 
-	RecursoGeneral(p_rec, &mrec->sGeneral);
+	RecursoGeneral(p_rec, &mrec->sGeneral, modosistema);
 	RecursoAudio(p_rec, &mrec->uRec.sAudio);
 
 	switch(mrec->sGeneral.iTipoIf)
@@ -351,6 +521,7 @@ void CommConversor::Recurso(CommResConfig *p_rec, struct cfgConfigRecurso *mrec,
 	case CFG_IFREC_TIPO_AB:
 	case CFG_IFREC_TIPO_EYM_PP:
 	case CFG_IFREC_TIPO_EYM_MARC:
+	case CFG_IFREC_TIPO_TUNNEL_2H:
 		RecursoColateralTPP(p_rec, &mrec->sGeneral.sColateral);
 		RecursoTelefoniaAnalogica(p_rec, &mrec->uIf.sTlf, &mrec->sGeneral);
 		break;
@@ -378,7 +549,7 @@ void CommConversor::Recurso(CommResConfig *p_rec, struct cfgConfigRecurso *mrec,
 }
 
 /** */
-void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneralRecurso *mgen)
+void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneralRecurso *mgen, bool modosistema)
 {
 	SetInt(&mgen->iSlot, p_rec->SlotPasarela, INCI_MPSW, "SLOT TARJETA");
 	SetInt(&mgen->iDispositivo, p_rec->NumDispositivoSlot, INCI_MPSW, "DISPOSITIVO TARJETA");
@@ -387,7 +558,7 @@ void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneral
 	SetString(mgen->szClave, p_rec->szClave, INCI_MPSW, "CLAVE",MAX_LONG_CLAVE);
 
 	SetString(mgen->szUriLocal, p_rec->Uri_Local, INCI_MPSW, "URI-LOCAL",MAX_LONG_DIR_URI);
-	SetInt(&mgen->iLLamadaAutomatica, p_rec->LlamadaAutomatica, INCI_MPSW, "LLAMADA AUTOMATICA");
+	SetInt(&mgen->iLLamadaAutomatica, p_rec->LlamadaAutomatica, INCI_MPSW, "LLAMADA AUTOMATICA", NULL, CommConversor::EvtNum2Sino);
 	SetInt(&mgen->iRestriccion, p_rec->restriccion, INCI_MPSW, "RESTRICCION LLAMADA");
 
 	/** Lista Blancas y Negras */
@@ -406,7 +577,8 @@ void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneral
 	mgen->iRecPuertoBase = 65004;
 
 	/** 20180913. Se utiliza en ULISES para los Display NAME de los recursos PP */
-	memcpy(mgen->szDestino, p_rec->szDestino.c_str(), CFG_MAX_LONG_NOMBRE_RECURSO);
+	if (!modosistema)	//modosistema 0 Ulises, 1 redan
+		memcpy(mgen->szDestino, p_rec->szDestino.c_str(), CFG_MAX_LONG_NOMBRE_RECURSO);
 
 	mgen->iFlgUsarDiffServ = p_rec->iFlgUsarDiffServ;
 
@@ -437,7 +609,8 @@ void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneral
 		memcpy(mgen->rangos_org[i].final, p_rec->telefonia.ats_rangos_org[i]->final.c_str(), LONG_AB_ATS);
 #endif
 	}
-	mgen->iEnableNoED137 = p_rec->telefonia.iEnableNoED137;
+	SetInt(&mgen->iEnableNoED137, p_rec->telefonia.iEnableNoED137, INCI_MPSW, "PERMITE NO ED137", NULL, CommConversor::EvtNum2Sino);
+
 #endif
 
 }
@@ -445,7 +618,7 @@ void CommConversor::RecursoGeneral(CommResConfig *p_rec, struct cfgConfigGeneral
 /** */
 void CommConversor::RecursoColateralTPP(CommResConfig *p_rec, struct cfgColateralPP   *mcol, bool spvoptions)
 {
-	SetInt(&mcol->iRespuestaAutomatica,p_rec->telefonia.r_automatica, INCI_MPSW, "RESPUESTA AUTOMATICA TPP");
+	SetInt(&mcol->iRespuestaAutomatica,p_rec->telefonia.r_automatica, INCI_MPSW, "RESPUESTA AUTOMATICA", NULL, CommConversor::EvtNum2Sino);
 #ifndef V110
 	SetString(mcol->szUriRemota, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA1 TPP", MAX_LONG_DIR_AMPLIADA);
 	if (spvoptions == true) {
@@ -459,14 +632,14 @@ void CommConversor::RecursoColateralTPP(CommResConfig *p_rec, struct cfgColatera
 		mcol->isuperv_options = 0;
 	}
 #else
-	SetString(mcol->szUriRemota1, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA1 TPP", MAX_LONG_DIR_AMPLIADA);
-	SetString(mcol->szUriRemota2, p_rec->telefonia.additional_uri_remota, INCI_MPSW, "URI-REMOTA2 TPP", MAX_LONG_DIR_AMPLIADA);
+	SetString(mcol->szUriRemota1, p_rec->telefonia.uri_remota, INCI_MPSW, "URI-REMOTA1", MAX_LONG_DIR_AMPLIADA);
+	SetString(mcol->szUriRemota2, p_rec->telefonia.additional_uri_remota, INCI_MPSW, "URI-REMOTA2", MAX_LONG_DIR_AMPLIADA);
 	if (spvoptions == true) {
-		SetInt(&mcol->itm_superv_options, p_rec->telefonia.tm_superv_options, INCI_MPSW, "TIEMPO OPTIONS");
-		SetInt(&mcol->isuperv_options1, p_rec->telefonia.superv_options, INCI_MPSW, "HABILITA OPTIONS1");
-		SetInt(&mcol->isuperv_options2, p_rec->telefonia.additional_superv_options, INCI_MPSW, "HABILITA OPTIONS2");
-		SetInt(&mcol->itiporespuesta1, p_rec->telefonia.itiporespuesta, INCI_MPSW, "TIPO RSP-OPTIONS1");
-		SetInt(&mcol->itiporespuesta2, p_rec->telefonia.additional_itiporespuesta, INCI_MPSW, "TIPO RSP-OPTIONS1");
+		SetInt(&mcol->itm_superv_options, p_rec->telefonia.tm_superv_options, INCI_MPSW, "TIEMPO SUPERVISION COLATERAL");
+		SetInt(&mcol->isuperv_options1, p_rec->telefonia.superv_options, INCI_MPSW, "SUPERVISA COLATERAL", NULL, CommConversor::EvtSpvColateral);
+		SetInt(&mcol->isuperv_options2, p_rec->telefonia.additional_superv_options, INCI_MPSW, "SUPERVISA COLATERAL ADICIONAL", NULL, CommConversor::EvtSpvColateral);
+		SetInt(&mcol->itiporespuesta1, p_rec->telefonia.itiporespuesta, INCI_MPSW, "CUALQUIER RSP-COLATERAL", NULL, CommConversor::EvtNum2Sino );
+		SetInt(&mcol->itiporespuesta2, p_rec->telefonia.additional_itiporespuesta, INCI_MPSW, "CUALQUIER RSP-COLATERAL ADICIONAL", NULL, CommConversor::EvtNum2Sino);
 	}
 	else {
 		//p_rec->telefonia.tm_superv_options = 10;
@@ -485,18 +658,57 @@ void CommConversor::RecursoColateralTPP(CommResConfig *p_rec, struct cfgColatera
 /** */
 void CommConversor::RecursoAudio(CommResConfig *p_rec, struct cfgConfigRecAudio   *maud)
 {
-	SetInt(&maud->iSelGananciaAgcTx, p_rec->hardware.AD_AGC, INCI_MPSW, "ACG EN TX");
-	SetInt(&maud->iGananciaAgcTx, p_rec->hardware.AD_Gain, INCI_MPSW, "GANANCIA ACG EN TX");
-	SetInt(&maud->iSelGananciaAgcRx, p_rec->hardware.DA_AGC, INCI_MPSW, "ACG EN RX");
-	SetInt(&maud->iGananciaAgcRx, p_rec->hardware.DA_Gain, INCI_MPSW, "GANANCIA ACG EN RX");
+	SetInt(&maud->iSelGananciaAgcTx, p_rec->hardware.AD_AGC, INCI_MPSW, "ACG A/D", NULL, CommConversor::EvtNum2Sino );
+	// 20220208. El valor depende si estamos en ULISES (tipo==1) o en REDAN (tipo==0).
+	// En Redan de momento no se configuran los parámetros de nivel y umbral para SelGananciaAGC=1, ponemos valores de defecto
+	if (p_rec->hardware.AD_AGC == 0)
+	{
+		SetInt(&maud->iGananciaAgcTx, p_rec->hardware.AD_Gain, INCI_MPSW, "Ajuste Cero Digital A/D", NULL, CommConversor::EvtAjusteCero );
+		//SetInt(&maud->iUmbralAgcTx, p_rec->hardware.AD_Umbral, INCI_MPSW, "UMBRAL_ACG EN TX");
+	}
+	else
+	{
+		if (p_cfg_in->tipo == 0)
+		{
+			SetInt(&maud->iGananciaAgcTx, -10, INCI_MPSW, "Nivel salida AGC A/D");
+			SetInt(&maud->iUmbralAgcTx, -35, INCI_MPSW, "Umbral AGC A/D");
+		}
+		else
+		{
+			SetInt(&maud->iGananciaAgcTx, p_rec->hardware.AD_Gain, INCI_MPSW, "Nivel salida AGC A/D");
+			SetInt(&maud->iUmbralAgcTx, p_rec->hardware.AD_Umbral, INCI_MPSW, "Umbral AGC A/D");
+		}
+	}
+	SetInt(&maud->iSelGananciaAgcRx, p_rec->hardware.DA_AGC, INCI_MPSW, "ACG D/A", NULL, CommConversor::EvtNum2Sino);
 
+	if (p_rec->hardware.DA_AGC == 0)
+	{
+		SetInt(&maud->iGananciaAgcRx, p_rec->hardware.DA_Gain, INCI_MPSW, "Ajuste Cero Digital D/A", NULL, CommConversor::EvtAjusteCero);
+	}
+	else
+	{
+		if  (p_cfg_in->tipo == 0)
+		{
+			SetInt(&maud->iGananciaAgcRx, -10, INCI_MPSW, "Nivel salida AGC D/A");
+			SetInt(&maud->iUmbralAgcRx, -35, INCI_MPSW, "Umbral AGC D/A");
+		}
+		else
+		{
+			SetInt(&maud->iGananciaAgcRx, p_rec->hardware.DA_Gain, INCI_MPSW, "Nivel salida AGC D/A");
+			SetInt(&maud->iUmbralAgcRx, p_rec->hardware.DA_Umbral, INCI_MPSW, "Umbral AGC D/A");
+		}
+	}
 	maud->iHaySupresionSilencio = 0;
 
-	SetInt(&maud->iTamanoRtp,p_rec->TamRTP, INCI_MPSW, "LONG. TRAMA RTP");
-	SetInt(&maud->iCodecPreferido, p_rec->Codec, INCI_MPSW, "CODEC");
+	//SetInt(&maud->iTamanoRtp,p_rec->TamRTP, INCI_MPSW, "LONG. TRAMA RTP");
+	maud->iTamanoRtp =p_rec->TamRTP;
+	//SetInt(&maud->iCodecPreferido, p_rec->Codec, INCI_MPSW, "CODEC");
+	maud->iCodecPreferido = p_rec->Codec;
 
-	SetInt(&maud->iBufferJitterMin, p_rec->Buffer_jitter.min, INCI_MPSW, "JITTER MIN");
-	SetInt(&maud->iBufferJitterMax,	p_rec->Buffer_jitter.max, INCI_MPSW, "JITTER MAX");
+	//SetInt(&maud->iBufferJitterMin, p_rec->Buffer_jitter.min, INCI_MPSW, "JITTER MIN");
+	//SetInt(&maud->iBufferJitterMax,	p_rec->Buffer_jitter.max, INCI_MPSW, "JITTER MAX");
+	maud->iBufferJitterMin = p_rec->Buffer_jitter.min;
+	maud->iBufferJitterMax = p_rec->Buffer_jitter.max;
 }
 
 /** */
@@ -511,16 +723,21 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 	if (mrad->iNumPaquetesSqOff != forzado) 
 	{
 		mrad->iNumPaquetesSqOff = forzado;
-		eventos.push_back(CommConvertEvent(INCI_MPSW, _srec, "TIPO-SQUELCH", forzado==0 ? "FORZADO ON" : "FORZADO OFF"));
+		eventos.push_back(CommConvertEvent(INCI_MPSW, _srec, "TIPO-SQUELCH", forzado==0 ? "FORZADO OFF" : "FORZADO ON"));
 	}
 
-	SetInt(&mrad->iTipoRadio, p_rec->radio.tipo, INCI_MPSW, "TIPO RADIO");
-	SetInt(&mrad->iUmbralDetSq, p_rec->radio.umbralVad, INCI_MPSW, "UMBRAL SQUELCH");
-	SetInt(&mrad->iMetodoBss, p_rec->radio.metodoBss, INCI_MPSW, "METODO BSS");
+	SetInt(&mrad->iTipoRadio, p_rec->radio.tipo, INCI_MPSW, "TIPO RADIO", NULL, CommConversor::EvtTipoRadio);
+	if (mrad->cTipoSq == 'v')
+		SetInt(&mrad->iUmbralDetSq, p_rec->radio.umbralVad, INCI_MPSW, "UMBRAL SQUELCH");
+	else
+		mrad->iUmbralDetSq = p_rec->radio.umbralVad;
+
+	SetInt(&mrad->iMetodoBss, p_rec->radio.metodoBss, INCI_MPSW, "METODO BSS", NULL, CommConversor::EvtMetodoBss);
 	mrad->iNtz = 0;
 	SetInt(&mrad->TiempoMaxPtt, p_rec->radio.tiempoPtt, INCI_MPSW, "TIEMPO MAXIMO PTT");
 	SetInt(&mrad->iModoConfirmacionPtt, p_rec->radio.modoConfPtt, INCI_MPSW, "MODO CONFIRMAR PTT");
-	SetInt(&mrad->iPeriodoRtpSqBss, p_rec->radio.repSqBss, INCI_MPSW, "RepSQyBSS");
+
+	mrad->iPeriodoRtpSqBss = p_rec->radio.repSqBss;
 
 	mrad->iSupervisionPortadoraTx = p_rec->radio.SupervPortadoraTx;
 	mrad->iSupervisionModuladoraTx = p_rec->radio.SupervModuladoraTx;
@@ -534,26 +751,34 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 	else 
 		SetInt(&mrad->iPttTimeOut, p_rec->radio.timeoutPtt, INCI_MPSW, "TIMEOUT PTT");
 
-	SetInt(&mrad->iNumFlujosMezcla, p_rec->radio.numFlujosAudio, INCI_MPSW, "NUMERO DE FLUJOS EN MEZCLA");
+	// de momento no sacamos historico de este valor
+	//SetInt(&mrad->iNumFlujosMezcla, p_rec->radio.numFlujosAudio, INCI_MPSW, "NUMERO DE FLUJOS EN MEZCLA");
+	mrad->iNumFlujosMezcla = p_rec->radio.numFlujosAudio;
 
 	mrad->iEyM = 0;
 	mrad->iTiempoPttBloqueado = 2000;
 	mrad->iRetrasoPttOff = 0;
 
-	SetInt((int *)&mrad->KeepAlivePeriod, p_cfg_in->servicios.sip.KeepAlivePeriod, INCI_MPSW, "KeepAlivePeriod");
-	SetInt((int *)&mrad->KeepAliveMultiplier,p_cfg_in->servicios.sip.KeepAliveMultiplier, INCI_MPSW, "KeepAliveMultiplier");
+	// de momento no sacamos historico de estos valores
+	//SetInt((int *)&mrad->KeepAlivePeriod, p_cfg_in->servicios.sip.KeepAlivePeriod, INCI_MPSW, "KeepAlivePeriod");
+	//SetInt((int *)&mrad->KeepAliveMultiplier,p_cfg_in->servicios.sip.KeepAliveMultiplier, INCI_MPSW, "KeepAliveMultiplier");
+	mrad->KeepAlivePeriod = p_cfg_in->servicios.sip.KeepAlivePeriod;
+	mrad->KeepAliveMultiplier = p_cfg_in->servicios.sip.KeepAliveMultiplier;
 
 	/** 20170191. */
 	switch(mrad->iTipoRadio) {
 		case TIPO_RD_LOCAL_FD_SIMPLE:
 		case TIPO_RD_LOCAL_FD_PR:
 			if (p_rec->radio.bss == 1)
-				SetInt((int *)&mrad->iClimaxDelay, p_rec->radio.climaxDelay, INCI_MPSW, "CLIMAX");
+				SetInt((int *)&mrad->iClimaxDelay, p_rec->radio.climaxDelay, INCI_MPSW, "CLIMAX", NULL, CommConversor::EvtClimax);
 			else
 				mrad->iClimaxDelay = 0;
 			SetInt(&mrad->iRetrasoSqOff, p_rec->radio.retrasoSqOff, INCI_MPSW, "COLA SQUELCH OFF");
 			SetInt((int *)&mrad->iTiempo_VentanaRx, p_rec->radio.tmVentanaRx, INCI_MPSW, "VENTANA ANALISIS BSS");
-			SetInt((int *)&mrad->iTmRetardoFijo, p_rec->radio.tmRetardoFijo, INCI_MPSW, "RETRASO FIJO CLIMAX");
+			if (mrad->iClimaxDelay == 2)
+				SetInt((int *)&mrad->iTmRetardoFijo, p_rec->radio.tmRetardoFijo, INCI_MPSW, "RETRASO FIJO CLIMAX");
+			else
+				mrad->iTmRetardoFijo = p_rec->radio.tmRetardoFijo;
 			break;
 		default:
 			mrad->iClimaxDelay = 0;
@@ -566,9 +791,15 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 	switch(mrad->iTipoRadio) {
 	case TIPO_RD_REMOTO_RX:
 		mgen->iTipo = CFG_REC_TIPO_AUDIO_RX;
+		SetInt((int *)&mrad->iTGRSid, p_rec->radio.tGRSid, INCI_MPSW, "GRS INTERNAL DELAY");
 		break;
 	case TIPO_RD_REMOTO_TX:
 		mgen->iTipo = CFG_REC_TIPO_AUDIO_TX;
+		mrad->iTGRSid = p_rec->radio.tGRSid;
+		break;
+	case TIPO_RD_REMOTO_RXTX:
+		mgen->iTipo = CFG_REC_TIPO_AUDIO_TXRX;
+		SetInt((int *)&mrad->iTGRSid, p_rec->radio.tGRSid, INCI_MPSW, "GRS INTERNAL DELAY");
 		break;
 	default:
 	//case TIPO_RD_LOCAL_SIMPLE:
@@ -577,17 +808,19 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 	//case TIPO_RD_LOCAL_FD_PR:
 	//case TIPO_RD_REMOTO_RXTX:
 		mgen->iTipo = CFG_REC_TIPO_AUDIO_TXRX;
+		mrad->iTGRSid = p_rec->radio.tGRSid;
+
 		break;
 	}
 	/*****************************************/
 
 	SetInt((int *)&mrad->iBssRtp, p_rec->radio.bssRtp, INCI_MPSW, "BSS EN RTP");
-	SetInt((int *)&mrad->iEvtPTT, p_rec->radio.evtPTT, INCI_MPSW, "GENERACION HISTORICO PTT-SQH");
-	SetInt((int *)&mrad->iTjbd, p_rec->radio.tjbd, INCI_MPSW, "JITTER BUFFER DELAY");
-	SetInt((int *)&mrad->iTGRSid, p_rec->radio.tGRSid, INCI_MPSW, "GRS INTERNAL DELAY");
+	SetInt((int *)&mrad->iEvtPTT, p_rec->radio.evtPTT, INCI_MPSW, "GENERACION HISTORICO PTT-SQH", NULL, CommConversor::EvtNum2Sino);
+	//SetInt((int *)&mrad->iTjbd, p_rec->radio.tjbd, INCI_MPSW, "JITTER BUFFER DELAY");
+	mrad->iTjbd = p_rec->radio.tjbd;
 
 	/** 20160830. Precision de Audio.. */
-	SetInt((int *)&mrad->iPrecisionAudio, p_rec->radio.iPrecisionAudio, INCI_MPSW, "PRECISION DE AUDIO");
+	SetInt((int *)&mrad->iPrecisionAudio, p_rec->radio.iPrecisionAudio, INCI_MPSW, "PRECISION DE AUDIO", NULL, CommConversor::EvtPrecision);
 	/** 20200508. Precision de Audio No Estricta para Version de 16 Canales Radio / Remoto */
 	if (force_rdaudio_normal == 1) {
 		mrad->iPrecisionAudio = PRECISION_NORMAL;
@@ -595,8 +828,8 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 
 	SetInt((int *)&mgen->iEnableGI, p_rec->radio.iEnableGI, INCI_MPSW, "IP-REC ENABLE");
 	/** PTT y Sesiones Prioritarias */
-	SetInt((int *)&mrad->iPttPrio, p_rec->radio.iPttPrio, INCI_MPSW, "PTT-PRIO", CommConversor::RadioPttPrioJ2M);
-	SetInt((int *)&mrad->iSessionPrio, p_rec->radio.iSesionPrio, INCI_MPSW, "SESSION-PRIO", CommConversor::RadioSessionPrioJ2M);
+	SetInt((int *)&mrad->iPttPrio, p_rec->radio.iPttPrio, INCI_MPSW, "PTT-PRIO", CommConversor::RadioPttPrioJ2M, CommConversor::EvtPttPrio);
+	SetInt((int *)&mrad->iSessionPrio, p_rec->radio.iSesionPrio, INCI_MPSW, "SESSION-PRIO", CommConversor::RadioSessionPrioJ2M, CommConversor::EvtSessionPrio);
 
 	SetTipoConmutacionRadio(&mrad->cTipoConmutacion, p_rec->radio.colateral.tipoConmutacion);
 	SetString(mgen->szDestino, p_rec->radio.colateral.name, INCI_MPSW, "FID", CFG_MAX_LONG_NOMBRE_RECURSO);
@@ -614,7 +847,7 @@ void CommConversor::RecursoRadio(CommResConfig *p_rec, struct cfgConfigGeneralRe
 	}
 
 	/** 20170130. Modo de Calculo Climax */
-	SetInt((int *)&mrad->iModoCalculoClimax, p_rec->radio.iModoCalculoClimax, INCI_MPSW, "PRECISION DE AUDIO");
+	SetInt((int *)&mrad->iModoCalculoClimax, p_rec->radio.iModoCalculoClimax, INCI_MPSW, "PRECISION DE AUDIO", NULL, CommConversor::EvtCalculoClimax);
 }
 
 /** */
@@ -738,7 +971,7 @@ void CommConversor::RecursoTelefoniaR2N5(CommResConfig *p_rec, struct cfgConfigI
 	//strcpy(mr2n5->szIdTroncal,"");
 	//strcpy(mr2n5->szIdRed, "");
 
-	SetInt(&mr2n5->iLado, p_rec->telefonia.lado, INCI_MPSW, "LADOR2-N5");
+	SetInt(&mr2n5->iLado, p_rec->telefonia.lado, INCI_MPSW, "LADOR2-N5", NULL, CommConversor::EvtLadoR2N5);
 	SetInt(&mr2n5->iT_Release, p_rec->telefonia.it_release, INCI_MPSW, "TIEMPO TONOS RELEASE");
 
 	memcpy(mr2n5->ntest_local, p_rec->telefonia.no_test_local.c_str(),LONG_AB_ATS);
@@ -746,7 +979,21 @@ void CommConversor::RecursoTelefoniaR2N5(CommResConfig *p_rec, struct cfgConfigI
 
 	/** 20160830. Periodo de Interrupt Warning... */
 	/** 20210212. El Byte Bajo es Periodo. El Byte alto es el 'P6-P22' Modo Normal o Transito */
-	SetInt((int *)&mr2n5->iT_Int_Warning, p_rec->telefonia.iT_Int_Warning, INCI_MPSW, "PERIODO INTERRUPT WARNING");
+	int criba = (int) mr2n5->iT_Int_Warning ^ p_rec->telefonia.iT_Int_Warning;
+	int anterior = mr2n5->iT_Int_Warning;
+	if (criba & 0xff)
+	{
+		SetInt((int *)&mr2n5->iT_Int_Warning, p_rec->telefonia.iT_Int_Warning, INCI_MPSW, "PERIODO INTERRUPT WARNING", NULL, CommConversor::EvtPeriodWarn);
+	}
+	if (criba & 0xff00)
+	{
+		mr2n5->iT_Int_Warning = anterior;
+		SetInt((int *)&mr2n5->iT_Int_Warning, p_rec->telefonia.iT_Int_Warning, INCI_MPSW, "TIMEOUT RESP STATUS", NULL, CommConversor::EvtTmoutRespStatus);
+	}
+
+	SetInt(&mr2n5->RespuestaSIP_ATSR2, p_rec->telefonia.RespuestaSIP_ATSR2, INCI_MPSW, "RESPUESTA SIP-ATSR2", NULL, CommConversor::EvtRespSipATS);
+	SetInt(&mr2n5->TmTonoBloqueo, p_rec->telefonia.TmTonoBloqueo, INCI_MPSW, "TIEMPO TONO BLOQUEO R2");
+	SetInt(&mr2n5->TmBloqueoLib, p_rec->telefonia.TmBloqueoLib, INCI_MPSW, "TIEMPO NLOQUEO LIB");
 
 #ifndef V110
 
@@ -845,16 +1092,19 @@ void CommConversor::RecursoTelefoniaAnalogica(CommResConfig *p_rec, struct cfgCo
 	// 20170215. El valor depende si estamos en ULISES (tipo==1) o en REDAN (tipo==0)
 	// mtlf->iDetectVox = p_cfg_in->tipo==0 ? 1 : 0;
 	// 20210301. Para REDAN se habilita la edición, y se deshabilita la opción para ULISES.
-	if (p_cfg_in->tipo == 0) {
-		SetInt((int*)(&mtlf->iDetectVox), p_rec->telefonia.detect_vox, INCI_MPSW, "DETECCION VOX");
+	if ((p_cfg_in->tipo == 0) && ( mgen->iTipoIf == CFG_IFREC_TIPO_BL)){
+		SetInt((int*)(&mtlf->iDetectVox), p_rec->telefonia.detect_vox, INCI_MPSW, "DETECCION VOX", NULL, CommConversor::EvtNum2Sino);
+
+		SetInt((int *)(&mtlf->iUmbralVox), p_rec->telefonia.umbral_vox, INCI_MPSW, "UMBRAL VOX");
+		SetInt((int *)(&mtlf->iTmInactividad), p_rec->telefonia.tm_inactividad, INCI_MPSW, "TIEMPO INACTIVIDAD");
+
+		SetInt((int *)(&mtlf->iControlTmLlam), p_rec->telefonia.iControlTmLlam, INCI_MPSW, "DURACION LLAMADA", NULL, CommConversor::EvtNum2Sino);
+		SetInt((int *)(&mtlf->iTmMaxConversacion), p_rec->telefonia.iTmMaxConversacion, INCI_MPSW, "TIEMPO LLAMADA");
 	}
 	else {
 		mtlf->iDetectVox = 0;
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
-	SetInt((int *)(&mtlf->iUmbralVox), p_rec->telefonia.umbral_vox, INCI_MPSW, "UMBRAL VOX");
-	SetInt((int *)(&mtlf->iTmInactividad), p_rec->telefonia.tm_inactividad, INCI_MPSW, "TIEMPO INACTIVIDAD");
 
 	/** */
 	memcpy(mtlf->szIdRed, p_rec->telefonia.idRed.c_str(), CFG_MAX_LONG_NOMBRE_RED);
@@ -873,21 +1123,37 @@ void CommConversor::RecursoTelefoniaAnalogica(CommResConfig *p_rec, struct cfgCo
 	mtlf->iPeriodoSpvRing = 200;
 	mtlf->iFiltroSpvRing = 2;
 	mtlf->iDetDtmf = 0;
+	mtlf->iControlTmLlam = 0;
+	mtlf->iTmMaxConversacion = 0;
 
 	/* 20170119. */
 	switch ( mgen->iTipoIf)
 	{
+	case CFG_IFREC_TIPO_TUNNEL_2H:
+		mtlf->iModoEyM = 0;
+		mtlf->TReleaseBL = p_rec->telefonia.TReleaseBL;
+		mtlf->iTmLlamEntrante = p_rec->telefonia.iTmLlamEntrante;
+		mtlf->iPeriodoSpvRing = p_rec->telefonia.iPeriodoSpvRing;
+		mtlf->iFiltroSpvRing = p_rec->telefonia.iFiltroSpvRing;
+		mtlf->iDetectVox = 0;
+		mtlf->iDetLineaAB = 0;
+		break;
 	case CFG_IFREC_TIPO_BL:
 		mtlf->iModoEyM = 0;
 		mtlf->TReleaseBL = p_rec->telefonia.TReleaseBL;
 		mtlf->iTmLlamEntrante = p_rec->telefonia.iTmLlamEntrante;
 		mtlf->iPeriodoSpvRing = p_rec->telefonia.iPeriodoSpvRing;
 		mtlf->iFiltroSpvRing = p_rec->telefonia.iFiltroSpvRing;
+		mtlf->iControlTmLlam = p_rec->telefonia.iControlTmLlam;
+		mtlf->iTmMaxConversacion = p_rec->telefonia.iTmMaxConversacion;
+		mtlf->iDetLineaAB = 0;
+
 		break;
 	case CFG_IFREC_TIPO_BC:
 		mtlf->iDetectVox = 0;
 		mtlf->iTmLlamEntrante = p_rec->telefonia.iTmLlamEntrante;
 		mtlf->iDetDtmf = p_rec->telefonia.iDetDtmf;
+		mtlf->iDetLineaAB = 0;
 		break;
 	case CFG_IFREC_TIPO_AB:
 		mtlf->iDetectVox = 0;
@@ -898,6 +1164,7 @@ void CommConversor::RecursoTelefoniaAnalogica(CommResConfig *p_rec, struct cfgCo
 		mtlf->iTmDetFinLlamada = p_rec->telefonia.iTmDetFinLlamada;
 		mtlf->iPeriodoSpvRing = p_rec->telefonia.iPeriodoSpvRing;
 		mtlf->iFiltroSpvRing = p_rec->telefonia.iFiltroSpvRing;
+		SetInt((int *)(&mtlf->iDetLineaAB), p_rec->telefonia.iDetLineaAB, INCI_MPSW, "DETECCION FALLO LINEA", NULL, CommConversor::EvtNum2Sino);
 		break;
 
 	default:
@@ -951,7 +1218,7 @@ void CommConversor::RecursosBorrados()
 		{
 			int evento = mcfg->sRecurso[grec].sGeneral.iTipoIf == CFG_IFREC_TIPO_RADIO ? INCI_BRCR : INCI_BRCT;
 			eventos.push_back(CommConvertEvent(evento, mcfg->sRecurso[grec].sGeneral.szNombre,"En Posicion ", 
-				Tools::Int2String(mcfg->asLocRec[irec].iSlot*4 )+"-"+Tools::Int2String(mcfg->asLocRec[irec].iDispositivo)));
+				Tools::Int2String(mcfg->asLocRec[irec].iSlot )+"-"+Tools::Int2String(mcfg->asLocRec[irec].iDispositivo)));
 		}
 	}
 }
@@ -1031,7 +1298,7 @@ void CommConversor::ActualizaSnmpIni()
 }
 
 /** */
-void CommConversor::ActualizaRecordIni()
+int CommConversor::ActualizaRecordIni()
 {
 	LocalConfig recini(onfs(LocalConfig::p_cfg->get(strModulos, strItemModuloGrabador)/*.recModule()*/));
 
@@ -1045,24 +1312,45 @@ void CommConversor::ActualizaRecordIni()
 	//setInt(recini, "RTP", "PAYLOAD_FORMAT", p_cfg_in->servicios.grab.rtp_pl, INCI_MPGP, "GRABADOR PAYLOAD RTP");
 	
 	int numRecorder = 0;
+	int modif=0;
+
+	if (p_cfg_in->servicios.grab.grabacionEd137 == 0)
+		modif|= SetString(recini, "RTSP", "EnableGrabacionED137", "false", INCI_MPGP, "ENABLE GRAB ED137");
+	else
+		modif|= SetString(recini, "RTSP", "EnableGrabacionED137", "true", INCI_MPGP, "ENABLE GRAB ED137");
+
 	if (Tools::ValidateIpAddress(p_cfg_in->servicios.grab.rtsp_ip)==true) {
-		SetString(recini, "RTSP", "IP_REC_A", p_cfg_in->servicios.grab.rtsp_ip, INCI_MPGP, "IP GRABADOR A");
+		modif|= SetString(recini, "RTSP", "IP_REC_A", p_cfg_in->servicios.grab.rtsp_ip, INCI_MPGP, "IP GRABADOR A");
 		numRecorder += 1;
 	}
 	else {
-		recini.set("RTSP", "IP_REC_A", "");
+		if (strcmp(recini.get("RTSP","IP_REC_A").c_str(), "")!=0)
+		{
+			recini.set("RTSP", "IP_REC_A", "");
+			modif = 1;
+		}
 	}
 	if (Tools::ValidateIpAddress(p_cfg_in->servicios.grab.rtspb_ip)==true) {
-		SetString(recini, "RTSP", "IP_REC_B", p_cfg_in->servicios.grab.rtspb_ip, INCI_MPGP, "IP GRABADOR B");
+		modif|= SetString(recini, "RTSP", "IP_REC_B", p_cfg_in->servicios.grab.rtspb_ip, INCI_MPGP, "IP GRABADOR B");
 		numRecorder += 1;
 	}
 	else {
-		recini.set("RTSP", "IP_REC_B", "");
+		if (strcmp(recini.get("RTSP","IP_REC_B").c_str(), "")!=0)
+		{
+			recini.set("RTSP", "IP_REC_B", "");
+			modif=1;
+		}
 	}
-	recini.set("GENERAL", "DUAL_RECORDER", numRecorder==2 ? "1" : "0");
+	if (strcmp(recini.get("GENERAL","DUAL_RECORDER").c_str(), numRecorder==2 ? "1" : "0")!=0)
+	{
+		recini.set("GENERAL", "DUAL_RECORDER", numRecorder==2 ? "1" : "0");
+		modif=1;
+	}
 
-	SetInt(recini, "RTSP", "PORT_RTSP", p_cfg_in->servicios.grab.rtsp_port, INCI_MPGP, "GRABADOR PUERTO RTSP");
+	modif|= SetInt(recini, "RTSP", "PORT_RTSP", p_cfg_in->servicios.grab.rtsp_port, INCI_MPGP, "GRABADOR PUERTO RTSP");
+	modif|= SetInt(recini, "RTSP", "PORT_RTSP2", p_cfg_in->servicios.grab.rtspb_port, INCI_MPGP, "GRABADOR B PUERTO RTSP");
 	recini.save();
+	return modif;
 }
 
 /** */
@@ -1253,3 +1541,56 @@ void CommConversor::TablaUlises(vector<CommUlises_st_direccionamiento_sip> &plan
 		p_plan[iSip].idusuario[0] = NO_NAME;
 }
 
+
+void CommConversor::ParametrosmodoSDC91()
+{
+	int ikey=0;
+	for (vector<CommRespSIPtoATSR2>::iterator itr = p_cfg_in->modoSDC91.respuestasSIPtoATSR2.begin(); itr != p_cfg_in->modoSDC91.respuestasSIPtoATSR2.end() && ikey < MAX_RESP_SIP_ATSR2; ++itr,ikey++)
+	{
+#if __POR_REFERENCIA__
+		mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respSIP = itr->respSIP;
+		switch(itr->respATSR2)
+		{
+		case respBUSY:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_OCUPADO;
+			break;
+		case respOUT:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_FUERA_DE_SERVICIO;
+			break;
+		case respCONGESTION:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_CONGESTION;
+			break;
+		case respLIBERACION:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_LIBERACION;
+			break;
+		case respBLOCKING:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_BLOQUEO;
+			break;
+		}
+#else
+		mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respSIP = itr->respSIP;
+		switch(itr->respATSR2)
+		{
+		case respBUSY:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_OCUPADO;
+			break;
+		case respOUT:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_FUERA_DE_SERVICIO;
+			break;
+		case respCONGESTION:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_CONGESTION;
+			break;
+		case respLIBERACION:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_LIBERACION;
+			break;
+		case respBLOCKING:
+			mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respATSR2 = RESP_R2_BLOQUEO;
+			break;
+
+		}
+#endif
+
+	}
+	mcfg->modoSDC91.respuestasSIP_ATSR2[ikey].respSIP = NO_CODIGO_SIP;	//MARCA EL FIN DE LA TABLA
+
+}

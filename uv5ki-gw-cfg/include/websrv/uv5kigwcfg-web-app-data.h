@@ -36,7 +36,9 @@ public:
 	{
 		Document json;
 		if (!validate(data_in))
+		{
 			throw Exception("JSON-No Valido");
+		}
 		if (json.IsObject()) 
 		{
 			json.RemoveAllMembers();
@@ -309,7 +311,7 @@ protected:
 class webData_tses : public jData
 {
 public:
-	webData_tses(int parStd=0, string parIdc="IDC_IDC", string parTim="TIM_TIM", string parModo="rd", string version="0.0");
+	webData_tses(int parStd=0, string parIdc="IDC_IDC", string parTim="TIM_TIM", string parModo="rd", string version="0.0", string parOrigen="ORG_ORG");
 	webData_tses(string jData) {
 		JDeserialize(jData);
 	}
@@ -321,6 +323,7 @@ public:
 		read_key(base, "std", std);
 		read_key(base, "idc", idc);
 		read_key(base, "tim", tim);
+		read_key(base, "org", org);
 		read_key(base, "ver", ver);
 		read_key(base, "modo", modo);
 #endif
@@ -331,6 +334,7 @@ private:
 	int std;
 	string idc;
 	string tim;
+	string org;
 	string ver;
 	string modo;
 	string modo_redan;
@@ -472,7 +476,7 @@ public:
 				read_key(base, "Date", Date);
 				read_key(base, "Size", Size);
 				read_key(base, "Hash", md5);
-				/** 20170807. Siempre calculo la versión por si han cambiado algun fichero... */
+				/** 20170807. Siempre calculo la versiï¿½n por si han cambiado algun fichero... */
 				/*if (Date == "") */{
 					try {
 						sistema::fileattr(onfs(Path), Modo, Date, Size);

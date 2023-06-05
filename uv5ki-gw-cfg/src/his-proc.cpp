@@ -141,6 +141,7 @@ void HistClient::SetBite(callback respuesta)
 	avisos.set(aviso);
 }
 
+
 /** */
 void HistClient::SetReset()
 {
@@ -164,6 +165,21 @@ void HistClient::SetSincrState(string snmpStatus)
 
 	stHistAviso aviso;
 	aviso.datos = string("C,C00,"+snmpStatus);
+	aviso.respuesta = NULL;
+	aviso.dst = default_dst;
+	avisos.set(aviso);
+}
+
+
+/** */
+void HistClient::SetLanguage(string lang)
+{
+	PLOG_INFO("SetLanguage: -----------%s", lang.c_str());
+	/** Lock */
+	CCSLock lock(_acceso);
+
+	stHistAviso aviso;
+	aviso.datos = string("C,T06,"+lang);
 	aviso.respuesta = NULL;
 	aviso.dst = default_dst;
 	avisos.set(aviso);

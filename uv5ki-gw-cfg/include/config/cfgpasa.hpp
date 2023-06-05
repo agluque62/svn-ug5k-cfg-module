@@ -35,6 +35,13 @@
 #define PRECISION_ESTRICTA 0
 #define PRECISION_NORMAL   1
 
+
+//tipo de host
+#define TIPO_HOST_PTO		0
+#define TIPO_HOST_CGW		1
+#define TIPO_HOST_RD_EXT	2
+#define TIPO_HOST_TLF_EXT	3
+
 //Identificacion de configuracion vacia
 
 #define ID_CFG_VACIA	"ESTA-VACIA"
@@ -74,7 +81,7 @@
 #define CFG_LONG_ALIAS                  32
 #define CFG_MAX_LONG_ID                 50
 #define CFG_MAX_LONG_ID_CONFIG   ((2*CFG_MAX_LONG_ID)+(CFG_MAX_LONG_NOMBRE_PASARELA)+2)
-
+#define CFG_MAX_LONG_ID_ORIGEN			32
 
 #define MAX_RECURSOS_TIFX               16
 #define MAX_ENLACES_EXTERNOS_POR_REC    32
@@ -93,6 +100,11 @@
 #define	MIN_FILTRO_SPV_RING			1
 #define	MAX_FILTRO_SPV_RING			6
 #define	DEF_FILTRO_SPV_RING			2
+
+/* tipo de refresher */
+#define NO_REFRESHER	0
+#define UAC_REFRESHER	1
+#define UAS_REFRESHER	2
 
 /*
  * Tipos de sincronizacion.
@@ -153,8 +165,11 @@
 #define CFG_IFREC_TIPO_EYM_MARC    14
 #define CFG_IFREC_TIPO_TUN_LOCAL   15
 #define CFG_IFREC_TIPO_TUN_REMOTO  16
+#define CFG_IFREC_TIPO_TUNNEL_2H   17
 
-#define CFG_IFREC_TOTAL_TIPOS      17
+#define CFG_IFREC_TOTAL_TIPOS      18
+
+#define CFGMANT_IFREC_TIPO_TUNNEL_2H    8	//para el modulo snmp el recurso tunneling //REVISAR MJ
 //tipo de proxy. el tipo viene en la informacion de tipo de recurso. para que no se solapen tipos, deben valer por encima de los tipos de recursos que hay configurados
 
 #define TIPO_PROXY_PRINCIPAL		CFG_IFREC_TOTAL_TIPOS
@@ -245,6 +260,7 @@
  */
 #define CFG_PREF_BSS_RSSI    0
 #define CFG_PREF_BSS_NUCLEO    1
+#define CFG_PREF_BSS_NINGUNO    2
 
 /*
  * Tipos de NTZ.
@@ -560,6 +576,33 @@ struct cfgEnlaceExterno
    char szId[CFG_MAX_LONG_NOMBRE+1];
 };
 
+/* informacion sobre modo SDC91*/
+
+#define NO_CODIGO_SIP		0
+
+#define RESP_ATSR2_MODO_ED137	0
+#define RESP_ATSR2_MODO_SDC91	1
+
+#define MAX_RESP_SIP_ATSR2	100
+
+#define RESP_R2_LIBRE				6
+#define RESP_R2_OCUPADO				3
+#define RESP_R2_CONGESTION			8
+#define RESP_R2_FUERA_DE_SERVICIO	5
+#define RESP_R2_LIBERACION			10
+#define	RESP_R2_BLOQUEO				11
+
+struct st_respuestaSIP_ATSR2
+{
+	int respSIP;
+	int respATSR2;
+};
+struct st_modoSDC91
+{
+	struct st_respuestaSIP_ATSR2 respuestasSIP_ATSR2[MAX_RESP_SIP_ATSR2];
+	bool operator ==( const st_modoSDC91& );
+    bool operator !=( const st_modoSDC91& );
+};
 
 //------------------------------------------------------------------------------------------
 
@@ -609,7 +652,6 @@ struct st_rangoATS {
     asEmpl: array de informacion de cada emplazamiento
  *
  */
-#ifdef V110
 struct cfgColateralPP
 {
     int iRespuestaAutomatica;
@@ -622,18 +664,7 @@ struct cfgColateralPP
     int itm_superv_options;                 /* temporizador supervision options */
     int iColateralSCV;                    /* indica si el colateral es un recurso de una pasarela (0) o un SCV (1)*/
 };
-#else
 
-struct cfgColateralPP
-{
-    int iRespuestaAutomatica;
-    char szUriRemota[MAX_LONG_DIR_AMPLIADA+1];
-    int isuperv_options;                    /* temporizador supervision options */
-    int itm_superv_options;                 /* temporizador supervision options */
-    int iColateralSCV;                    /* indica si el colateral es un recurso de una pasarela (0) o un SCV (1)*/
-
-};
-#endif
 
 //esta estructura se deja de momento porque en redan se utiliza, se pasa cfgsistema a los recursos para que tengan la ip para darla a grabación.
 struct st_config_sistema
@@ -680,6 +711,7 @@ struct cfgConfigGeneralRecurso
 
     char szUriLocal[MAX_LONG_DIR_AMPLIADA+1];
     int iLLamadaAutomatica;
+    int iModoTunnel;
     int iRestriccion;
     char szListaBlanca[MAX_NUM_LISTA_BLANCA][MAX_LONG_DIR_AMPLIADA+1];
     char szListaNegra[MAX_NUM_LISTA_NEGRA][MAX_LONG_DIR_AMPLIADA+1];
@@ -689,11 +721,9 @@ struct cfgConfigGeneralRecurso
 
     int size_aListaEnlacesExternos;
     struct cfgEnlaceExterno aListaEnlacesExternos[MAX_ENLACES_EXTERNOS_POR_REC];
-#ifdef V110
     int iEnableNoED137;
     struct st_rangoATS rangos_dst[N_MAX_RANGOS_ATS];      /*array de rangos de nuemros destino */
     struct st_rangoATS rangos_org[N_MAX_RANGOS_ATS];      /*array de rangos de numeros origen */
-#endif
     cfgConfigGeneralRecurso();
     void TomaSlot( int );
     void TomaDispositivo( int );
@@ -720,8 +750,10 @@ struct cfgConfigRecAudio
 {
     int iSelGananciaAgcTx;
     int iGananciaAgcTx;
+    int iUmbralAgcTx;
     int iSelGananciaAgcRx;
     int iGananciaAgcRx;
+    int iUmbralAgcRx;
     int iHaySupresionSilencio;
     int iTamanoRtp;
     int iCodecPreferido;
@@ -993,14 +1025,13 @@ struct cfgConfigIfR2N5
     } sTiemA, sTiemB;
 
     int iT_Release;                              //tiempo generando tonos antes de liberar
-    int iT_Int_Warning;   //tiempo de duracion de los tonos de interrupt warning
-
+    int iT_Int_Warning;   //tiempo de duracion de los tonos de interrupt warning (byte bajo)
+    						//modo de espera respuesta llamada "Time out respuesta llamada" (byte alto) 0:modo normal(P6-P22) 1: siempre P22
+    int RespuestaSIP_ATSR2;
+	int	TmTonoBloqueo;
+	int	TmBloqueoLib;
     char ntest_local[LONG_AB_ATS];
     char ntest_remoto[LONG_AB_ATS];
-#ifndef V110
-    struct st_rangoATS rangos_dst[N_MAX_RANGOS_ATS];      /*array de rangos de nuemros destino */
-    struct st_rangoATS rangos_org[N_MAX_RANGOS_ATS];      /*array de rangos de numeros origen */
-#endif
     char szIdTroncal[CFG_MAX_LONG_NOMBRE_TRONCAL+1];
     char szIdRed[CFG_MAX_LONG_NOMBRE_RED+1];
     int iNumRangosOperador;
@@ -1057,9 +1088,9 @@ struct cfgConfigIfTlf
     int iDetInversionPol;
     int iDetCallerId;
     int iTmCallerId;
-#ifdef V110
+    int iControlTmLlam;			//se supervisa la dracion de la conversacion en lineas BL
+    int iTmMaxConversacion;			//tiempo maximo de conversacion en lineas BL
     int iDetLineaAB;
-#endif
     int iPeriodoSpvRing;
     int iFiltroSpvRing;
 
@@ -1190,10 +1221,13 @@ struct cfgConfigPasarela
     int iDual;
 
     char acIdConfig[CFG_MAX_LONG_ID_CONFIG+1];
+    char acIdOrigenCfg[CFG_MAX_LONG_ID_ORIGEN+1];
     int iModoSincronizacion;
 //    char szDirMasterSincro[CFG_MAX_LONG_DIRECCION_TRANSPORTE];
     int iSipPuertoLocal;
     int iSipPeriodoSuperv;
+    int SupervisionTlf;			//1: supervisa sesiones sip tlf
+    int Refresher; 				//0: no propone refreseher,1 : uac 2 : uas
 //    int iSnmpPuertoLocal;
     int iSnmpPuertoRemoto;
     int iRecPuertoRemoto;
@@ -1226,6 +1260,7 @@ struct cfgConfigPasarela
 //#ifdef CFG_ENC
     struct st_direccionamientoproxy plandireccionamientoproxy[N_MAX_CENTRALES];
 //#endif
+    struct st_modoSDC91 modoSDC91;
     /*
      * todo meter estas funciones en cfgConfigPasarela
      *

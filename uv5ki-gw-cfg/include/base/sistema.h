@@ -22,7 +22,7 @@
 
  #include <signal.h>
 
- /** 20180322. Se han añadido estos includes para el semaforo global */
+ /** 20180322. Se han aï¿½adido estos includes para el semaforo global */
  #include <sys/ipc.h>
  #include <sys/sem.h>
  #include <stdlib.h>
@@ -92,6 +92,9 @@ public:
 	/** */
 	static void fileattr(string path, int modo, string &date, string &size);
 
+	/* indica que tiene dual viva */
+	static int sistema::DualAlive();
+
 	/** 20171031. Obtener el colateral */
 	static string ipColateral();
 
@@ -100,7 +103,7 @@ public:
 	static time_t time();
 	static time_t time_max();
 
-	/** 20210827. Revision de la gestión JIFFIES */
+	/** 20210827. Revision de la gestiï¿½n JIFFIES */
 	static unsigned int jiffies();
 	
 };
@@ -119,7 +122,7 @@ public:
 /** 20180322. Semaforo Global */
 #ifndef _WIN32
 	#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
-	// La union ya está definida en sys/sem.h
+	// La union ya estï¿½ definida en sys/sem.h
 	#else
 	// Tenemos que definir la union
 	union semun

@@ -22,6 +22,7 @@
 #include "./comm-har-config.h"
 #include "./comm-res-config.h"
 #include "./comm-uv5-config.h"
+#include "./comm-mSDC91-config.h"
 
 /** Estructura de CONFIGURACION. Se parte de REDAN */
 class CommConfig : public jData
@@ -30,7 +31,8 @@ public:
 	CommConfig() {
 		/** Modo para las configuraciones por defecto */
 		tipo = LocalConfig::p_cfg->get(strRuntime, strRuntimeItemModoGlobal, "0")=="1" ? 1 : 0;
-		idConf=string("defecto_") + (tipo==0 ? string("redan") : string("ulises"));
+		idConf = string("defecto_") + (tipo==0 ? string("redan") : string("ulises"));
+		origenCfg = "CFGDEF";
 		fechaHora = Tools::Ahora_Servidor();
 	}
 	CommConfig(string jstring) {
@@ -79,6 +81,8 @@ public:
 		return false;
 	}
 	bool test() {
+		if (idConf == "Indice Desconocido")
+			return false;
 		bool bret = general.test() && servicios.test() && hardware.test();
 		for (vector<CommResConfig>::iterator res = recursos.begin(); res != recursos.end(); res++)
 			bret = bret && res->test();
@@ -90,29 +94,36 @@ public:
 		write_key(writer, "tipo", tipo);
 		write_key(writer, "idConf", idConf);
 		write_key(writer, "fechaHora", fechaHora);
+		write_key(writer, "origenCfg", origenCfg);
 		write_key(writer, "general", general);
 		write_key(writer, "hardware", hardware);
 		write_key(writer, "recursos", recursos);
 		write_key(writer, "users", users);
 		write_key(writer, "servicios", servicios);
 		write_key(writer, "ulises", ulises);
+		write_key(writer, "modoSDC91", modoSDC91);
 	}
 	virtual void jread(Value &base) {
 		read_key(base, "tipo", tipo);
 		read_key(base, "idConf", idConf);
 		read_key(base, "fechaHora", fechaHora);
+		read_key(base, "origenCfg", origenCfg);
 		read_key(base, "users", users);
 		read_key(base, "general", general);
 		read_key(base, "servicios", servicios);
 		read_key(base, "hardware", hardware);
 		read_key(base, "recursos", recursos);
 		read_key(base, "ulises", ulises);
+		read_key(base, "modoSDC91", modoSDC91);
+		if (origenCfg == "Indice Desconocido")
+			origenCfg = "CFGR";
 	}
 
 public:
 	int tipo;
 	string idConf;
 	string fechaHora;
+	string origenCfg;
 	CommGenConfig general;
 	CommSerConfig servicios;
 	CommHarConfig hardware;
@@ -124,6 +135,7 @@ public:
 	vector<CommResConfig *> recursos;
 #endif
 	CommUv5Config ulises;
+	CommModoSDC91Config modoSDC91;
 
 };
 

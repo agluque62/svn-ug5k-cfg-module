@@ -3,13 +3,14 @@
 
 
 /** */
-webData_tses::webData_tses(int parStd, string parIdc, string parTim, string parModo, string version)
+webData_tses::webData_tses(int parStd, string parIdc, string parTim, string parModo, string version, string parOrigen)
 {	
 	std = parStd;
 	idc = parIdc;
 	tim = parTim;
 	ver = version;			// VersionGlobal();
 	modo = parModo;
+	org = parOrigen;
 
 	ntpsync = IsNtpSync()==true ? 1 : 0;
 	localdate = Tools::Ahora_Servidor();
@@ -44,6 +45,7 @@ void webData_tses::jwrite(Writer<StringBuffer> &writer)
 	write_key/*_string*/(writer, "localdate", localdate);
 	write_key/*_string*/(writer, "idc", idc);
 	write_key/*_string*/(writer, "tim", tim);
+	write_key/*_string*/(writer, "org", org);
 	write_key/*_string*/(writer, "timr", timr);
 	write_key/*_string*/(writer, "modo_16r", modo_16r);
 #if LOCAL_TEST_1

@@ -66,7 +66,7 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantServ
             Cfg2RadioTelef();
     }
 
-    /** Añade, Modifica o Borra un Recurso */
+    /** Aï¿½ade, Modifica o Borra un Recurso */
     function RecSet(slv, can, tp) {
         for (irec = 0; irec < cfg.recursos.length; irec++) {
             if (cfg.recursos[irec].SlotPasarela == slv && cfg.recursos[irec].NumDispositivoSlot == can) {
@@ -87,9 +87,9 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantServ
                 return;
             }
         }
-        /** Añadir el Recurso */
+        /** Aï¿½adir el Recurso */
         if (tp != 0) {
-            console.log("Añadido Recurso: ", slv, ":", can, " Tipo: ", tp);
+            console.log("Aï¿½adido Recurso: ", slv, ":", can, " Tipo: ", tp);
             cfg.recursos.push(defResource(slv, can, tp));
         }
     }
@@ -143,8 +143,10 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantServ
             hardware: {
                 AD_AGC: 0,
                 AD_Gain: 10,
+                AD_Umbral: -35,
                 DA_AGC: 0,
-                DA_Gain: -10
+                DA_Gain: -10,
+                DA_Umbral: -35
             },
             radio: {
                 tipo: 0,
@@ -215,14 +217,18 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantServ
                 h2h4: 0,
                 ladoeym: 0,
                 modo: 0,
-                no_test_local: "",
-                no_test_remoto: "",
+                no_test_local: "309999",
+                no_test_remoto: "399999",
                 it_release: 5,
-                detect_vox: 1,
+                detect_vox: 0,
                 umbral_vox: -20,
                 tm_inactividad: 2,
                 colateral_scv: 0,
                 iT_Int_Warning: 5,
+                RespuestaSIP_ATSR2: 0,
+				TmTonoBloqueo: 1,
+				TmBloqueoLib: 100,
+                
                 ats_rangos_dst: [
 					{ inicial: "", final: "" },
 					{ inicial: "", final: "" },
@@ -240,13 +246,15 @@ function CfgService(dataservice, $q, $rootScope, transerv, authservice, MantServ
 				, iTmLlamEntrante: 30
 				, iTmDetFinLlamada: 6
 				, TReleaseBL: 3
-				, iDetCallerId: 1
-				, iTmCallerId: 2500
+				, iDetCallerId: 0
+				, iTmCallerId: 3000
 				, iDetInversionPol: 1
 				, iPeriodoSpvRing: 200
 				, iFiltroSpvRing: 2
                 , iDetDtmf: 0
-            /** 20200703. Nuevos parámetros de líneas Telefónicas */
+                , iControlTmLlam: 0
+                , iTmMaxConversacion: 0
+            /** 20200703. Nuevos parï¿½metros de lï¿½neas Telefï¿½nicas */
                 , iDetLineaAB: 0
                 , iEnableNoED137: 0
             /** 20200703. Nueva Estructura de Colateral Remoto */

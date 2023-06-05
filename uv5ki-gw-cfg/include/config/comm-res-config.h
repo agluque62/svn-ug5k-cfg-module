@@ -44,27 +44,34 @@ public:
 	CommResHardware() {
 		AD_AGC = DA_AGC = 0;
 		AD_Gain = DA_Gain = 0;
+		AD_Umbral = DA_Umbral = 0;
 	}
 public:
 	virtual void jwrite(Writer<StringBuffer> &writer)
 	{
 		write_key(writer, "AD_AGC", AD_AGC);
 		write_key(writer, "AD_Gain", AD_Gain);
+		write_key(writer, "AD_Umbral", AD_Umbral);
 		write_key(writer, "DA_AGC", DA_AGC);
 		write_key(writer, "DA_Gain", DA_Gain);
+		write_key(writer, "DA_Umbral", DA_Umbral);
 	}
 	virtual void jread(Value &base)
 	{
 		read_key(base, "AD_AGC", AD_AGC);
 		read_key(base, "AD_Gain", AD_Gain);
+		read_key(base, "AD_Umbral", AD_Umbral);
 		read_key(base, "DA_AGC", DA_AGC);
 		read_key(base, "DA_Gain", DA_Gain);
+		read_key(base, "DA_Umbral", DA_Umbral);
 	}
 public:
 	int AD_AGC;
 	int AD_Gain;
+	int AD_Umbral;
 	int DA_AGC;
 	int DA_Gain;
+	int DA_Umbral;
 };
 
 /** */

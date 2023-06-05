@@ -53,12 +53,32 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             return transerv.translate("El valor debe estar entre: ") + rr_ad_rng.toString();
         return value >= rr_ad_rng.min && value <= rr_ad_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_ad_rng.toString();
     };
+    vm.cbmadniv_val = function (value) {
+        if (value.toString() == "")
+            return transerv.translate("El valor debe estar entre: ") + rr_adniv_rng.toString();
+        return value >= rr_adniv_rng.min && value <= rr_adniv_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_adniv_rng.toString();
+    };
+    vm.cbmadumb_val = function (value) {
+        if (value.toString() == "")
+            return transerv.translate("El valor debe estar entre: ") + rr_adumb_rng.toString();
+        return value >= rr_adumb_rng.min && value <= rr_adumb_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_adumb_rng.toString();
+    };
 
     /* Validador cmd en D/A */
     vm.cbmda_val = function (value) {
         if (value.toString() == "")
             return transerv.translate("El valor debe estar entre: ") + rr_da_rng.toString();
         return value >= rr_da_rng.min && value <= rr_da_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_da_rng.toString();
+    };
+    vm.cbmdaniv_val = function (value) {
+        if (value.toString() == "")
+            return transerv.translate("El valor debe estar entre: ") + rr_daniv_rng.toString();
+        return value >= rr_daniv_rng.min && value <= rr_daniv_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_daniv_rng.toString();
+    };
+    vm.cbmdaumb_val = function (value) {
+        if (value.toString() == "")
+            return transerv.translate("El valor debe estar entre: ") + rr_daumb_rng.toString();
+        return value >= rr_daumb_rng.min && value <= rr_daumb_rng.max ? "" : transerv.translate("El valor debe estar entre: ") + rr_daumb_rng.toString();
     };
 
     /* Validador nivel VAD */
@@ -95,6 +115,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
         vm.set_pagina(0);
     };
 
+    /* */
     /*  ******************** */
     vm.radgain_show = function (ind) {
         ////if (vm.pagina == 1)
@@ -102,8 +123,14 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
         switch (ind) {
             case 2:
                 return (parseInt(vm.vdata[1].Value) == 0);
+            case 3:
             case 4:
-                return (parseInt(vm.vdata[3].Value) == 0);
+                return (parseInt(vm.vdata[1].Value) == 1);
+            case 6:
+                return (parseInt(vm.vdata[5].Value) == 0);
+            case 7:
+            case 8:
+                return (parseInt(vm.vdata[5].Value) == 1);
         }
         return true;
     };
@@ -161,9 +188,11 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             case 4:     // URI.
                 return true;
             case 5:     // Enable Registro.
-                return MantService.hide_on_ulises();
+                return false;
+                //return MantService.hide_on_ulises();
             case 6:     // Clave
-                return vm.show_clave();
+                return false;
+                //return vm.show_clave();
             case 7:     // Eventos PTT/SQH
                 return true;
             case 8:     // Grabacion.
@@ -183,13 +212,21 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 return true;
             case 2:         // Val G-A/D
                 return vm.radgain_show();
-            case 3:         // AGC D/A
-                return true;
-            case 4:         // Val G-D/A
+            case 3:         // Val Nivel-A/D
                 return vm.radgain_show();
-            case 5:         // Jitter Buffer
+            case 4:         // Val Umbral-A/D
+                return vm.radgain_show();
+            case 5:         // AGC D/A
+                return true;
+            case 6:         // Val G-D/A
+                return vm.radgain_show();
+            case 7:         // Val Nivel-D/A
+                return vm.radgain_show();
+            case 8:         // Val Umbral-D/A
+                return vm.radgain_show();
+            case 9:         // Jitter Buffer
                 return false;
-            case 6:         // Precision Audio.
+            case 10:         // Precision Audio.
                 return !force_rdaudio_normal;           // true; 20200508. Opcion de 16 canales radio sin audio stricto
         }
         return false;
@@ -243,7 +280,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
             case 15:        // Tabla de Calificacion Radio. Solo en Radios Remotos.
                 //if (MantService.hide_on_ulises() == false)
                 //    return false;
-                return (parseInt(vm.vdata[0].Value) == 4 || parseInt(vm.vdata[0].Value) == 6);
+                return ( (parseInt(vm.vdata[0].Value) == 4 || parseInt(vm.vdata[0].Value) == 6) && parseInt(vm.vdata[5].Value) != 2);
         }
         return true;
     };
@@ -623,6 +660,24 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Val: vm.cbmad_val
                     },
                     {
+                        Name: /*'Nivel AGC en A/D (dBm):'*/transerv.translate('RCTRL_P01_AGCAD_NIVEL'),
+                        Value: MantService.is_ulises() ? vm.rdata.hardware.AD_Gain : -10,
+                        Enable: MantService.is_ulises() ? authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]) : false,
+                        Input: 0,
+                        Inputs: [],
+                        Show: vm.radgain_show,
+                        Val: vm.cbmadniv_val
+                    },
+                    {
+                        Name: /*'Umbral AGC en A/D (dBm):'*/transerv.translate('RCTRL_P01_AGCAD_UMBRAL'),
+                        Value: MantService.is_ulises() ? vm.rdata.hardware.AD_Umbral : -35,
+                        Enable: MantService.is_ulises() ? authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]) : false,
+                        Input: 0,
+                        Inputs: [],
+                        Show: vm.radgain_show,
+                        Val: vm.cbmadumb_val
+                    },
+                    {
                         Name: /*'AGC en D/A ?:'*/transerv.translate('RCTRL_P01_AGCDA'),
                         Value: vm.rdata.hardware.DA_AGC.toString(),
                         Enable: authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]),
@@ -639,6 +694,24 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                         Inputs: [],
                         Show: vm.radgain_show,
                         Val: vm.cbmda_val
+                    },
+                    {
+                        Name: /*'Nivel en D/A (dBm):'*/transerv.translate('RCTRL_P01_AGCDA_NIVEL'),
+                        Value: MantService.is_ulises() ? vm.rdata.hardware.DA_Gain : -10,
+                        Enable: MantService.is_ulises() ? authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]) : false,
+                        Input: 0,
+                        Inputs: [],
+                        Show: vm.radgain_show,
+                        Val: vm.cbmdaniv_val
+                    },
+                    {
+                        Name: /*'UMBRAL en D/A (dBm):'*/transerv.translate('RCTRL_P01_AGCDA_UMBRAL'),
+                        Value: MantService.is_ulises() ? vm.rdata.hardware.DA_Umbral : -35,
+                        Enable: MantService.is_ulises() ? authservice.global_enable([ADMIN_PROFILE, PCFG_PROFILE]) : false,
+                        Input: 0,
+                        Inputs: [],
+                        Show: vm.radgain_show,
+                        Val: vm.cbmdaumb_val
                     },
                     {
                         Name: /*'Jitter Buffer Delay (ms):'*/transerv.translate('RCTRL_P01_JIT'),
@@ -1052,17 +1125,24 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 vm.rdata.enableRegistro = parseInt(vm.vdata[5].Value);
                 vm.rdata.szClave = vm.vdata[6].Value;
                 vm.rdata.radio.evtPTT = parseInt(vm.vdata[7].Value);
-                vm.rdata.radio.iEnableGI = parseInt(vm.vdata[8].Value);
+                /*vm.rdata.radio.iEnableGI = parseInt(vm.vdata[8].Value);*/
+	            if (parseInt(vm.vdata[3].Value) == 4 || parseInt(vm.vdata[3].Value) == 6)
+                	vm.rdata.radio.iEnableGI = parseInt(vm.vdata[8].Value);
+	            else
+	            	vm.rdata.radio.iEnableGI = 0;
+	            
                 /* TODO. Forzar PTTSQH vm.tdata.szClave = vm.vdata[9].Value;*/
                 break;
             case 1:
                 vm.rdata.Codec = parseInt(vm.vdata[0].Value);
                 vm.rdata.hardware.AD_AGC = parseInt(vm.vdata[1].Value);
-                vm.rdata.hardware.AD_Gain = vm.vdata[2].Value * 10;
-                vm.rdata.hardware.DA_AGC = parseInt(vm.vdata[3].Value);
-                vm.rdata.hardware.DA_Gain = vm.vdata[4].Value * 10;
-                vm.rdata.radio.tjbd = vm.vdata[5].Value;
-                vm.rdata.radio.iPrecisionAudio = parseInt(vm.vdata[6].Value);
+                vm.rdata.hardware.AD_Gain = vm.rdata.hardware.AD_AGC==0? vm.vdata[2].Value * 10 : vm.vdata[3].Value;
+                vm.rdata.hardware.AD_Umbral = vm.vdata[4].Value;
+                vm.rdata.hardware.DA_AGC = parseInt(vm.vdata[5].Value);
+                vm.rdata.hardware.DA_Gain = vm.rdata.hardware.DA_AGC==0? vm.vdata[6].Value * 10 : vm.vdata[7].Value;
+                vm.rdata.hardware.DA_Umbral = vm.vdata[8].Value;
+                vm.rdata.radio.tjbd = vm.vdata[9].Value;
+                vm.rdata.radio.iPrecisionAudio = parseInt(vm.vdata[10].Value);
                 break;
             case 2:
                 vm.rdata.radio.tipo = parseInt(vm.vdata[0].Value);
@@ -1162,7 +1242,7 @@ function ug5kRecrCtrl($scope, $routeParams, $route, authservice, CfgService, Val
                 return vm.uri_val(vm.vdata[4].Value)=="" && vm.fid_val(vm.vdata[2].Value)=="";
             case 1:
                 if (vm.vdata[2].Show(2) && vm.cbmad_val(vm.vdata[2].Value)!="") return false;
-                if (vm.vdata[4].Show(4) && vm.cbmda_val(vm.vdata[4].Value)!="") return false;
+                if (vm.vdata[6].Show(6) && vm.cbmda_val(vm.vdata[6].Value)!="") return false;
                 break;
             case 2:
                 if (vm.vdata[2].Show(2) && vm.vad_val(vm.vdata[2].Value)!="") return false;

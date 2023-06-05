@@ -28,6 +28,8 @@ class BiteControl : public CodeBase
 {
 public:
 	BiteControl() {
+		PLOG_INFO("Uv5kiGwCfgWebApp.h :--------- $$ class BITE");
+
 		This = this;
 		P_HIS_PROC->SetBite(BiteControl::st_bite_rsp);
 	}
